@@ -91,6 +91,7 @@ pitchWave (Sound letter accidental octave) =
          ]
   where
     -- Frequency of `Sound letter Nothing 0`
+    -- Obtained from https://en.wikipedia.org/wiki/Piano_key_frequencies
     baseFrequency :: Rational
     baseFrequency =
         case letter of
