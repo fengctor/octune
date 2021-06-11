@@ -9,7 +9,7 @@ import           Data.List
 import           Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import           Data.Text       (Text)
-import qualified Data.Text       as Text
+import qualified Data.Text       as T
 
 import           Data.WAVE
 
@@ -57,7 +57,7 @@ genMainSamples env =
 
 -- Line Expressions
 genSamples :: Env -> Int -> AST -> Either Text WAVESamples
-genSamples env bpm ast = go ast
+genSamples env bpm = go
   where
     go :: AST -> Either Text WAVESamples
     go (Var v) =
@@ -95,7 +95,7 @@ noteToSamples bpm (Note pitch beats) =
 -- Sample line constituting a single wavelength of the pitch.
 -- frameRate / frequency = wavelength in frames
 pitchWave :: Pitch -> WAVESamples
-pitchWave Rest                = [[0]]
+pitchWave Rest = [[0]]
 pitchWave (Sound _ _ n)
   | n < 0 || n > 8 = [[0]] -- TODO: return a Left?
 pitchWave (Sound letter accidental octave) =
