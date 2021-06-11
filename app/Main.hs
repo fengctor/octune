@@ -1,3 +1,5 @@
+{-# LANGUAGE ExtendedDefaultRules #-}
+{-# LANGUAGE OverloadedStrings    #-}
 module Main where
 
 --- Example from https://github.com/BartMassey/wave/blob/master/writetest.hs
@@ -20,43 +22,23 @@ import           Octune.AST
 import           Octune.WaveGen
 
 main :: IO ()
-main = do
-    let header =
-            WAVEHeader {
-                waveNumChannels = 1,
-                waveFrameRate = 48000,
-                waveBitsPerSample = 16,
-                waveFrames = Nothing
-            }
-    let ampl = 1 `shiftL` 28
-    let sample n =
-            concat $ replicate (240 * n) $
-                replicate (div 100 n) [-ampl] ++ replicate (div 100 n) [ampl]
-    let middleCNote = Note (Sound C Nothing 4) 1
-    let restNote = Note Rest 0.5
-    case genSamples Map.empty 120 pokemonThing of
+main =
+    testSongs
+        ["pokemonThing.wav", "twinkleTwinkle.wav"]
+        [pokemonThing, twinkleTwinkle]
+
+testSongs :: [String] -> [Env] -> IO ()
+testSongs fileNames songs =
+    case traverse genWAVE songs of
         Left errMsg ->
             hPutStrLn stderr $ Text.unpack errMsg
-        Right pokemonSample -> do
-            print $ length pokemonSample
-            let pokemon =
-                    WAVE {
-                        waveHeader = header,
-                        waveSamples = pokemonSample
-                    }
-            let squareMerge =
-                    WAVE {
-                        waveHeader = header,
-                        waveSamples = mergeSamples [sample 1, sample 2, sample 3]
-                    }
-
-            putWAVEFile "pokemonThing.wav" pokemon
-            putWAVEFile "squareMerge.wav" squareMerge
+        Right songWAVEs -> do
+            traverse (uncurry putWAVEFile) $ zip fileNames songWAVEs
             putStrLn "Done"
 
-twinkleTwinkle :: AST
+twinkleTwinkle :: Env
 twinkleTwinkle =
-    LineApp Merge [right, left]
+    Map.fromList [("main", Song 60 (LineApp Merge [right, left]))]
   where
     right = Line
         [ Note (Sound C Nothing 4) 0.4
@@ -113,24 +95,26 @@ twinkleTwinkle =
         , Note (Sound C Nothing 3) 1
         ]
 
-pokemonThing :: AST
-pokemonThing = Line
-    [ Note (Sound A Nothing 3) 0.5
-    , Note (Sound B Nothing 3) 1
-    , Note (Sound D Nothing 4) 0.5
-    , Note (Sound E Nothing 4) 1.5
-    , Note (Sound F (Just Sharp) 4) 1.5
-    , Note (Sound A Nothing 4) 0.5
-    , Note (Sound E Nothing 4) 5.5
-    , Note (Sound F Nothing 4) 0.5
-    , Note (Sound F (Just Sharp) 4) 1
-    , Note (Sound E Nothing 4) 0.5
-    , Note (Sound F Nothing 4) 0.5
-    , Note (Sound F (Just Sharp) 4) 0.5
-    , Note (Sound A (Just Sharp) 4) 1.5
-    , Note (Sound C (Just Sharp) 5) 1.5
-    , Note (Sound B Nothing 4) 0.5
-    , Note (Sound F (Just Sharp) 4) 0.5
-    , Note (Sound F Nothing 4) 0.5
-    , Note (Sound F (Just Sharp) 4) 4.5
-    ]
+pokemonThing :: Env
+pokemonThing = Map.fromList [("main", Song 120 right)]
+  where
+    right = Line
+        [ Note (Sound A Nothing 3) 0.5
+        , Note (Sound B Nothing 3) 1
+        , Note (Sound D Nothing 4) 0.5
+        , Note (Sound E Nothing 4) 1.5
+        , Note (Sound F (Just Sharp) 4) 1.5
+        , Note (Sound A Nothing 4) 0.5
+        , Note (Sound E Nothing 4) 5.5
+        , Note (Sound F Nothing 4) 0.5
+        , Note (Sound F (Just Sharp) 4) 1
+        , Note (Sound E Nothing 4) 0.5
+        , Note (Sound F Nothing 4) 0.5
+        , Note (Sound F (Just Sharp) 4) 0.5
+        , Note (Sound A (Just Sharp) 4) 1.5
+        , Note (Sound C (Just Sharp) 5) 1.5
+        , Note (Sound B Nothing 4) 0.5
+        , Note (Sound F (Just Sharp) 4) 0.5
+        , Note (Sound F Nothing 4) 0.5
+        , Note (Sound F (Just Sharp) 4) 4.5
+        ]

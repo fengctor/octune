@@ -22,7 +22,7 @@ semitoneFreqMultiplier :: Rational
 semitoneFreqMultiplier = 1.05946309435929
 
 -- Number of frames per second
-frameRate :: Int32
+frameRate :: Int
 frameRate = 48000
 
 -- Default amplitude of a wave
@@ -33,6 +33,17 @@ amplitude = 1 `shiftL` 27
 mergeSamples :: [WAVESamples] -> WAVESamples
 mergeSamples = foldl1' (zipWith (zipWith (+)))
 
+genWAVE :: Env -> Either Text WAVE
+genWAVE = fmap (WAVE header) . genMainSamples
+  where
+    header :: WAVEHeader
+    header =
+        WAVEHeader {
+            waveNumChannels = 1,
+            waveFrameRate = frameRate,
+            waveBitsPerSample = 16,
+            waveFrames = Nothing
+        }
 
 genMainSamples :: Env -> Either Text WAVESamples
 genMainSamples env =
@@ -65,9 +76,12 @@ genSamples env bpm ast = go ast
         applyLineFun lineFun lineArgs
 
     applyLineFun :: LineFun -> [AST] -> Either Text WAVESamples
-    applyLineFun Seq   = fmap mconcat . traverse go
-    applyLineFun Merge = fmap mergeSamples . traverse go
-    applyLineFun _     = error "TODO"
+    applyLineFun Seq =
+        fmap mconcat . traverse go
+    applyLineFun Merge =
+        fmap mergeSamples . traverse go
+    applyLineFun (Repeat n) =
+        fmap (mconcat . replicate n . mconcat) . traverse go
 
 noteToSamples :: Int -> Note -> WAVESamples
 noteToSamples bpm (Note pitch beats) =
@@ -119,5 +133,3 @@ pitchWave (Sound letter accidental octave) =
         fromEnum $
             (toRational frameRate / frequency) / 2
 
-genWAVE :: Env -> Either Text WAVE
-genWAVE = undefined
