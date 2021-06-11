@@ -9,37 +9,35 @@ import           Data.List
 
 import           Data.WAVE
 
-mergeSamples :: [WAVESamples] -> WAVESamples
-mergeSamples = foldl1' (zipWith (zipWith (+)))
+import           Octune.AST
+import           Octune.WaveGen
 
 main :: IO ()
 main = do
-  let header =
-          WAVEHeader {
-             waveNumChannels = 1,
-             waveFrameRate = 48000,
-             waveBitsPerSample = 16,
-             waveFrames = Nothing
-          }
-  let ampl = 1 `shiftL` 28
-  let sample n = concat $ replicate (240 * n) $
-       replicate (div 100 n) [-ampl] ++ replicate (div 100 n) [ampl]
-  let squareFirst =
-          WAVE {
-             waveHeader = header,
-             waveSamples = sample 1
-          }
-  let squareSecond =
-          WAVE {
-             waveHeader = header,
-             waveSamples = sample 2
-          }
-  let squareBoth =
-          WAVE {
-             waveHeader = header,
-             waveSamples = mergeSamples [sample 1, sample 2, sample 3]
-          }
-  putWAVEFile "first.wav" squareFirst
-  putWAVEFile "second.wav" squareSecond
-  putWAVEFile "both.wav" squareBoth
-  putStrLn "Done"
+    let header =
+            WAVEHeader {
+                waveNumChannels = 1,
+                waveFrameRate = 48000,
+                waveBitsPerSample = 16,
+                waveFrames = Nothing
+            }
+    let ampl = 1 `shiftL` 28
+    let sample n =
+            concat $ replicate (240 * n) $
+                replicate (div 100 n) [-ampl] ++ replicate (div 100 n) [ampl]
+    let middleCSample = noteToSamples 60 (Note (Sound C Nothing 4) 1.5)
+    print $ length middleCSample
+    let squareC =
+            WAVE {
+                waveHeader = header,
+                waveSamples = middleCSample
+            }
+    let squareMerge =
+            WAVE {
+                waveHeader = header,
+                waveSamples = mergeSamples [sample 1, sample 2, sample 3]
+            }
+
+    putWAVEFile "squareC.wav" squareC
+    putWAVEFile "squareMerge.wav" squareMerge
+    putStrLn "Done"

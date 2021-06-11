@@ -14,7 +14,7 @@ data Accidental
 
 type Octave = Int
 data Pitch
-    = Sound Letter Accidental Octave
+    = Sound Letter (Maybe Accidental) Octave
     | Rest
     deriving (Show, Read, Eq)
 
@@ -37,6 +37,6 @@ data AST
     | Song Int AST          -- BPM, Line
     -- Line expressions
     | Var Text
-    | Line [[Note]]         -- Columns of notes
+    | Line [Note]           -- Row of notes
     | LineApp LineFun [AST] -- Function application on lines
     deriving (Show, Read, Eq)
