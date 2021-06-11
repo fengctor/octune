@@ -4,12 +4,12 @@ import           Data.Text (Text)
 import qualified Data.Text as T
 
 data Letter
-    = A | B | C | D | E | F | G
+    = C | D | E | F | G | A | B
     deriving (Show, Read, Eq)
 
 data Accidental
-    = Sharp
-    | Flat
+    = Flat
+    | Sharp
     deriving (Show, Read, Eq)
 
 type Octave = Int
@@ -25,7 +25,7 @@ data Note = Note Pitch Beats
 
 data LineFun
     = Seq
-    | Stack
+    | Merge
     | Repeat Int
     deriving (Show, Read, Eq)
 

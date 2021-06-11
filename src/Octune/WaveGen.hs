@@ -17,13 +17,17 @@ import           Octune.AST
 
 type Env = Map Text AST
 
+-- Multiplier for frequency to go up a semitone
+semitoneFreqMultiplier :: Rational
+semitoneFreqMultiplier = 1.05946309435929
+
 -- Number of frames per second
 frameRate :: Int32
 frameRate = 48000
 
 -- Default amplitude of a wave
 amplitude :: Int32
-amplitude = 1 `shiftL` 28
+amplitude = 1 `shiftL` 27
 
 -- Layer a list of samples over each other
 mergeSamples :: [WAVESamples] -> WAVESamples
@@ -57,6 +61,13 @@ genSamples env bpm ast = go ast
                 go lineExpr
     go (Line noteRow) =
         pure $ noteRow >>= noteToSamples bpm
+    go (LineApp lineFun lineArgs) =
+        applyLineFun lineFun lineArgs
+
+    applyLineFun :: LineFun -> [AST] -> Either Text WAVESamples
+    applyLineFun Seq   = fmap mconcat . traverse go
+    applyLineFun Merge = fmap mergeSamples . traverse go
+    applyLineFun _     = error "TODO"
 
 noteToSamples :: Int -> Note -> WAVESamples
 noteToSamples bpm (Note pitch beats) =
@@ -73,14 +84,39 @@ pitchWave :: Pitch -> WAVESamples
 pitchWave Rest                = [[0]]
 pitchWave (Sound _ _ n)
   | n < 0 || n > 8 = [[0]] -- TODO: return a Left?
-pitchWave (Sound C Nothing 4) =
-    let frequency = 262
-        halfWaveFrames = fromEnum $ div (div frameRate 2) frequency
-     in mconcat
-            [ replicate halfWaveFrames [-amplitude]
-            , replicate halfWaveFrames [amplitude]
-            ]
-pitchWave _ = error "TODO"
+pitchWave (Sound letter accidental octave) =
+     mconcat
+         [ replicate halfWaveFrames [-amplitude]
+         , replicate halfWaveFrames [amplitude]
+         ]
+  where
+    -- Frequency of `Sound letter Nothing 0`
+    baseFrequency :: Rational
+    baseFrequency =
+        case letter of
+            C -> 16.35160
+            D -> 18.35405
+            E -> 20.60172
+            F -> 21.82676
+            G -> 24.49971
+            A -> 27.50000
+            B -> 30.86771
+
+    accidentalMultiplier :: Rational
+    accidentalMultiplier =
+        case accidental of
+            Nothing    -> 1
+            Just Flat  -> 1 / semitoneFreqMultiplier
+            Just Sharp -> semitoneFreqMultiplier
+
+    frequency :: Rational
+    frequency =
+        accidentalMultiplier * baseFrequency * product (replicate octave 2)
+
+    halfWaveFrames :: Int
+    halfWaveFrames =
+        fromEnum $
+            (toRational frameRate / frequency) / 2
 
 genWAVE :: Env -> Either Text WAVE
 genWAVE = undefined
