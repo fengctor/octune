@@ -4,17 +4,17 @@ import           Data.Text (Text)
 import qualified Data.Text as T
 
 data Letter
-    = A | B | C | D | E | F | G
+    = C | D | E | F | G | A | B
     deriving (Show, Read, Eq)
 
 data Accidental
-    = Sharp
-    | Flat
+    = Flat
+    | Sharp
     deriving (Show, Read, Eq)
 
 type Octave = Int
 data Pitch
-    = Sound Letter Accidental Octave
+    = Sound Letter (Maybe Accidental) Octave
     | Rest
     deriving (Show, Read, Eq)
 
@@ -25,7 +25,7 @@ data Note = Note Pitch Beats
 
 data LineFun
     = Seq
-    | Stack
+    | Merge
     | Repeat Int
     deriving (Show, Read, Eq)
 
@@ -37,6 +37,6 @@ data AST
     | Song Int AST          -- BPM, Line
     -- Line expressions
     | Var Text
-    | Line [[Note]]         -- Columns of notes
+    | Line [Note]           -- Row of notes
     | LineApp LineFun [AST] -- Function application on lines
     deriving (Show, Read, Eq)
