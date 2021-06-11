@@ -34,15 +34,15 @@ main = do
                 replicate (div 100 n) [-ampl] ++ replicate (div 100 n) [ampl]
     let middleCNote = Note (Sound C Nothing 4) 1
     let restNote = Note Rest 0.5
-    case genSamples Map.empty 60 twinkleTwinkle of
+    case genSamples Map.empty 120 pokemonThing of
         Left errMsg ->
             hPutStrLn stderr $ Text.unpack errMsg
-        Right middleCSample -> do
-            print $ length middleCSample
-            let squareC =
+        Right pokemonSample -> do
+            print $ length pokemonSample
+            let pokemon =
                     WAVE {
                         waveHeader = header,
-                        waveSamples = middleCSample
+                        waveSamples = pokemonSample
                     }
             let squareMerge =
                     WAVE {
@@ -50,7 +50,7 @@ main = do
                         waveSamples = mergeSamples [sample 1, sample 2, sample 3]
                     }
 
-            putWAVEFile "twinkleTwinkle.wav" squareC
+            putWAVEFile "pokemonThing.wav" pokemon
             putWAVEFile "squareMerge.wav" squareMerge
             putStrLn "Done"
 
@@ -112,3 +112,25 @@ twinkleTwinkle =
 
         , Note (Sound C Nothing 3) 1
         ]
+
+pokemonThing :: AST
+pokemonThing = Line
+    [ Note (Sound A Nothing 3) 0.5
+    , Note (Sound B Nothing 3) 1
+    , Note (Sound D Nothing 4) 0.5
+    , Note (Sound E Nothing 4) 1.5
+    , Note (Sound F (Just Sharp) 4) 1.5
+    , Note (Sound A Nothing 4) 0.5
+    , Note (Sound E Nothing 4) 5.5
+    , Note (Sound F Nothing 4) 0.5
+    , Note (Sound F (Just Sharp) 4) 1
+    , Note (Sound E Nothing 4) 0.5
+    , Note (Sound F Nothing 4) 0.5
+    , Note (Sound F (Just Sharp) 4) 0.5
+    , Note (Sound A (Just Sharp) 4) 1.5
+    , Note (Sound C (Just Sharp) 5) 1.5
+    , Note (Sound B Nothing 4) 0.5
+    , Note (Sound F (Just Sharp) 4) 0.5
+    , Note (Sound F Nothing 4) 0.5
+    , Note (Sound F (Just Sharp) 4) 4.5
+    ]

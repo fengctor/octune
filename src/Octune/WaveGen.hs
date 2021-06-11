@@ -71,8 +71,8 @@ genSamples env bpm ast = go ast
 
 noteToSamples :: Int -> Note -> WAVESamples
 noteToSamples bpm (Note pitch beats) =
-    let durationFrames =
-            toRational bpm * beats * toRational frameRate / 60
+    let secondsPerBeat = (beats / toRational bpm) * 60
+        durationFrames = secondsPerBeat * toRational frameRate
      in take (round durationFrames)
         . mconcat
         . repeat
