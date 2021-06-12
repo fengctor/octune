@@ -33,34 +33,34 @@ lexeme =
             (L.skipBlockComment "{-" "-}")
 
 openSong :: Parser ()
-openSong = lexeme (char '{') *> pure ()
+openSong = lexeme (char '{') $> ()
 
 closeSong :: Parser ()
-closeSong = lexeme (char '}') *> pure ()
+closeSong = lexeme (char '}') $> ()
 
 openSeq :: Parser ()
-openSeq = lexeme (char '[') *> pure ()
+openSeq = lexeme (char '[') $> ()
 
 closeSeq :: Parser ()
-closeSeq = lexeme (char ']') *> pure ()
+closeSeq = lexeme (char ']') $> ()
 
 openRepeat :: Parser ()
-openRepeat = lexeme (string "[*") *> pure ()
+openRepeat = lexeme (string "[*") $> ()
 
 closeRepeat :: Parser ()
-closeRepeat = lexeme (string "*]") *> pure ()
+closeRepeat = lexeme (string "*]") $> ()
 
 openMerge :: Parser ()
-openMerge = lexeme (string "[+") *> pure ()
+openMerge = lexeme (string "[+") $> ()
 
 closeMerge :: Parser ()
-closeMerge = lexeme (string "+]") *> pure ()
+closeMerge = lexeme (string "+]") $> ()
 
 openLine :: Parser ()
-openLine = lexeme (char '<') *> pure ()
+openLine = lexeme (char '<') $> ()
 
 closeLine :: Parser ()
-closeLine = lexeme (char '>') *> pure ()
+closeLine = lexeme (char '>') $> ()
 
 
 {- Parser Definitions -}
