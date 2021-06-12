@@ -109,7 +109,7 @@ pNote :: Parser Note
 pNote = lexeme $ Note <$> pBeats <*> pPitch
 
 pFile :: Parser AST
-pFile = File <$> (space *> some pDecl <* eof)
+pFile = File <$> (lexeme space *> some pDecl <* eof)
 
 pIdentifier :: Parser Text
 pIdentifier = T.pack <$>

@@ -1,5 +1,5 @@
 
-main = { 60 : twinkleTwinkle}
+main = { 60 : [* 2 : twinkleTwinkle *] }
 
 twinkleTwinkle = [+ lHand rHand +]
 

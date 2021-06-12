@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 05a595041f19bb225ad4889da37da2645ca259a27f09300e8dd54990db434c2c
+-- hash: 2a6cbe12b214382c893bf345bd1524afc1a6e954251b7bb5ce19c904a07a4124
 
 name:           octune
 version:        0.1.0.0
@@ -42,7 +42,7 @@ library
     , text
   default-language: Haskell2010
 
-executable octune-exe
+executable octune
   main-is: Main.hs
   other-modules:
       Paths_octune

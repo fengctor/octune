@@ -2,19 +2,21 @@
 {-# LANGUAGE OverloadedStrings    #-}
 module Main where
 
---- Example from https://github.com/BartMassey/wave/blob/master/writetest.hs
---- Write a 1-second 48Ksps 240Hz half-amplitude mono square
---- wave into "square.wav".
+import           System.Environment
+import           System.Exit
+import           System.IO
 
+import           Control.Monad
+
+import           Data.Bifunctor
 import           Data.Bits
 import           Data.Foldable
 import           Data.List
 
-import           Data.Text       (Text)
-import qualified Data.Text       as T
-import qualified Data.Text.IO    as TIO
+import           Data.Text          (Text)
+import qualified Data.Text          as T
+import qualified Data.Text.IO       as TIO
 
-import           System.IO
 
 import           Text.Megaparsec
 
@@ -26,16 +28,33 @@ import           Octune.WaveGen
 
 
 main :: IO ()
-main = do
-    let twinkleFile = "twinkleTwinkle.otn"
-    twinkleContents <- TIO.readFile ("test/otn_files/" ++ twinkleFile)
-    case runParser pFile twinkleFile twinkleContents of
-        Right twinkleTwinkle ->
-            testSongs
-                ["pokemonThing.wav", "twinkleTwinkle.wav"]
-                [pokemonThing, twinkleTwinkle]
-        Left todo ->
-            hPutStrLn stderr "Parse error: TODO"
+main = runOctune
+
+-- Currently compiles exactly 1 song per file
+runOctune :: IO ()
+runOctune = do
+    fileNames <- getArgs
+    fileContents <- traverse TIO.readFile fileNames
+    case fileContents of
+        [] -> TIO.hPutStrLn stderr "Error: no files provided"
+              *> exitWith (ExitFailure 1)
+        _  -> pure ()
+    case traverse (uncurry compile) (zip fileNames fileContents) of
+        Left errMsg ->
+            TIO.hPutStrLn stderr errMsg
+            *> exitWith (ExitFailure 1)
+        Right songWAVEs ->
+             traverse_ (uncurry putWAVEFile) (zip songNames songWAVEs)
+             *> putStr ("Produced:\n" ++ unlines songNames)
+               where
+                 songNames :: [String]
+                 songNames = fmap ((++ ".wav") . takeWhile (/= '.')) fileNames
+  where
+    compile :: String -> Text -> Either Text WAVE
+    compile fileName =
+        genWAVE <=<
+            first (T.pack . errorBundlePretty)
+            . runParser pFile fileName
 
 testSongs :: [String] -> [AST] -> IO ()
 testSongs fileNames songs =

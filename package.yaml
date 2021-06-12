@@ -30,7 +30,7 @@ library:
   source-dirs: src
 
 executables:
-  octune-exe:
+  octune:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
