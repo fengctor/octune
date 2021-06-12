@@ -95,14 +95,30 @@ genSamples env bpm = go
     applyLineFun (Repeat n) =
         fmap (mconcat . replicate n . mconcat) . traverse go
 
+applyModifier :: WAVESamples -> NoteModifier -> WAVESamples
+applyModifier samples Detatched = chopped ++ remainingSilence
+  where
+    -- Make the last 20% of the note silent
+    splitPoint = div (4 * length samples) 5
+    (chopped, remaining) = splitAt splitPoint samples
+    remainingSilence = [0] <$ remaining
+applyModifier samples Staccato = chopped ++ remainingSilence
+  where
+    -- Make the last 75% of the note silent
+    splitPoint = div (length samples) 4
+    (chopped, remaining) = splitAt splitPoint samples
+    remainingSilence = [0] <$ remaining
+
 noteToSamples :: Int -> Note -> WAVESamples
-noteToSamples bpm (Note beats pitch) =
+noteToSamples bpm (Note noteMods beats pitch) =
     let secondsPerBeat = (beats / toRational bpm) * 60
         durationFrames = secondsPerBeat * toRational frameRate
-     in take (round durationFrames)
-        . mconcat
-        . repeat
-        $ pitchWave pitch
+        unmodifiedSamples =
+            take (round durationFrames)
+            . mconcat
+            . repeat
+            $ pitchWave pitch
+     in foldl' applyModifier unmodifiedSamples noteMods
 
 -- Sample line constituting a single wavelength of the pitch.
 -- frameRate / frequency = wavelength in frames

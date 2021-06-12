@@ -7,6 +7,8 @@ import           Numeric
 
 import           Data.Char                  (digitToInt)
 import           Data.List
+import           Data.List.NonEmpty         as NE
+import qualified Data.Set                   as Set
 import           Data.Void
 
 import           Data.Text                  (Text)
@@ -19,6 +21,8 @@ import qualified Text.Megaparsec.Char.Lexer as L
 import           Octune.AST
 
 type Parser = Parsec Void Text
+
+{- Token Definitions -}
 
 lexeme :: Parser a -> Parser a
 lexeme =
@@ -58,6 +62,9 @@ openLine = lexeme (char '<') *> pure ()
 closeLine :: Parser ()
 closeLine = lexeme (char '>') *> pure ()
 
+
+{- Parser Definitions -}
+
 pLetter :: Parser Letter
 pLetter =
     C <$ char 'C'
@@ -80,11 +87,23 @@ pAccidental =
     <|>
     Sharp <$ char '#'
 
+pOctave :: Parser Octave
+pOctave = digitChar >>= validateOctave
+  where
+    validateOctave :: Char -> Parser Octave
+    validateOctave '9' =
+        let expected = fmap (Tokens . NE.fromList . show) [0..8]
+         in failure
+                (Just $ Tokens (NE.fromList "9"))
+                (Set.fromList expected)
+    validateOctave n =
+        pure $ digitToInt n
+
 pPitch :: Parser Pitch
 pPitch =
     Rest <$ char '_'
     <|>
-    Sound <$> pLetter <*> optional (try pAccidental) <*> L.decimal
+    Sound <$> pLetter <*> optional (try pAccidental) <*> pOctave
 
 mantissaToRational :: String -> Rational
 mantissaToRational = go (1 / 10)
@@ -93,6 +112,14 @@ mantissaToRational = go (1 / 10)
     go _ [] = 0
     go colMult (d:ds) =
         colMult * toRational (digitToInt d) + go (colMult / 10) ds
+
+pNoteModifier :: Parser NoteModifier
+pNoteModifier = do
+    char '\''
+    mStac <- optional (char '\'')
+    case mStac of
+        Nothing -> pure Detatched
+        Just _  -> pure Staccato
 
 pBeats :: Parser Beats
 pBeats = pRational
@@ -106,7 +133,7 @@ pBeats = pRational
             Just mantissa -> base + mantissaToRational mantissa
 
 pNote :: Parser Note
-pNote = lexeme $ Note <$> pBeats <*> pPitch
+pNote = lexeme $ Note <$> many pNoteModifier <*> pBeats <*> pPitch
 
 pFile :: Parser AST
 pFile = File <$> (lexeme space *> some pDecl <* eof)
