@@ -1,0 +1,39 @@
+-- Coffin Dance
+
+main = { 120 : chorus }
+
+chorus = [* 2 : [+ lChorusLine rChorusLine +] *]
+
+rChorusLine = [
+    reF#4 reD4 reF#4 reC#5 reB4 reD4 reA4 reD4
+    reG#4 reE4 reG#4 reG#4 reB4 reE4 reA4 reG#4
+    [* 2 : reF#4 reC#4 reF#4 reA5 reG#5 reA5 reG#5 reA5 *]
+]
+
+reC#4 = <0.4C#4 0.1_>
+reD4 = <0.4D4 0.1_>
+reE4 = <0.4E4 0.1_>
+reF#4 = <0.4F#4 0.1_>
+reG#4 = <0.4G#4 0.1_>
+reA4 = <0.4A4 0.1_>
+reB4 = <0.4B4 0.1_>
+reC#5 = <0.4C#5 0.1_>
+reA5 = <0.4A5 0.1_>
+reG#5 = <0.4G#5 0.1_>
+
+lChorusLine = [
+    lsD <0.5_> lsD lsD <0.25_> lsD <0.25_>
+    lsD <0.25_> lsD <0.25_> lsD <0.25_> lsD <0.25_>
+
+    lsE <0.5_> lsE lsE <0.25_> lsE <0.25_>
+    lsE <0.25_> lsE <0.25_> lsE <0.25_> lsE lsF
+
+    [* 2 : lsF# <0.5_> lsF# lsF# <0.25_> lsF# <0.25_>
+           <0.25_> lsF# lsF# <0.25_> lsF# lsF# lsF# lsF# 
+    *]
+]
+
+lsD = [ [+ <0.2D2> <0.2D3> +] <0.05_> ]
+lsE = [ [+ <0.2E2> <0.2E3> +] <0.05_> ]
+lsF = [ [+ <0.2F2> <0.2F3> +] <0.05_> ]
+lsF# = [ [+ <0.2F#2> <0.2F#3> +] <0.05_> ]

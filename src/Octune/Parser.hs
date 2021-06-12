@@ -113,7 +113,10 @@ pFile = File <$> (lexeme space *> some pDecl <* eof)
 
 pIdentifier :: Parser Text
 pIdentifier = T.pack <$>
-    lexeme ((:) <$> letterChar <*> many alphaNumChar <?> "identifier")
+    lexeme ((:) <$> letterChar <*> many idChar <?> "identifier")
+  where
+    idChar :: Parser Char
+    idChar = alphaNumChar <|> char '#'
 
 pDecl :: Parser AST
 pDecl = Decl <$> pIdentifier <*> (lexeme (char '=') *> pRhs)
