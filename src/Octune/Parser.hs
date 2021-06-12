@@ -125,8 +125,8 @@ pBeats :: Parser Beats
 pBeats = pRelativeBeats <|> pRational
   where
     -- half notes, quarter notes, etc...
-    pRelativeBeats :: Parser Beats
-    pRelativeBeats =
+    pRelativeBeatsBase :: Parser Beats
+    pRelativeBeatsBase =
         2 <$ char 'h'
         <|>
         1 <$ char 'q'
@@ -136,6 +136,13 @@ pBeats = pRelativeBeats <|> pRational
         0.25 <$ char 's'
         <|>
         0.125 <$ char 't'
+
+    -- Considers trailing dots
+    pRelativeBeats :: Parser Beats
+    pRelativeBeats = do
+        base <- pRelativeBeatsBase
+        dots <- many (char '.')
+        pure $ base * sum (scanl' (\a _ -> a / 2) 1 dots)
 
     pRational :: Parser Beats
     pRational = do
