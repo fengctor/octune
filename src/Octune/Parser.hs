@@ -118,7 +118,7 @@ pNoteModifier = do
     char '\''
     mStac <- optional (char '\'')
     case mStac of
-        Nothing -> pure Detatched
+        Nothing -> pure Detached
         Just _  -> pure Staccato
 
 pBeats :: Parser Beats

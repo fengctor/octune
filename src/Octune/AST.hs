@@ -21,7 +21,7 @@ data Pitch
 
 -- TODO: more modifiers
 data NoteModifier
-    = Detatched
+    = Detached
     | Staccato
     deriving (Show, Read, Eq)
 

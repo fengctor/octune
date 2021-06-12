@@ -96,7 +96,7 @@ genSamples env bpm = go
         fmap (mconcat . replicate n . mconcat) . traverse go
 
 applyModifier :: WAVESamples -> NoteModifier -> WAVESamples
-applyModifier samples Detatched = chopped ++ remainingSilence
+applyModifier samples Detached = chopped ++ remainingSilence
   where
     -- Make the last 20% of the note silent
     splitPoint = div (4 * length samples) 5
