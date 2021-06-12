@@ -5,9 +5,9 @@ main = { 120 : chorus }
 chorus = [* 2 : [+ lChorusLine rChorusLine +] *]
 
 rChorusLine = [
-    reF#4 reD4 reF#4 reC#5 reB4 reD4 reA4 reD4
-    reG#4 reE4 reG#4 reG#4 reB4 reE4 reA4 reG#4
-    [* 2 : reF#4 reC#4 reF#4 reA5 reG#5 reA5 reG#5 reA5 *]
+    <'eF#4 'eD4 'eF#4 'eC#5 'eB4 'eD4 'eA4 'eD4>
+    <'eG#4 'eE4 'eG#4 'eG#4 'eB4 'eE4 'eA4 'eG#4>
+    [* 2 : <'eF#4 'eC#4 'eF#4 'eA5 'eG#5 'eA5 'eG#5 'eA5> *]
 ]
 
 reC#4 = <'0.5C#4>

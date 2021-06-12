@@ -33,34 +33,34 @@ lexeme =
             (L.skipBlockComment "{-" "-}")
 
 openSong :: Parser ()
-openSong = lexeme (char '{') $> ()
+openSong = () <$ lexeme (char '{')
 
 closeSong :: Parser ()
-closeSong = lexeme (char '}') $> ()
+closeSong = () <$ lexeme (char '}')
 
 openSeq :: Parser ()
-openSeq = lexeme (char '[') $> ()
+openSeq = () <$ lexeme (char '[')
 
 closeSeq :: Parser ()
-closeSeq = lexeme (char ']') $> ()
+closeSeq = () <$ lexeme (char ']')
 
 openRepeat :: Parser ()
-openRepeat = lexeme (string "[*") $> ()
+openRepeat = () <$ lexeme (string "[*")
 
 closeRepeat :: Parser ()
-closeRepeat = lexeme (string "*]") $> ()
+closeRepeat = () <$ lexeme (string "*]")
 
 openMerge :: Parser ()
-openMerge = lexeme (string "[+") $> ()
+openMerge = () <$ lexeme (string "[+")
 
 closeMerge :: Parser ()
-closeMerge = lexeme (string "+]") $> ()
+closeMerge = () <$ lexeme (string "+]")
 
 openLine :: Parser ()
-openLine = lexeme (char '<') $> ()
+openLine = () <$ lexeme (char '<')
 
 closeLine :: Parser ()
-closeLine = lexeme (char '>') $> ()
+closeLine = () <$ lexeme (char '>')
 
 
 {- Parser Definitions -}
@@ -122,8 +122,21 @@ pNoteModifier = do
         Just _  -> pure Staccato
 
 pBeats :: Parser Beats
-pBeats = pRational
+pBeats = pRelativeBeats <|> pRational
   where
+    -- half notes, quarter notes, etc...
+    pRelativeBeats :: Parser Beats
+    pRelativeBeats =
+        2 <$ char 'h'
+        <|>
+        1 <$ char 'q'
+        <|>
+        0.5 <$ char 'e'
+        <|>
+        0.25 <$ char 's'
+        <|>
+        0.125 <$ char 't'
+
     pRational :: Parser Beats
     pRational = do
         base <- L.decimal
