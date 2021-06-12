@@ -12,15 +12,16 @@ data Accidental
     | Sharp
     deriving (Show, Read, Eq)
 
+type Beats = Rational
+
 type Octave = Int
+
 data Pitch
     = Sound Letter (Maybe Accidental) Octave
     | Rest
     deriving (Show, Read, Eq)
 
-type Beats = Rational
-
-data Note = Note Pitch Beats
+data Note = Note Beats Pitch
     deriving (Show, Read, Eq)
 
 data LineFun

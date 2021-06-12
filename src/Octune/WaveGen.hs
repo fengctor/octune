@@ -33,8 +33,15 @@ amplitude = 1 `shiftL` 27
 mergeSamples :: [WAVESamples] -> WAVESamples
 mergeSamples = foldl1' (zipWith (zipWith (+)))
 
-genWAVE :: Env -> Either Text WAVE
-genWAVE = fmap (WAVE header) . genMainSamples
+
+genWAVE :: AST -> Either Text WAVE
+genWAVE (File decls) =
+    WAVE header <$> (
+        genMainSamples
+        . Map.fromList
+        . fmap envEntryFromDecl
+        $ decls
+    )
   where
     header :: WAVEHeader
     header =
@@ -44,6 +51,11 @@ genWAVE = fmap (WAVE header) . genMainSamples
             waveBitsPerSample = 16,
             waveFrames = Nothing
         }
+    envEntryFromDecl :: AST -> (Text, AST)
+    envEntryFromDecl (Decl vName binding) =
+        (vName, binding)
+    envEntryFromDecl _ =
+        error "Parser should ensure this is a Decl"
 
 genMainSamples :: Env -> Either Text WAVESamples
 genMainSamples env =
@@ -84,7 +96,7 @@ genSamples env bpm = go
         fmap (mconcat . replicate n . mconcat) . traverse go
 
 noteToSamples :: Int -> Note -> WAVESamples
-noteToSamples bpm (Note pitch beats) =
+noteToSamples bpm (Note beats pitch) =
     let secondsPerBeat = (beats / toRational bpm) * 60
         durationFrames = secondsPerBeat * toRational frameRate
      in take (round durationFrames)

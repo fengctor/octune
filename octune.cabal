@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: e9903e50ef455194d7bed14884c30638e0e4dce4463d6651c66ff0d968d59f57
+-- hash: 05a595041f19bb225ad4889da37da2645ca259a27f09300e8dd54990db434c2c
 
 name:           octune
 version:        0.1.0.0
@@ -28,6 +28,7 @@ source-repository head
 library
   exposed-modules:
       Octune.AST
+      Octune.Parser
       Octune.WaveGen
   other-modules:
       Paths_octune
@@ -37,6 +38,7 @@ library
       WAVE
     , base >=4.7 && <5
     , containers
+    , megaparsec
     , text
   default-language: Haskell2010
 
@@ -51,6 +53,7 @@ executable octune-exe
       WAVE
     , base >=4.7 && <5
     , containers
+    , megaparsec
     , octune
     , text
   default-language: Haskell2010
@@ -67,6 +70,7 @@ test-suite octune-test
       WAVE
     , base >=4.7 && <5
     , containers
+    , megaparsec
     , octune
     , text
   default-language: Haskell2010
