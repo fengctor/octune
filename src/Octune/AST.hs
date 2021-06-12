@@ -12,8 +12,6 @@ data Accidental
     | Sharp
     deriving (Show, Read, Eq)
 
-type Beats = Rational
-
 type Octave = Int
 
 data Pitch
@@ -21,7 +19,15 @@ data Pitch
     | Rest
     deriving (Show, Read, Eq)
 
-data Note = Note Beats Pitch
+-- TODO: more modifiers
+data NoteModifier
+    = Detached
+    | Staccato
+    deriving (Show, Read, Eq)
+
+type Beats = Rational
+
+data Note = Note [NoteModifier] Beats Pitch
     deriving (Show, Read, Eq)
 
 data LineFun

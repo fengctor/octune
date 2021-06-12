@@ -7,6 +7,8 @@ import           Numeric
 
 import           Data.Char                  (digitToInt)
 import           Data.List
+import           Data.List.NonEmpty         as NE
+import qualified Data.Set                   as Set
 import           Data.Void
 
 import           Data.Text                  (Text)
@@ -20,6 +22,8 @@ import           Octune.AST
 
 type Parser = Parsec Void Text
 
+{- Token Definitions -}
+
 lexeme :: Parser a -> Parser a
 lexeme =
     L.lexeme $
@@ -29,34 +33,37 @@ lexeme =
             (L.skipBlockComment "{-" "-}")
 
 openSong :: Parser ()
-openSong = lexeme (char '{') *> pure ()
+openSong = () <$ lexeme (char '{')
 
 closeSong :: Parser ()
-closeSong = lexeme (char '}') *> pure ()
+closeSong = () <$ lexeme (char '}')
 
 openSeq :: Parser ()
-openSeq = lexeme (char '[') *> pure ()
+openSeq = () <$ lexeme (char '[')
 
 closeSeq :: Parser ()
-closeSeq = lexeme (char ']') *> pure ()
+closeSeq = () <$ lexeme (char ']')
 
 openRepeat :: Parser ()
-openRepeat = lexeme (string "[*") *> pure ()
+openRepeat = () <$ lexeme (string "[*")
 
 closeRepeat :: Parser ()
-closeRepeat = lexeme (string "*]") *> pure ()
+closeRepeat = () <$ lexeme (string "*]")
 
 openMerge :: Parser ()
-openMerge = lexeme (string "[+") *> pure ()
+openMerge = () <$ lexeme (string "[+")
 
 closeMerge :: Parser ()
-closeMerge = lexeme (string "+]") *> pure ()
+closeMerge = () <$ lexeme (string "+]")
 
 openLine :: Parser ()
-openLine = lexeme (char '<') *> pure ()
+openLine = () <$ lexeme (char '<')
 
 closeLine :: Parser ()
-closeLine = lexeme (char '>') *> pure ()
+closeLine = () <$ lexeme (char '>')
+
+
+{- Parser Definitions -}
 
 pLetter :: Parser Letter
 pLetter =
@@ -80,11 +87,23 @@ pAccidental =
     <|>
     Sharp <$ char '#'
 
+pOctave :: Parser Octave
+pOctave = digitChar >>= validateOctave
+  where
+    validateOctave :: Char -> Parser Octave
+    validateOctave '9' =
+        let expected = fmap (Tokens . NE.fromList . show) [0..8]
+         in failure
+                (Just $ Tokens (NE.fromList "9"))
+                (Set.fromList expected)
+    validateOctave n =
+        pure $ digitToInt n
+
 pPitch :: Parser Pitch
 pPitch =
     Rest <$ char '_'
     <|>
-    Sound <$> pLetter <*> optional (try pAccidental) <*> L.decimal
+    Sound <$> pLetter <*> optional (try pAccidental) <*> pOctave
 
 mantissaToRational :: String -> Rational
 mantissaToRational = go (1 / 10)
@@ -94,9 +113,37 @@ mantissaToRational = go (1 / 10)
     go colMult (d:ds) =
         colMult * toRational (digitToInt d) + go (colMult / 10) ds
 
+pNoteModifier :: Parser NoteModifier
+pNoteModifier = do
+    char '\''
+    mStac <- optional (char '\'')
+    case mStac of
+        Nothing -> pure Detached
+        Just _  -> pure Staccato
+
 pBeats :: Parser Beats
-pBeats = pRational
+pBeats = pRelativeBeats <|> pRational
   where
+    -- half notes, quarter notes, etc...
+    pRelativeBeatsBase :: Parser Beats
+    pRelativeBeatsBase =
+        2 <$ char 'h'
+        <|>
+        1 <$ char 'q'
+        <|>
+        0.5 <$ char 'e'
+        <|>
+        0.25 <$ char 's'
+        <|>
+        0.125 <$ char 't'
+
+    -- Considers trailing dots
+    pRelativeBeats :: Parser Beats
+    pRelativeBeats = do
+        base <- pRelativeBeatsBase
+        dots <- many (char '.')
+        pure $ base * sum (scanl' (\a _ -> a / 2) 1 dots)
+
     pRational :: Parser Beats
     pRational = do
         base <- L.decimal
@@ -106,7 +153,7 @@ pBeats = pRational
             Just mantissa -> base + mantissaToRational mantissa
 
 pNote :: Parser Note
-pNote = lexeme $ Note <$> pBeats <*> pPitch
+pNote = lexeme $ Note <$> many pNoteModifier <*> pBeats <*> pPitch
 
 pFile :: Parser AST
 pFile = File <$> (lexeme space *> some pDecl <* eof)
