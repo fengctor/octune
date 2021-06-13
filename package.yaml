@@ -29,6 +29,9 @@ dependencies:
 library:
   source-dirs: src
 
+ghc-options:
+- -Wall
+
 executables:
   octune:
     main:                Main.hs

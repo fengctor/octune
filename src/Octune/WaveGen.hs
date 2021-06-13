@@ -9,7 +9,6 @@ import           Data.List
 import           Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import           Data.Text       (Text)
-import qualified Data.Text       as T
 
 import           Data.WAVE
 
@@ -56,6 +55,7 @@ genWAVE (File decls) =
         (vName, binding)
     envEntryFromDecl _ =
         error "Parser should ensure this is a Decl"
+genWAVE _ = error "Should only call genWAVE on Files"
 
 genMainSamples :: Env -> Either Text WAVESamples
 genMainSamples env =
@@ -86,6 +86,7 @@ genSamples env bpm = go
         pure $ noteRow >>= noteToSamples bpm
     go (LineApp lineFun lineArgs) =
         applyLineFun lineFun lineArgs
+    go _ = error "Should only call genSamples on LineExpressions"
 
     applyLineFun :: LineFun -> [AST] -> Either Text WAVESamples
     applyLineFun Seq =
