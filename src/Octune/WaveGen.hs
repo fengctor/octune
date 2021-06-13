@@ -124,26 +124,26 @@ noteToSamples bpm (Note noteMods beats pitch) =
 -- frameRate / frequency = wavelength in frames
 pitchWave :: Pitch -> WAVESamples
 pitchWave Rest = [[0]]
-pitchWave (Sound _ _ n)
-  | n < 0 || n > 8 = [[0]] -- TODO: return a Left?
 pitchWave (Sound letter accidental octave) =
      mconcat
          [ replicate halfWaveFrames [-amplitude]
          , replicate halfWaveFrames [amplitude]
          ]
   where
-    -- Frequency of `Sound letter Nothing 0`
+    -- Frequency of `Sound letter Nothing 4`
     -- Obtained from https://en.wikipedia.org/wiki/Piano_key_frequencies
+    -- We assume most notes will be close to octave 4 to optimize
+    -- frequency calculation below
     baseFrequency :: Rational
     baseFrequency =
         case letter of
-            C -> 16.35160
-            D -> 18.35405
-            E -> 20.60172
-            F -> 21.82676
-            G -> 24.49971
-            A -> 27.50000
-            B -> 30.86771
+            C -> 261.6256
+            D -> 293.6648
+            E -> 329.6276
+            F -> 349.2282
+            G -> 391.9954
+            A -> 440.0000
+            B -> 493.8833
 
     accidentalMultiplier :: Rational
     accidentalMultiplier =
@@ -152,9 +152,10 @@ pitchWave (Sound letter accidental octave) =
             Just Flat  -> 1 / semitoneFreqMultiplier
             Just Sharp -> semitoneFreqMultiplier
 
+    -- Note: `octave` should be valid (0 <= octave <= 8) from parsing
     frequency :: Rational
     frequency =
-        accidentalMultiplier * baseFrequency * product (replicate octave 2)
+        accidentalMultiplier * baseFrequency * (2^^(octave - 4))
 
     halfWaveFrames :: Int
     halfWaveFrames =
