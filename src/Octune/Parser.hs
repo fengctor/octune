@@ -7,7 +7,7 @@ import           Numeric
 
 import           Data.Char                  (digitToInt)
 import           Data.List
-import           Data.List.NonEmpty         as NE
+import qualified Data.List.NonEmpty         as NE
 import qualified Data.Set                   as Set
 import           Data.Void
 
@@ -142,7 +142,9 @@ pBeats = pRelativeBeats <|> pRational
     pRelativeBeats = do
         base <- pRelativeBeatsBase
         dots <- many (char '.')
-        pure $ base * sum (scanl' (\a _ -> a / 2) 1 dots)
+        -- Note: 1 + 1/2 + 1/4 + 1/8 + ... + 1/(2^n)
+        --     = 2 - (1/2)^n
+        pure $ base * (2 - (1/2)^^(length dots))
 
     pRational :: Parser Beats
     pRational = do
