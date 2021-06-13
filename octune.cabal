@@ -4,16 +4,16 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a3967a05faa9513cadab8aa17ecfdc27a061a62ded0c3d2447150c49d17927f6
+-- hash: 1197d8cf71af5fc77b271f04c8472413b5d86651d68ad755bb56750b4ec6f1d7
 
 name:           octune
-version:        0.1.0.0
+version:        0.1.0
 description:    Please see the README on GitHub at <https://github.com/githubuser/octune#readme>
-homepage:       https://github.com/githubuser/octune#readme
-bug-reports:    https://github.com/githubuser/octune/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2021 Author name here
+homepage:       https://github.com/fengctor/octune#readme
+bug-reports:    https://github.com/fengctor/octune/issues
+author:         Gary Feng
+maintainer:     gary.feng@uwaterloo.ca
+copyright:      2021 Gary Feng
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -23,7 +23,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/octune
+  location: https://github.com/fengctor/octune
 
 library
   exposed-modules:

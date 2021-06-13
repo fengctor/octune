@@ -1,10 +1,10 @@
 name:                octune
-version:             0.1.0.0
-github:              "githubuser/octune"
+version:             0.1.0
+github:              "fengctor/octune"
 license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2021 Author name here"
+author:              "Gary Feng"
+maintainer:          "gary.feng@uwaterloo.ca"
+copyright:           "2021 Gary Feng"
 
 extra-source-files:
 - README.md
