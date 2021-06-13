@@ -9,9 +9,7 @@ import           System.IO
 import           Control.Monad
 
 import           Data.Bifunctor
-import           Data.Bits
 import           Data.Foldable
-import           Data.List
 
 import           Data.Text          (Text)
 import qualified Data.Text          as T
@@ -22,7 +20,6 @@ import           Text.Megaparsec
 
 import           Data.WAVE
 
-import           Octune.AST
 import           Octune.Parser
 import           Octune.WaveGen
 
@@ -44,11 +41,12 @@ runOctune = do
             TIO.hPutStrLn stderr errMsg
             *> exitWith (ExitFailure 1)
         Right songWAVEs ->
-             traverse_ (uncurry putWAVEFile) (zip songNames songWAVEs)
-             *> putStr ("Produced:\n" ++ unlines songNames)
-               where
-                 songNames :: [String]
-                 songNames = fmap ((++ ".wav") . takeWhile (/= '.')) fileNames
+            -- traverse_ (print . length . waveSamples) songWAVEs
+            traverse_ (uncurry putWAVEFile) (zip songNames songWAVEs)
+            *> putStr ("Produced:\n" ++ unlines songNames)
+              where
+                songNames :: [String]
+                songNames = fmap ((++ ".wav") . takeWhile (/= '.')) fileNames
   where
     compile :: String -> Text -> Either Text WAVE
     compile fileName =

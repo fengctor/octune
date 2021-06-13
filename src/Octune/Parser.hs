@@ -1,13 +1,11 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE OverloadedStrings    #-}
+{-# LANGUAGE TypeApplications     #-}
 
 module Octune.Parser where
 
-import           Numeric
-
 import           Data.Char                  (digitToInt)
-import           Data.List
-import           Data.List.NonEmpty         as NE
+import qualified Data.List.NonEmpty         as NE
 import qualified Data.Set                   as Set
 import           Data.Void
 
@@ -92,7 +90,7 @@ pOctave = digitChar >>= validateOctave
   where
     validateOctave :: Char -> Parser Octave
     validateOctave '9' =
-        let expected = fmap (Tokens . NE.fromList . show) [0..8]
+        let expected = fmap (Tokens . NE.fromList . show @Int) [0..8]
          in failure
                 (Just $ Tokens (NE.fromList "9"))
                 (Set.fromList expected)
@@ -115,7 +113,7 @@ mantissaToRational = go (1 / 10)
 
 pNoteModifier :: Parser NoteModifier
 pNoteModifier = do
-    char '\''
+    _ <- char '\''
     mStac <- optional (char '\'')
     case mStac of
         Nothing -> pure Detached
@@ -142,7 +140,9 @@ pBeats = pRelativeBeats <|> pRational
     pRelativeBeats = do
         base <- pRelativeBeatsBase
         dots <- many (char '.')
-        pure $ base * sum (scanl' (\a _ -> a / 2) 1 dots)
+        -- Note: 1 + 1/2 + 1/4 + 1/8 + ... + 1/(2^n)
+        --     = 2 - (1/2)^n
+        pure $ base * (2 - (1/2)^^(length dots))
 
     pRational :: Parser Beats
     pRational = do

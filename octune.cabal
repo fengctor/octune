@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2a6cbe12b214382c893bf345bd1524afc1a6e954251b7bb5ce19c904a07a4124
+-- hash: a3967a05faa9513cadab8aa17ecfdc27a061a62ded0c3d2447150c49d17927f6
 
 name:           octune
 version:        0.1.0.0
@@ -34,11 +34,13 @@ library
       Paths_octune
   hs-source-dirs:
       src
+  ghc-options: -Wall
   build-depends:
       WAVE
     , base >=4.7 && <5
     , containers
     , megaparsec
+    , parallel
     , text
   default-language: Haskell2010
 
@@ -48,13 +50,14 @@ executable octune
       Paths_octune
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N2
   build-depends:
       WAVE
     , base >=4.7 && <5
     , containers
     , megaparsec
     , octune
+    , parallel
     , text
   default-language: Haskell2010
 
@@ -65,12 +68,13 @@ test-suite octune-test
       Paths_octune
   hs-source-dirs:
       test
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       WAVE
     , base >=4.7 && <5
     , containers
     , megaparsec
     , octune
+    , parallel
     , text
   default-language: Haskell2010

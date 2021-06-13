@@ -1,7 +1,6 @@
 module Octune.AST where
 
 import           Data.Text (Text)
-import qualified Data.Text as T
 
 data Letter
     = C | D | E | F | G | A | B
