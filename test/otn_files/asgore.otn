@@ -1,0 +1,109 @@
+-- Bergentrückung (Intro) + ASGORE
+
+main = { 108 : [ bergentruckung <h_> asgore ] }
+
+bergentruckung = [+
+    bergentruckungR 
+    bergentruckungL 
+    bergentruckungBass 
++]
+
+bergentruckungR = [
+    < 'eE4 e_ 'eG#4 e_ hF#4 >
+    < 'eD#4 e_ 'eF#4 e_ hE4 >
+    < 'eC#4 e_ 'eE4 e_ hD#4 >
+    < 'eB3 e_ 'eC#4 e_ hG#3 >
+
+    < 'eE4 e_ 'eG#4 e_ hF#4 >
+    < 'eB4 e_ 'eF#4 e_ 'hG#4 >
+    < 'eG#4 'eF#4 'eG#4 'eB4 qC#5 'qE5 >
+    < sD#5 tE5 tD#5 'eC#5 'eB4 'eD#5 hC#5 >
+]
+
+bergentruckungL = [
+    < 'eG#3 ''eG#3 'eB3 ''eB3 hC#4 >
+    < 'eF#3 ''eF#3 'eB3 ''eB3 hG#3 >
+    < 'eF#3 ''eF#3 'eB3 ''eB3 'eB3 'eA3 'eF#3 'eG#3 >
+    < 'eF#3 'eE3 'eF#3 'eG#3 hC#3 >
+
+    < 'eG#3 ''eG#3 'eB3 ''eB3 hC#4 >
+    < 'eD#4 ''eD#4 'eB3 ''eB3 qD#4 'qE4 >
+    < 'eE4 'eD#4 'eC#4 'eB3 qA3 qC#4 >
+    < 'eB3 'eF#3 'eG#3 'eB3 hG#3 >
+]
+
+bergentruckungBass = [
+    < eG#2 ''eG#2 eB2 ''eB2 hA2 >
+    < eF#2 ''eF#2 eB2 ''eB2 hG#2 >
+    < eE2 ''eE2 eG#2 ''eG#2 hF#2 >
+    < eD#2 ''eD#2 eC#2 ''eC#2 hG#2 >
+
+    < eG#2 ''eG#2 eB2 ''eB2 hA2 >
+    < eF#2 ''eF#2 eB2 ''eB2 hG#2 >
+    < eE2 ''eE2 eG#2 ''eG#2 hF#2 >
+    < eD#2 ''eD#2 eC#2 ''eC#2 hC#2 >
+]
+
+asgore = [
+    asgoreA
+]
+
+asgoreA = [* 2 :
+    [+ 
+        asgoreRA1
+        asgoreLA1
+        asgoreBassA1
+    +]
+
+    [+
+        asgoreRA2
+        asgoreLA2
+        asgoreBassA2
+    +]
+
+*]
+
+asgoreRA1 = [
+    < 'eE4 e_ 'eG#4 e_ >
+    < 'q.F#4 'eG#4 e.C#4 e.D#4 eE4 q.G#4 e_ >
+    < 'eE4 e_ 'eG#4 e_ >
+    < 'q.F#4 'eG#4 e.C#4 e.D#4 eB4 q.G#4 e_ >
+]
+
+asgoreLA1 = [
+    < 'eG#3 ''eG#3 eB2 ''eB2 >
+    [* 2 : < 'e.C#4 'e.C#4 'eB3 'eA3 e_ 'eG#3 e_ > *]
+    [* 3 : < 'e.G#3 'e.G#3 'eF#3 > *]
+]
+
+asgoreBassA1 = [
+    < h_ >
+    [* 3 : <'sA2 'sA2 sE3 'sA2 'sA2 'sA2 sA3 'sA2 > *]
+    < 'eA2 e_ 'eB2 e_ >
+    [* 3 : <'sC#3 'sC#3 sG#3 'sC#3 'sC#3 'sC#3 sC#4 'sC#3 > *]
+]
+
+asgoreRA2 = [
+    < 'eG#4 e_ 'eA4 e_ >
+    < 'q.B4 eC#5 e.E4 e.F#4 eG#4 >
+    < 'q.B4 eC#5 'e.D#5 e.D#5 eB4 >
+    < h.G#4 e_ sA4 sG#4 >
+    < qF#4 q_ >
+]
+
+asgoreLA2 = [
+    < 'eC#4 ''eC#4 eB3 ''eB3 >
+    [* 2 : < 'e.E4 'e.E4 'eD#4 > *]
+    [* 2 : < 'e.F#4 'e.F#4 'eE4 > *]
+    [* 2 : < 'e.C#4 'e.C#4 'eC#4 > *]
+    < qD#4 q_ >
+]
+
+asgoreBassA2 = [
+    < h_ >
+    [* 2 : <'sA2 'sA2 sE3 'sA2 'sA2 'sA2 sA3 'sA2 > *]
+    [* 2 : <'sB2 'sB2 sF#3 'sB2 'sB2 'sB2 sB3 'sB2 > *]
+    [* 2 : <'sA2 'sA2 sE3 'sA2 'sA2 'sA2 sA3 'sA2 > *]
+    < qB2 q_ >
+]
+

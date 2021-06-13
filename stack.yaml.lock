@@ -10,7 +10,7 @@ packages:
       size: 405
       sha256: ee5ccd70fa7fe6ffc360ebd762b2e3f44ae10406aa27f3842d55b8cbd1a19498
   original:
-    hackage: WAVE-0.1.6@sha256:f744ff68f5e3a0d1f84fab373ea35970659085d213aef20860357512d0458c5c,1016
+    hackage: WAVE-0.1.6
 snapshots:
 - completed:
     size: 567679
