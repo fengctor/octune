@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 1197d8cf71af5fc77b271f04c8472413b5d86651d68ad755bb56750b4ec6f1d7
+-- hash: 8b759218bd75db1f3f13c82879cfaebd3af3aeafca8e96c03c5118a7250fff9e
 
 name:           octune
 version:        0.1.0
@@ -50,7 +50,7 @@ executable octune
       Paths_octune
   hs-source-dirs:
       app
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N2
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N1
   build-depends:
       WAVE
     , base >=4.7 && <5
