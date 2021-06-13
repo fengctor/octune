@@ -28,10 +28,17 @@ frameRate = 48000
 amplitude :: Int32
 amplitude = 1 `shiftL` 27
 
+{-# INLINE [0] zipWithHom #-}
+zipWithHom :: (a -> a -> a) -> [a] -> [a] -> [a]
+zipWithHom f = go
+  where
+    go [] ys         = ys
+    go xs []         = xs
+    go (x:xs) (y:ys) = f x y : go xs ys
+
 -- Layer a list of samples over each other
 mergeSamples :: [WAVESamples] -> WAVESamples
-mergeSamples = foldl1' (zipWith (zipWith (+)))
-
+mergeSamples = foldl1' (zipWithHom (zipWithHom (+)))
 
 genWAVE :: AST -> Either Text WAVE
 genWAVE (File decls) =
