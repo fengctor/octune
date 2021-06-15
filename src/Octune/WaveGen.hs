@@ -89,8 +89,8 @@ genSamples env bpm = go
                     ]
             Just lineExpr ->
                 go lineExpr
-    go (Line noteRow) =
-        pure $ noteRow >>= noteToSamples bpm
+    go (LineNote note) =
+        pure $ noteToSamples bpm note
     go (LineApp lineFun lineArgs) =
         applyLineFun lineFun lineArgs
     go _ = error "Should only call genSamples on LineExpressions"

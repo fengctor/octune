@@ -43,6 +43,6 @@ data AST
     | Song Int AST          -- BPM, Line
     -- Line expressions
     | Var Text
-    | Line [Note]           -- Row of notes
+    | LineNote Note           -- Row of notes
     | LineApp LineFun [AST] -- Function application on lines
     deriving (Show, Read, Eq)

@@ -54,12 +54,6 @@ openMerge = () <$ lexeme (string "[+")
 closeMerge :: Parser ()
 closeMerge = () <$ lexeme (string "+]")
 
-openLine :: Parser ()
-openLine = () <$ lexeme (char '<')
-
-closeLine :: Parser ()
-closeLine = () <$ lexeme (char '>')
-
 
 {- Parser Definitions -}
 
@@ -175,14 +169,13 @@ pSongExpr = between openSong closeSong $
     Song <$> lexeme L.decimal <* lexeme (char ':') <*> pLineExpr
 
 pLineExpr :: Parser AST
-pLineExpr = try pVar <|> try pLine <|> pLineApp
+pLineExpr = try pLineNote <|> pVar <|> pLineApp
 
 pVar :: Parser AST
 pVar = Var <$> pIdentifier
 
-pLine :: Parser AST
-pLine = between openLine closeLine $
-    Line <$> many pNote
+pLineNote :: Parser AST
+pLineNote = LineNote <$> pNote
 
 pLineApp :: Parser AST
 pLineApp =
