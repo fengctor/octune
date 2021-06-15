@@ -1,0 +1,289 @@
+-- Bergentrückung (Intro) + ASGORE
+
+main = { 116 : [ bergentruckung <h_> asgore ] }
+
+bergentruckung = [+
+    bergentruckungR 
+    bergentruckungL 
+    bergentruckungBass 
++]
+
+bergentruckungR = [
+    < 'eE4 e_ 'eG#4 e_ tF4 s.F#4 q.F#4 >
+    < 'eD#4 e_ 'eF#4 e_ tD#4 s.E4 q.E4 >
+    < 'eC#4 e_ 'eE4 e_ tD4 s.D#4 q.D#4 >
+    < 'eB3 e_ 'eC#4 e_ tG3 s.G#3 q.G#3 >
+
+    < 'eE4 e_ 'eG#4 e_ tF4 s.F#4 q.F#4 >
+    < 'eB4 e_ 'eF#4 e_ tG4 s.G#4 'q.G#4 >
+    < 'eG#4 'eF#4 'eG#4 'eB4 qC#5 'qE5 >
+    < sD#5 tE5 tD#5 'eC#5 'eB4 'eD#5 hC#5 >
+]
+
+bergentruckungL = [
+    < 'eG#3 ''eG#3 'eB3 ''eB3 hC#4 >
+    < 'eF#3 ''eF#3 'eA3 ''eA3 hC#4 >
+    < 'eF#3 ''eF#3 'eB3 ''eB3 'eB3 'eA3 'eF#3 'eG#3 >
+    < 'eF#3 'eE3 'eF#3 'eG#3 hC#3 >
+
+    < 'eG#3 ''eG#3 'eB3 ''eB3 hC#4 >
+    < 'eF#3 ''eF#3 'eB3 ''eB3 qD#4 'qE4 >
+    < 'eE4 'eD#4 'eC#4 'eB3 qA3 qC#4 >
+    < 'eB3 'eF#3 'eG#3 'eB3 hG#3 >
+]
+
+bergentruckungBass = [
+    < 'eC#3 ''eC#3 'eE3 ''eE3 hA2 >
+    < 'eB2 ''eB2 'eD#3 ''eD#3 hC#3 >
+    < 'eG#2 ''eG#2 'eB2 ''eB2 hA2 >
+    < 'eF#2 ''eF#2 'eA2 ''eA2 hG#2 >
+
+    < 'eG#2 ''eG#2 'eB2 ''eB2 hA2 >
+    < 'eB2 ''eB2 'eD#3 ''eD#3 hC#3 >
+    < 'eE2 ''eE2 'eG#2 ''eG#2 hF#2 >
+    < 'eD#2 ''eD#2 'eC#2 ''eC#2 hC#2 >
+]
+
+asgore = [
+    asgoreA
+    asgoreB
+    asgorePass
+    asgoreBridge
+]
+
+
+{- A SECTION -}
+
+asgoreA = [
+    [+ 
+        asgoreRA1
+        asgoreLA1
+        asgoreBassA1
+    +]
+    [+
+        asgoreRA2
+        asgoreLA2
+        asgoreBassA2
+    +]
+
+    [+ 
+        asgoreRA1
+        asgoreLA1
+        asgoreBassA1
+    +]
+    [+
+        asgoreSynthA2
+        asgoreRA2
+        asgoreLA2
+        asgoreBassA2
+    +]
+
+]
+
+asgoreRA1 = [
+    < 'eE4 e_ 'eG#4 e_ >
+    < tF4 s.F#4 'qF#4 'eG#4 e.C#4 e.D#4 eE4 q.G#4 e_ >
+    < 'eE4 e_ 'eG#4 e_ >
+    < tF4 s.F#4 'qF#4 'eG#4 e.C#4 e.D#4 eB4 q.G#4 e_ >
+]
+
+asgoreLA1 = [
+    < 'eG#3 ''eG#3 eB2 ''eB2 >
+    [* 3 : < 'e.C#4 'e.C#4 'eB3 'eG#3 e_ 'eB3 e_ > *]
+    < 'e.C#4 'e.C#4 'eB3 >
+]
+
+asgoreBassA1 = [
+    < 'eC#3 ''eC#3 'eE3 ''eE3 >
+    [* 3 : <'sA2 'sA2 sE3 'sA2 'sA2 'sA2 sA3 'sA2 > *]
+    < 'eA2 e_ 'eB2 e_ >
+    [* 3 : <'sC#3 'sC#3 sG#3 'sC#3 'sC#3 'sC#3 sC#4 'sC#3 > *]
+]
+
+
+asgoreSynthA2 = [
+    < 'eE5 e_ 'eF#5 e_ >
+    < tF#5 tF5 e.F#5 hF#5 q_ >
+    < tF#5 tF5 e.F#5 hF#5 q_ >
+    -- < tG#5 tG5 e.G#5 hG#5 q_ >
+    < h.G#5 q_ >
+    < qF#5 q_ >
+]
+
+asgoreRA2 = [
+    < 'eG#4 e_ 'eA4 e_ >
+    < tA4 s.B4 'qB4 eC#5 e.E4 e.F#4 eG#4 >
+    < tA4 s.B4 'qB4 eC#5 'e.D#5 e.D#5 eB4 >
+    < tG4 s.G#4 eG#4 hG#4 e_ sA4 sG#4 >
+    < qF#4 q_ >
+]
+
+asgoreLA2 = [
+    < 'eC#3 ''eC#3 'eB2 ''eB2 >
+    [* 2 : < 'e.E4 'e.E4 'eD#4 > *]
+    [* 2 : < 'e.F#4 'e.F#4 'eE4 > *]
+    [* 2 : < 'e.C#4 'e.C#4 'eC#4 > *]
+    < qD#4 q_ >
+]
+
+asgoreBassA2 = [
+    < 'eG#3 ''eC#3 'eE3 ''eE3 >
+    [* 2 : <'sA2 'sA2 sE3 'sA2 'sA2 'sA2 sA3 'sA2 > *]
+    [* 2 : <'sB2 'sB2 sF#3 'sB2 'sB2 'sB2 sB3 'sB2 > *]
+    [* 2 : <'sA2 'sA2 sE3 'sA2 'sA2 'sA2 sA3 'sA2 > *]
+    < qB2 q_ >
+]
+
+
+{- B SECTION -}
+
+asgoreB = [+
+    asgoreRB
+    asgoreLB
+    asgoreBassB
++]
+
+asgoreRB = [
+    < 'eE4 e_ 'eD#4 e_ >
+
+    [* 3 : asgoreRBRiff *]
+    asgoreRBRiffTail1
+    [* 3 : asgoreRBRiff *]
+    asgoreRBRiffTail2
+
+    [* 3 : [+ asgoreRBRiff asgoreRBRiffUpOctave +] *]
+    [+ asgoreRBRiffTail1 asgoreRBRiffTail1UpOctave +]
+    [* 3 : [+ asgoreRBRiff asgoreRBRiffUpOctave +] *] 
+    [+ asgoreRBRiffTail2 asgoreRBRiffTail2UpOctave +]
+]
+
+asgoreRBRiff = < 'sC#4 'sE4 'sD#4 'sE4 'sC#4 e_ eC#4 'sD#4 'sE4 'sB4 'sG#4 e._ >
+
+asgoreRBRiffUpOctave =
+    < 'sC#5 'sE5 'sD#5 'sE5 'sC#5 e_ eC#5 'sD#5 'sE5 'sB5 'sG#5 e._ >
+
+asgoreRBRiffTail1 = < e.B3 'e.F#4 'eE4 0.05D4 0.2D#4 'eC#4 'e.B3 eD#4 >
+asgoreRBRiffTail1UpOctave = < e.B4 'e.F#5 'eE5 0.05D5 0.2D#5 'eC#5 'e.B4 eD#5 >
+asgoreRBRiffTail2 = < e.C4 'e.F#4 'eE4 0.05D4 0.2D#4 'eC#4 'e.C4 eD#4 >
+asgoreRBRiffTail2UpOctave = < e.C5 'e.F#5 'eE5 0.05D5 0.2D#5 'eC#5 'e.C5 eD#5 >
+
+asgoreLB = [
+    < 'eA3 e_ 'eG#3 e_ >
+    [* 4 : 
+        < 'eE3 'eE3 'eE3 'tD#3 'tD#3 'tD#3 tE3 'eE3 'eE3 'eE3 'eD#3 >
+        < 'eE3 'eE3 'eE3 sD#3 'e.E3 'eE3 'eE3 'tF#3 'tF#3 'tF#3 'tF#3 >
+        < 'eG#3 'eG#3 'eG#3 'tF#3 'tF#3 'tF#3 tG#3 'eG#3 'eG#3 'eG#3 'eF#3 >
+        < 'eD#3 'eD#3 'eD#3 sD#3 'e.D#3 'eF#3 'eF#3 'eD#3 >
+    *]
+]
+
+asgoreBassB = [
+    < 'eC#3 e_ 'eB2 e_ >
+    [* 2 :
+        < ''qA2 'eA2 'tG#2 'tG#2 'tG#2 tA2 'eA2 'eA2 'eA2 'eG#2 >
+        < ''qA2 'eA2 sG#2 'e.A2 'eA2 'eA2 'tB2 'tB2 'tB2 tB2 >
+        < ''qC#3 'eC#3 'tB2 'tB2 'tB2 tC#3 'eC#3 'eC#3 'eC#3 'eB2 >
+        < 'e.F#2 'e.F#2 'eF#2 'e.F#2 'e.F#2 'eF#2 >
+
+        < ''qA2 'eA2 'tG#2 'tG#2 'tG#2 tA2 'eA2 'eA2 'eA2 'eG#2 >
+        < ''qA2 'eA2 sG#2 'e.A2 'eA2 'eA2 'tB2 'tB2 'tB2 tB2 >
+        < ''qC#3 'eC#3 'tB2 'tB2 'tB2 tC#3 'eC#3 'eC#3 'eC#3 'eB2 >
+        < 'e.G#2 'e.G#2 'eG#2 'e.G#2 'e.B2 'eB2 >
+    *]
+]
+
+
+{- PASS -}
+
+asgorePass = [+
+    asgoreRPass
+    asgoreLPass
+    asgoreBassPass
++]
+
+asgoreRPass = [
+    < tC#5 tC5 q..C#5 q_ 'eG#4 'eB4 >
+    < tC#5 tC5 e.C#5 e_ 'eE5 'sF#5 'eE5 'e.D#5 'eE5 >
+    < tC5 s.C#5 eC#5 q_ 'eG#4 s_ 'eB4 s_ 'eE5 >
+    < tD5 s.D#5 eD#5 e_ >
+]
+
+asgoreLPass = [
+    < hG#4 q_ 'eE4 'eF#4 >
+    < qG#4 e_ 'eB4 'sC#5 'eB4 'e.G#4 'eB4 >
+    < qG#4 h._ >
+    < h_ >
+]
+
+asgoreBassPass = [
+    [* 4 : [+ < 'sA2 'sA2 'sA2 'sA2 > < e_ 'sA3 s_ > +] *]
+    [* 4 : [+ < 'sB2 'sB2 'sB2 'sB2 > < e_ 'sB3 s_ > +] *]
+    [* 4 : [+ < 'sC#3 'sC#3 'sC#3 'sC#3 > < e_ 'sC#4 s_ > +] *]
+    [* 2 : [+ < 'sG#2 'sG#2 'sG#2 'sG#2 > < e_ 'sG#3 s_ > +] *]
+]
+
+
+{- BRIDGE -}
+
+asgoreBridge = [+
+    asgoreRBridge
+    asgoreLBridge
+    asgoreSuppBridge
+    asgoreBassBridge
++]
+
+asgoreRBridge = [
+    < 'e.C#5 'e.E5 'eF#5 >
+    < hG#5 q_ 'eE5 'eF#5 >
+    < qG#5 e_ eF#5 eE5 sF#5 e.D#5 eB4 >
+    < hC#5 q_ 'eE5 'eF#5 >
+    < qG#5 e_ eF#5 eE5 sF#5 e.D#5 eB5 >
+    < hG#5 q_ 'eE5 'eF#5 >
+    < qG#5 e_ eF#5 eE5 sF#5 e.D#5 eB4 >
+    < h.C#5 q_ >
+    [+ < 'h.D#5 q_ > asgoreRBridgeLead +]
+]
+asgoreRBridgeLead = [
+    < q._ 'eE5 'sD#5 'eC#5 'e.B4 'eD#5 >
+]
+
+asgoreLBridge = [
+    < 'e.E4 'e.G#4 'eB4 >
+    < hC#5 h_  >
+    < qC#5 e_ 'eB4 eG#4 sB4 'e.G#4 eG#4 >
+    < hA4 h_  >
+    < qC#5 e_ 'eB4 eG#4 sB4 'e.G#4 eG#4 >
+    < hF#4 h_  >
+    < qG#4 e_ 'eB4 eG#4 sB4 'e.G#4 eG#4 >
+    < h.A4 q_  >
+    < h.G#4 q_  >
+]
+
+asgoreSuppBridge = [
+    < h_ >
+    [* 7 : [+ asgoreRBRiff {-asgoreRBRiffUpOctave-} +] *]
+    < q._ 'eG#4 'sF#4 'eG#4 'e.D#4 'eB3 >
+]
+
+asgoreBassBridge = [
+    < 'e.G#2 'e.G#2 eG#2 >
+    [* 4 : [+ < 'sF#2 'sF#2 'sF#2 'sF#2 > < e_ 'sF#3 s_ > +] *]
+    [* 4 : [+ < 'sG#2 'sG#2 'sG#2 'sG#2 > < e_ 'sG#3 s_ > +] *]
+    [* 4 : [+ < 'sA2 'sA2 'sA2 'sA2 > < e_ 'sA3 s_ > +] *]
+    [* 4 : [+ < 'sG#2 'sG#2 'sG#2 'sG#2 > < e_ 'sG#3 s_ > +] *]
+
+    [* 4 : [+ < 'sF#2 'sF#2 'sF#2 'sF#2 > < e_ 'sF#3 s_ > +] *]
+    [* 4 : [+ < 'sG#2 'sG#2 'sG#2 'sG#2 > < e_ 'sG#3 s_ > +] *]
+    [* 4 : [+ < 'sA2 'sA2 'sA2 'sA2 > < e_ 'sA3 s_ > +] *]
+    < 'e.G#2 'e.G#2 'eG#2 'e.B2 'e.D#3 'eG#3 >
+]
+
+
+{- C SECTION -}
+
+{-asgoreC = [+
+    asgoreRC
++]
+
+asgoreRC = [
+]-}
