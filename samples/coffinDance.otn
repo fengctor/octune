@@ -5,24 +5,24 @@ main = { 120 : chorus }
 chorus = [* 2 : [+ lChorusLine rChorusLine +] *]
 
 rChorusLine = [
-    <'eF#4 'eD4 'eF#4 'eC#5 'eB4 'eD4 'eA4 'eD4>
-    <'eG#4 'eE4 'eG#4 'eG#4 'eB4 'eE4 'eA4 'eG#4>
-    [* 2 : <'eF#4 'eC#4 'eF#4 'eA5 'eG#5 'eA5 'eG#5 'eA5> *]
+    'eF#4 'eD4 'eF#4 'eC#5 'eB4 'eD4 'eA4 'eD4
+    'eG#4 'eE4 'eG#4 'eG#4 'eB4 'eE4 'eA4 'eG#4
+    [* 2 : 'eF#4 'eC#4 'eF#4 'eA5 'eG#5 'eA5 'eG#5 'eA5 *]
 ]
 
 lChorusLine = [
-    lsD <0.5_> lsD lsD <0.25_> lsD <0.25_>
-    lsD <0.25_> lsD <0.25_> lsD <0.25_> lsD <0.25_>
+    lsD 0.5_ lsD lsD 0.25_ lsD 0.25_
+    lsD 0.25_ lsD 0.25_ lsD 0.25_ lsD 0.25_
 
-    lsE <0.5_> lsE lsE <0.25_> lsE <0.25_>
-    lsE <0.25_> lsE <0.25_> lsE <0.25_> lsE lsF
+    lsE 0.5_ lsE lsE 0.25_ lsE 0.25_
+    lsE 0.25_ lsE 0.25_ lsE 0.25_ lsE lsF
 
-    [* 2 : lsF# <0.5_> lsF# lsF# <0.25_> lsF# <0.25_>
-           <0.25_> lsF# lsF# <0.25_> lsF# lsF# lsF# lsF# 
+    [* 2 : lsF# 0.5_ lsF# lsF# 0.25_ lsF# 0.25_
+           0.25_ lsF# lsF# 0.25_ lsF# lsF# lsF# lsF# 
     *]
 ]
 
-lsD = [+ <'sD2> <'sD3> +]
-lsE = [+ <'sE2> <'sE3> +]
-lsF = [+ <'sF2> <'sF3> +]
-lsF# = [+ <'sF#2> <'sF#3> +]
+lsD = [+ 'sD2 'sD3 +]
+lsE = [+ 'sE2 'sE3 +]
+lsF = [+ 'sF2 'sF3 +]
+lsF# = [+ 'sF#2 'sF#3 +]
