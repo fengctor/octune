@@ -22,7 +22,7 @@ semitoneFreqMultiplier = 1.05946309435929
 
 -- Number of frames per second
 frameRate :: Int
-frameRate = 48000
+frameRate = 24000
 
 -- Default amplitude of a wave
 amplitude :: Int32
