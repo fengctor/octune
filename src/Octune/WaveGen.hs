@@ -134,8 +134,8 @@ pitchWave :: Pitch -> WAVESamples
 pitchWave Rest = [[0]]
 pitchWave (Sound letter accidental octave) =
      mconcat
-         [ replicate halfWaveFrames [-amplitude]
-         , replicate halfWaveFrames [amplitude]
+         [ replicate halfWaveFrames [amplitude]
+         , replicate halfWaveFrames [-amplitude]
          ]
   where
     -- Frequency of `Sound letter Nothing 4`
