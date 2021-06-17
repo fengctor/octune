@@ -1,3 +1,5 @@
+{-# LANGUAGE BangPatterns #-}
+
 module Octune.Types.AST where
 
 import           Data.Text (Text)
@@ -14,7 +16,7 @@ data Accidental
 type Octave = Int
 
 data Pitch
-    = Sound Letter (Maybe Accidental) Octave
+    = Sound !Letter !(Maybe Accidental) !Octave
     | Rest
     deriving (Show, Read, Eq)
 
@@ -26,13 +28,13 @@ data NoteModifier
 
 type Beats = Rational
 
-data Note = Note [NoteModifier] Beats Pitch
+data Note = Note [NoteModifier] !Beats Pitch
     deriving (Show, Read, Eq)
 
 data LineFun
     = Seq
     | Merge
-    | Repeat Int
+    | Repeat !Int
     deriving (Show, Read, Eq)
 
 data AST
@@ -40,9 +42,9 @@ data AST
     = File [AST]
     | Decl Text AST
     -- Song expression
-    | Song Int AST          -- BPM, Line
+    | Song !Int AST          -- BPM, Line
     -- Line expressions
     | Var Text
     | LineNote Note           -- Row of notes
-    | LineApp LineFun [AST] -- Function application on lines
+    | LineApp !LineFun [AST] -- Function application on lines
     deriving (Show, Read, Eq)

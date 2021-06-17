@@ -15,7 +15,6 @@ import           Data.Text          (Text)
 import qualified Data.Text          as T
 import qualified Data.Text.IO       as TIO
 
-
 import           Text.Megaparsec
 
 import           Data.WAVE

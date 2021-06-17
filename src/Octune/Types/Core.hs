@@ -10,10 +10,10 @@ import           Octune.Types.Env
 
 -- Resulting from after static analysis
 data Core
-    = CoreSong Int Core
+    = CoreSong !Int Core
     | CoreVar Text
     | CoreNote Note
-    | CoreApp LineFun [Core]
+    | CoreApp !LineFun [Core]
     deriving (Show, Read, Eq)
 
 coreEnv :: AST -> Env Core

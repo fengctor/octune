@@ -3,8 +3,6 @@ cabal-version: 1.12
 -- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: 952f8b47730e94b48a4c7008b26f3441a17cb4eac45b9b6727e5f854a378828a
 
 name:           octune
 version:        0.1.0
@@ -45,7 +43,6 @@ library
     , base >=4.7 && <5
     , containers
     , megaparsec
-    , parallel
     , text
   default-language: Haskell2010
 
@@ -62,7 +59,6 @@ executable octune
     , containers
     , megaparsec
     , octune
-    , parallel
     , text
   default-language: Haskell2010
 
@@ -80,6 +76,5 @@ test-suite octune-test
     , containers
     , megaparsec
     , octune
-    , parallel
     , text
   default-language: Haskell2010

@@ -24,7 +24,6 @@ dependencies:
 - text
 - containers
 - megaparsec
-- parallel
 - WAVE
 
 library:

@@ -6,8 +6,9 @@ module Octune.WaveGen where
 import           Data.Bits
 import           Data.Int
 import           Data.List
-import qualified Data.Map.Lazy as Map
-import           Data.Text     (Text)
+import           Data.Map.Strict (Map)
+import qualified Data.Map.Strict as Map
+import           Data.Text       (Text)
 
 import           Data.WAVE
 
@@ -61,25 +62,30 @@ genSamples :: Env Core -> Int -> Core -> Either Text WAVESamples
 genSamples env bpm = memoGenSamples
   where
     memoGenSamples :: Core -> Either Text WAVESamples
-    memoGenSamples (CoreVar vName) = fmap go env Map.! vName
+    memoGenSamples (CoreVar vName) = cache Map.! vName
     memoGenSamples coreExpr        = go coreExpr
 
+    -- Note: Strict Map is ok here since getting WHNF of Either Text WaveSamples
+    --       will not evaluate past the constructor calls (Left, Right)
+    cache :: Map Text (Either Text WAVESamples)
+    cache = fmap go env
+
     go :: Core -> Either Text WAVESamples
-    -- TODO: memoize variables
-    go (CoreVar vName) = memoGenSamples (env Map.! vName)
-    go (CoreNote note) =
-        pure $ noteToSamples bpm note
-    go (CoreApp lineFun lineArgs) =
-        applyLineFun lineFun lineArgs
-    go _ = error "Should not be called on CoreSongs"
+    go (CoreVar vName)            = memoGenSamples (env Map.! vName)
+    go (CoreNote note)            = pure $ noteToSamples bpm note
+    go (CoreApp lineFun lineArgs) = applyLineFun lineFun lineArgs
+    go _                          = error "Should not be called on CoreSongs"
 
     applyLineFun :: LineFun -> [Core] -> Either Text WAVESamples
     applyLineFun Seq =
-        fmap mconcat . traverse memoGenSamples
+        fmap mconcat
+        . traverse memoGenSamples
     applyLineFun Merge =
-        fmap mergeSamples . traverse memoGenSamples
+        fmap mergeSamples
+        . traverse memoGenSamples
     applyLineFun (Repeat n) =
-        fmap (mconcat . replicate n . mconcat) . traverse memoGenSamples
+        fmap (mconcat . replicate n . mconcat)
+        . traverse memoGenSamples
 
 applyModifier :: WAVESamples -> NoteModifier -> WAVESamples
 applyModifier samples Detached = chopped ++ remainingSilence
