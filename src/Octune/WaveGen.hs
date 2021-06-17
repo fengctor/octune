@@ -6,7 +6,8 @@ module Octune.WaveGen where
 import           Data.Bits
 import           Data.Int
 import           Data.List
-import           Data.Text    (Text)
+import qualified Data.Map.Lazy as Map
+import           Data.Text     (Text)
 
 import           Data.WAVE
 
@@ -36,9 +37,15 @@ zipWithHom f = go
 mergeSamples :: [WAVESamples] -> WAVESamples
 mergeSamples = foldl1' (zipWithHom (zipWithHom (+)))
 
-genWAVE :: Core -> Either Text WAVE
-genWAVE (CoreSong bpm coreExpr) =
-    WAVE header <$> genSamples bpm coreExpr
+genWAVE :: Env Core -> Either Text WAVE
+genWAVE env =
+    case Map.lookup "main" env of
+        Just (CoreSong bpm coreExpr) ->
+            WAVE header <$> genSamples env bpm coreExpr
+        Just _ ->
+            Left "`main` must be a song expression"
+        Nothing ->
+            Left "Program must contain `main`"
   where
     header :: WAVEHeader
     header =
@@ -48,13 +55,18 @@ genWAVE (CoreSong bpm coreExpr) =
             waveBitsPerSample = 16,
             waveFrames = Nothing
         }
-genWAVE _ = error "Should only call genWAVE on Files"
 
 -- Line Expressions
-genSamples :: Int -> Core -> Either Text WAVESamples
-genSamples bpm = go
+genSamples :: Env Core -> Int -> Core -> Either Text WAVESamples
+genSamples env bpm = memoGenSamples
   where
+    memoGenSamples :: Core -> Either Text WAVESamples
+    memoGenSamples (CoreVar vName) = fmap go env Map.! vName
+    memoGenSamples coreExpr        = go coreExpr
+
     go :: Core -> Either Text WAVESamples
+    -- TODO: memoize variables
+    go (CoreVar vName) = memoGenSamples (env Map.! vName)
     go (CoreNote note) =
         pure $ noteToSamples bpm note
     go (CoreApp lineFun lineArgs) =
@@ -63,11 +75,11 @@ genSamples bpm = go
 
     applyLineFun :: LineFun -> [Core] -> Either Text WAVESamples
     applyLineFun Seq =
-        fmap mconcat . traverse go
+        fmap mconcat . traverse memoGenSamples
     applyLineFun Merge =
-        fmap mergeSamples . traverse go
+        fmap mergeSamples . traverse memoGenSamples
     applyLineFun (Repeat n) =
-        fmap (mconcat . replicate n . mconcat) . traverse go
+        fmap (mconcat . replicate n . mconcat) . traverse memoGenSamples
 
 applyModifier :: WAVESamples -> NoteModifier -> WAVESamples
 applyModifier samples Detached = chopped ++ remainingSilence

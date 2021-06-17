@@ -51,6 +51,6 @@ runOctune = do
   where
     compile :: String -> Text -> Either Text WAVE
     compile fileName =
-        genWAVE . fromAST <=<
+        genWAVE . coreEnv <=<
             first (T.pack . errorBundlePretty)
             . runParser pFile fileName
