@@ -16,8 +16,8 @@ data Core
     | CoreApp !LineFun [Core]
     deriving (Show, Read, Eq)
 
-coreEnv :: AST -> Env Core
-coreEnv ast = fmap go (buildASTEnv ast)
+coreEnv :: Env AST -> Env Core
+coreEnv = fmap go
   where
     go :: AST -> Core
     go (Song bpm lineExpr)         = CoreSong bpm (go lineExpr)

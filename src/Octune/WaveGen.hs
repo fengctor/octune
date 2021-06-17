@@ -116,11 +116,7 @@ noteToSamples bpm (Note noteMods beats pitch) =
 -- frameRate / frequency = wavelength in frames
 pitchWave :: Pitch -> WAVESamples
 pitchWave Rest = [[0]]
-pitchWave (Sound letter accidental octave) =
-     mconcat
-         [ replicate halfWaveFrames [amplitude]
-         , replicate halfWaveFrames [-amplitude]
-         ]
+pitchWave (Sound letter accidental octave) = squareWave
   where
     -- Frequency of `Sound letter Nothing 4`
     -- Obtained from https://en.wikipedia.org/wiki/Piano_key_frequencies
@@ -149,8 +145,12 @@ pitchWave (Sound letter accidental octave) =
     frequency =
         accidentalMultiplier * baseFrequency * (2^^(octave - 4))
 
-    halfWaveFrames :: Int
-    halfWaveFrames =
-        fromEnum $
-            (toRational frameRate / frequency) / 2
-
+    squareWave :: WAVESamples
+    squareWave =
+        let numFrames = fromEnum (toRational frameRate / frequency)
+            half1 = div numFrames 2
+            half2 = numFrames - half1
+         in mconcat
+                [ replicate half1 [amplitude]
+                , replicate half2 [-amplitude]
+                ]
