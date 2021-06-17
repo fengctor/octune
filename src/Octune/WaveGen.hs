@@ -6,15 +6,11 @@ module Octune.WaveGen where
 import           Data.Bits
 import           Data.Int
 import           Data.List
-import           Data.Map.Strict (Map)
-import qualified Data.Map.Strict as Map
-import           Data.Text       (Text)
+import           Data.Text    (Text)
 
 import           Data.WAVE
 
-import           Octune.AST
-
-type Env = Map Text AST
+import           Octune.Types
 
 -- Multiplier for frequency to go up a semitone
 semitoneFreqMultiplier :: Rational
@@ -40,14 +36,9 @@ zipWithHom f = go
 mergeSamples :: [WAVESamples] -> WAVESamples
 mergeSamples = foldl1' (zipWithHom (zipWithHom (+)))
 
-genWAVE :: AST -> Either Text WAVE
-genWAVE (File decls) =
-    WAVE header <$> (
-        genMainSamples
-        . Map.fromList
-        . fmap envEntryFromDecl
-        $ decls
-    )
+genWAVE :: Core -> Either Text WAVE
+genWAVE (CoreSong bpm coreExpr) =
+    WAVE header <$> genSamples bpm coreExpr
   where
     header :: WAVEHeader
     header =
@@ -57,45 +48,20 @@ genWAVE (File decls) =
             waveBitsPerSample = 16,
             waveFrames = Nothing
         }
-    envEntryFromDecl :: AST -> (Text, AST)
-    envEntryFromDecl (Decl vName binding) =
-        (vName, binding)
-    envEntryFromDecl _ =
-        error "Parser should ensure this is a Decl"
 genWAVE _ = error "Should only call genWAVE on Files"
 
-genMainSamples :: Env -> Either Text WAVESamples
-genMainSamples env =
-    case Map.lookup "main" env of
-        Nothing ->
-            Left "No `main` melody found"
-        Just (Song bpm lineExpr) ->
-            genSamples env bpm lineExpr
-        _ ->
-            Left "`main` must be a song"
-
 -- Line Expressions
-genSamples :: Env -> Int -> AST -> Either Text WAVESamples
-genSamples env bpm = go
+genSamples :: Int -> Core -> Either Text WAVESamples
+genSamples bpm = go
   where
-    go :: AST -> Either Text WAVESamples
-    go (Var v) =
-        case Map.lookup v env of
-            Nothing ->
-                Left $ mconcat
-                    [ "Undefined variable `"
-                    , v
-                    , "`"
-                    ]
-            Just lineExpr ->
-                go lineExpr
-    go (LineNote note) =
+    go :: Core -> Either Text WAVESamples
+    go (CoreNote note) =
         pure $ noteToSamples bpm note
-    go (LineApp lineFun lineArgs) =
+    go (CoreApp lineFun lineArgs) =
         applyLineFun lineFun lineArgs
-    go _ = error "Should only call genSamples on LineExpressions"
+    go _ = error "Should not be called on CoreSongs"
 
-    applyLineFun :: LineFun -> [AST] -> Either Text WAVESamples
+    applyLineFun :: LineFun -> [Core] -> Either Text WAVESamples
     applyLineFun Seq =
         fmap mconcat . traverse go
     applyLineFun Merge =

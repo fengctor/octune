@@ -21,6 +21,7 @@ import           Text.Megaparsec
 import           Data.WAVE
 
 import           Octune.Parser
+import           Octune.Types.Core
 import           Octune.WaveGen
 
 
@@ -50,6 +51,6 @@ runOctune = do
   where
     compile :: String -> Text -> Either Text WAVE
     compile fileName =
-        genWAVE <=<
+        genWAVE . fromAST <=<
             first (T.pack . errorBundlePretty)
             . runParser pFile fileName

@@ -1,4 +1,4 @@
-module Octune.AST where
+module Octune.Types.AST where
 
 import           Data.Text (Text)
 

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8b759218bd75db1f3f13c82879cfaebd3af3aeafca8e96c03c5118a7250fff9e
+-- hash: a490163a439f84249802eb2739a687a04517fa9ba0222dfb9e38b4a16532e8b0
 
 name:           octune
 version:        0.1.0
@@ -27,8 +27,10 @@ source-repository head
 
 library
   exposed-modules:
-      Octune.AST
       Octune.Parser
+      Octune.Types
+      Octune.Types.AST
+      Octune.Types.Core
       Octune.WaveGen
   other-modules:
       Paths_octune

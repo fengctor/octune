@@ -16,7 +16,7 @@ import           Text.Megaparsec
 import           Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
 
-import           Octune.AST
+import           Octune.Types.AST
 
 type Parser = Parsec Void Text
 
