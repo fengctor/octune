@@ -1,6 +1,5 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE OverloadedStrings    #-}
-{-# LANGUAGE TupleSections        #-}
 
 module Octune.StaticAnalysis.VarUsage where
 
@@ -21,7 +20,7 @@ import           Octune.Types        (AST (..), Ann (..), Env)
 checkVarsDeclared :: Env (AST Ann) -> Either Text ()
 checkVarsDeclared env = traverse_ (uncurry checkDeclRhs) (Map.toList env)
   where
-    checkDeclRhs :: Text -> (AST Ann) -> Either Text ()
+    checkDeclRhs :: Text -> AST Ann -> Either Text ()
     checkDeclRhs declName (Song _ _ expr) =
         checkDeclRhs declName expr
     -- TODO: use linePos for better error message
@@ -50,10 +49,10 @@ checkVarsDeclared env = traverse_ (uncurry checkDeclRhs) (Map.toList env)
 checkNoVarCycles :: Env (AST Ann) -> Either Text ()
 checkNoVarCycles env = errorOnSelfEdges *> errorOnCycles
   where
-    edgesFromVar :: Text -> (AST Ann) -> (Text, Text, [Text])
+    edgesFromVar :: Text -> AST Ann -> (Text, Text, [Text])
     edgesFromVar v expr = (v, v, varsIn expr)
 
-    varsIn :: (AST Ann) -> [Text]
+    varsIn :: AST Ann -> [Text]
     varsIn (Song _ _ expr)    = varsIn expr
     varsIn (Var _ v)          = [v]
     varsIn LineNote{}         = []

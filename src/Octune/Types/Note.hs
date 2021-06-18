@@ -1,5 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
-
 module Octune.Types.Note where
 
 data Letter

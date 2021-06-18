@@ -93,7 +93,7 @@ pBeats = pRelativeBeats <|> pRational
         dots <- many (char '.')
         -- Note: 1 + 1/2 + 1/4 + 1/8 + ... + 1/(2^n)
         --     = 2 - (1/2)^n
-        pure $ base * (2 - (1/2)^^(length dots))
+        pure $ base * (2 - (1/2)^^length dots)
 
     pRational :: Parser Beats
     pRational = do

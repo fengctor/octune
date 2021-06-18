@@ -1,5 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
-
 module Octune.Types.AST where
 
 import           Data.Text         (Text)

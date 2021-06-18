@@ -1,5 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
-
 module Octune.Types.Ann where
 
 import           Octune.Types.Note (Beats)
