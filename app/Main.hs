@@ -17,10 +17,10 @@ import           Text.Megaparsec
 
 import           Data.WAVE
 
+import           Octune.CodeGen
 import           Octune.Parser
 import           Octune.StaticAnalysis
 import           Octune.Types
-import           Octune.WaveGen
 
 
 main :: IO ()

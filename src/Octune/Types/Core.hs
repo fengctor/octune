@@ -3,10 +3,11 @@
 
 module Octune.Types.Core where
 
-import           Data.Text        (Text)
+import           Data.Text         (Text)
 
 import           Octune.Types.AST
 import           Octune.Types.Env
+import           Octune.Types.Note
 
 -- Resulting from after static analysis
 data Core

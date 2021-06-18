@@ -25,14 +25,20 @@ source-repository head
 
 library
   exposed-modules:
+      Octune.CodeGen
+      Octune.CodeGen.SamplesGen
+      Octune.CodeGen.WAVEGen
       Octune.Parser
+      Octune.Parser.AST
+      Octune.Parser.Lexeme
+      Octune.Parser.Note
       Octune.StaticAnalysis
       Octune.StaticAnalysis.VarUsage
       Octune.Types
       Octune.Types.AST
       Octune.Types.Core
       Octune.Types.Env
-      Octune.WaveGen
+      Octune.Types.Note
   other-modules:
       Paths_octune
   hs-source-dirs:
