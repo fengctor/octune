@@ -1,5 +1,6 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE OverloadedStrings    #-}
+
 module Main where
 
 import           System.Environment
@@ -17,6 +18,7 @@ import           Text.Megaparsec
 
 import           Data.WAVE
 
+import           Octune.Annotate
 import           Octune.CodeGen
 import           Octune.Parser
 import           Octune.StaticAnalysis
@@ -51,6 +53,6 @@ runOctune = do
     compile fileName fileContents = do
         ast <- first (T.pack . errorBundlePretty) $
                    runParser pFile fileName fileContents
-        let env = buildASTEnv ast
+        let env = annotateBeatLengths (buildASTEnv ast)
         staticAnalysis env ast
         genWAVE (coreEnv env)

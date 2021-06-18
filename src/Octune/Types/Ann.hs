@@ -5,7 +5,7 @@ import           Text.Megaparsec
 
 data Ann
     = Ann
-        { pos     :: !SourcePos
-        , beatLen :: Maybe Beats
+        { pos        :: !SourcePos
+        , beatLength :: Maybe Beats
         }
     deriving (Show, Read, Eq)

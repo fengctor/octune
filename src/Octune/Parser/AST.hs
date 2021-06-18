@@ -12,7 +12,7 @@ initAnn :: SourcePos -> Ann
 initAnn srcPos =
     Ann
         { pos = srcPos
-        , beatLen = Nothing
+        , beatLength = Nothing
         }
 
 getAnn :: Parser Ann
