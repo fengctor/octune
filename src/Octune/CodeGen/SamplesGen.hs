@@ -123,6 +123,6 @@ pitchWave frameRate (Sound letter accidental octave) = squareWave
     squareWave =
         let halfFrames = fromEnum $ (toRational frameRate / frequency) / 2
          in mconcat
-                [ replicate halfFrames [amplitude]
-                , replicate halfFrames [-amplitude]
+                [ replicate halfFrames [-amplitude]
+                , replicate halfFrames [amplitude]
                 ]

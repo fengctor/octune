@@ -6,28 +6,31 @@ module Octune.StaticAnalysis.VarUsage where
 
 import           Data.Foldable
 
-import           Data.Graph       (Graph)
-import qualified Data.Graph       as Graph
-import qualified Data.Map.Strict  as Map
+import           Data.Graph          (Graph)
+import qualified Data.Graph          as Graph
+import qualified Data.Map.Strict     as Map
 
-import           Data.Text        (Text)
-import qualified Data.Text        as T
+import           Data.Text           (Text)
+import qualified Data.Text           as T
 
-import           Octune.Types.AST
-import           Octune.Types.Env
+import           Text.Megaparsec.Pos
+
+import           Octune.Types        (AST (..), Ann (..), Env)
 
 -- Checks that variables used have all been declared
-checkVarsDeclared :: Env AST -> Either Text ()
+checkVarsDeclared :: Env (AST Ann) -> Either Text ()
 checkVarsDeclared env = traverse_ (uncurry checkDeclRhs) (Map.toList env)
   where
-    checkDeclRhs :: Text -> AST -> Either Text ()
-    checkDeclRhs declName (Song _ expr) =
+    checkDeclRhs :: Text -> (AST Ann) -> Either Text ()
+    checkDeclRhs declName (Song _ _ expr) =
         checkDeclRhs declName expr
-    checkDeclRhs declName (Var vName) =
+    -- TODO: use linePos for better error message
+    checkDeclRhs declName (Var ann vName) =
         case Map.lookup vName env of
             Nothing ->
                 Left $ mconcat
-                    [ "Undefined variable `"
+                    [ T.pack (sourcePosPretty $ pos ann)
+                    , ":\nUndefined variable `"
                     , vName
                     , "` in declaration of `"
                     , declName
@@ -35,25 +38,28 @@ checkVarsDeclared env = traverse_ (uncurry checkDeclRhs) (Map.toList env)
                     ]
             Just _ ->
                 pure ()
-    checkDeclRhs _ (LineNote _) =
+    checkDeclRhs _ LineNote{} =
         pure ()
-    checkDeclRhs declName (LineApp _ args) =
+    checkDeclRhs declName (LineApp _ _ args) =
         traverse_ (checkDeclRhs declName) args
+    checkDeclRhs _ BeatsAssertion{} =
+        pure ()
     checkDeclRhs _ _ = error "Should not have File or Decl from parsing"
 
 -- Checks that usages of variables don't form a cycle
-checkNoVarCycles :: Env AST -> Either Text ()
+checkNoVarCycles :: Env (AST Ann) -> Either Text ()
 checkNoVarCycles env = errorOnSelfEdges *> errorOnCycles
   where
-    edgesFromVar :: Text -> AST -> (Text, Text, [Text])
-    edgesFromVar v expr = (v, v, variablesIn expr)
+    edgesFromVar :: Text -> (AST Ann) -> (Text, Text, [Text])
+    edgesFromVar v expr = (v, v, varsIn expr)
 
-    variablesIn :: AST -> [Text]
-    variablesIn (Song _ expr)    = variablesIn expr
-    variablesIn (Var v)          = [v]
-    variablesIn (LineNote _)     = []
-    variablesIn (LineApp _ args) = foldl' (\a c -> variablesIn c ++ a) [] args
-    variablesIn _ = error "Should not have File or Decl from parsing"
+    varsIn :: (AST Ann) -> [Text]
+    varsIn (Song _ _ expr)    = varsIn expr
+    varsIn (Var _ v)          = [v]
+    varsIn LineNote{}         = []
+    varsIn (LineApp _ _ args) = foldl' (\a c -> varsIn c ++ a) [] args
+    varsIn BeatsAssertion{}   = []
+    varsIn _ = error "Should not have File or Decl from parsing"
 
     -- Graph from variables to the variables that appear in their declaration
     varGraph :: Graph

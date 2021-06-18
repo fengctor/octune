@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Data.Combinator
       Octune.CodeGen
       Octune.CodeGen.SamplesGen
       Octune.CodeGen.WAVEGen
@@ -35,6 +36,7 @@ library
       Octune.StaticAnalysis
       Octune.StaticAnalysis.VarUsage
       Octune.Types
+      Octune.Types.Ann
       Octune.Types.AST
       Octune.Types.Core
       Octune.Types.Env

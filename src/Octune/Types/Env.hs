@@ -9,10 +9,10 @@ import           Octune.Types.AST
 
 type Env = Map Text
 
-buildASTEnv :: AST -> Env AST
-buildASTEnv (File decls) = Map.fromList (fmap envEntryFromDecl decls)
+buildASTEnv :: AST a -> Env (AST a)
+buildASTEnv (File _ decls) = Map.fromList (fmap envEntryFromDecl decls)
   where
-    envEntryFromDecl :: AST -> (Text, AST)
-    envEntryFromDecl (Decl vName binding) = (vName, binding)
+    envEntryFromDecl :: AST a -> (Text, AST a)
+    envEntryFromDecl (Decl _ vName binding) = (vName, binding)
     envEntryFromDecl _ = error "Parser should ensure this is a Decl"
 buildASTEnv _ = error "Should only call buildEnv on Files"
