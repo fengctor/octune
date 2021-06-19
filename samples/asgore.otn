@@ -9,39 +9,39 @@ bergentruckung = [+
 +]
 
 bergentruckungR = [
-    'eE4 e_ 'eG#4 e_ tF4 s.F#4 q.F#4
-    'eD#4 e_ 'eF#4 e_ tD#4 s.E4 q.E4
-    'eC#4 e_ 'eE4 e_ tD4 s.D#4 q.D#4
-    'eB3 e_ 'eC#4 e_ tG3 s.G#3 q.G#3
+    |4> 'eE4 e_ 'eG#4 e_ tF4 s.F#4 q.F#4
+    |4> 'eD#4 e_ 'eF#4 e_ tD#4 s.E4 q.E4
+    |4> 'eC#4 e_ 'eE4 e_ tD4 s.D#4 q.D#4
+    |4> 'eB3 e_ 'eC#4 e_ tG3 s.G#3 q.G#3
 
-    'eE4 e_ 'eG#4 e_ tF4 s.F#4 q.F#4
-    'eB4 e_ 'eF#4 e_ tG4 s.G#4 'q.G#4
-    'eG#4 'eF#4 'eG#4 'eB4 qC#5 'qE5
-    sD#5 tE5 tD#5 'eC#5 'eB4 'eD#5 hC#5
+    |4> 'eE4 e_ 'eG#4 e_ tF4 s.F#4 q.F#4
+    |4> 'eB4 e_ 'eF#4 e_ tG4 s.G#4 'q.G#4
+    |4> 'eG#4 'eF#4 'eG#4 'eB4 qC#5 'qE5
+    |4> sD#5 tE5 tD#5 'eC#5 'eB4 'eD#5 hC#5
 ]
 
 bergentruckungL = [
-    'eG#3 ''eG#3 'eB3 ''eB3 hC#4
-    'eF#3 ''eF#3 'eA3 ''eA3 hC#4
-    'eF#3 ''eF#3 'eB3 ''eB3 'eB3 'eA3 'eF#3 'eG#3
-    'eF#3 'eE3 'eF#3 'eG#3 hC#3
+    |4> 'eG#3 ''eG#3 'eB3 ''eB3 hC#4
+    |4> 'eF#3 ''eF#3 'eA3 ''eA3 hC#4
+    |4> 'eF#3 ''eF#3 'eB3 ''eB3 'eB3 'eA3 'eF#3 'eG#3
+    |4> 'eF#3 'eE3 'eF#3 'eG#3 hC#3
 
-    'eG#3 ''eG#3 'eB3 ''eB3 hC#4
-    'eF#3 ''eF#3 'eB3 ''eB3 qD#4 'qE4
-    'eE4 'eD#4 'eC#4 'eB3 qA3 qC#4
-    'eB3 'eF#3 'eG#3 'eB3 hG#3
+    |4> 'eG#3 ''eG#3 'eB3 ''eB3 hC#4
+    |4> 'eF#3 ''eF#3 'eB3 ''eB3 qD#4 'qE4
+    |4> 'eE4 'eD#4 'eC#4 'eB3 qA3 qC#4
+    |4> 'eB3 'eF#3 'eG#3 'eB3 hG#3
 ]
 
 bergentruckungBass = [
-    'eC#3 ''eC#3 'eE3 ''eE3 hA2
-    'eB2 ''eB2 'eD#3 ''eD#3 hC#3
-    'eG#2 ''eG#2 'eB2 ''eB2 hA2
-    'eF#2 ''eF#2 'eA2 ''eA2 hG#2
+    |4> 'eC#3 ''eC#3 'eE3 ''eE3 hA2
+    |4> 'eB2 ''eB2 'eD#3 ''eD#3 hC#3
+    |4> 'eG#2 ''eG#2 'eB2 ''eB2 hA2
+    |4> 'eF#2 ''eF#2 'eA2 ''eA2 hG#2
 
-    'eG#2 ''eG#2 'eB2 ''eB2 hA2
-    'eB2 ''eB2 'eD#3 ''eD#3 hC#3
-    'eE2 ''eE2 'eG#2 ''eG#2 hF#2
-    'eD#2 ''eD#2 'eC#2 ''eC#2 hC#2
+    |4> 'eG#2 ''eG#2 'eB2 ''eB2 hA2
+    |4> 'eB2 ''eB2 'eD#3 ''eD#3 hC#3
+    |4> 'eE2 ''eE2 'eG#2 ''eG#2 hF#2
+    |4> 'eD#2 ''eD#2 'eC#2 ''eC#2 hC#2
 ]
 
 asgore = [
@@ -83,10 +83,11 @@ asgoreA = [
 ]
 
 asgoreRA1 = [
-    'eE4 e_ 'eG#4 e_
-    tF4 s.F#4 'qF#4 'eG#4 e.C#4 e.D#4 eE4 q.G#4 e_
-    'eE4 e_ 'eG#4 e_
-    tF4 s.F#4 'qF#4 'eG#4 e.C#4 e.D#4 eB4 q.G#4 e_
+    |2> 'eE4 e_ 'eG#4 e_
+    |4> tF4 s.F#4 'qF#4 'eG#4 e.C#4 e.D#4 eE4 
+    |4> q.G#4 e_ 'eE4 e_ 'eG#4 e_
+    |4> tF4 s.F#4 'qF#4 'eG#4 e.C#4 e.D#4 eB4
+    |2> q.G#4 e_
 ]
 
 asgoreLA1 = [

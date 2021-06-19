@@ -35,6 +35,7 @@ library
       Octune.Parser.Lexeme
       Octune.Parser.Note
       Octune.StaticAnalysis
+      Octune.StaticAnalysis.BarBeats
       Octune.StaticAnalysis.VarUsage
       Octune.Types
       Octune.Types.Ann
