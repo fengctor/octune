@@ -1,7 +1,4 @@
-{-# LANGUAGE ExtendedDefaultRules #-}
-{-# LANGUAGE OverloadedStrings    #-}
-
-module Octune.WaveGen where
+module Octune.CodeGen.SamplesGen where
 
 import           Data.Bits
 import           Data.Int
@@ -10,23 +7,18 @@ import           Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import           Data.Text       (Text)
 
-import           Data.WAVE
+import           Data.WAVE       (WAVESamples)
 
-import           Octune.AST
+import           Octune.Types
 
-type Env = Map Text AST
+-- Default amplitude of a wave
+amplitude :: Int32
+amplitude = 1 `shiftL` 27
 
 -- Multiplier for frequency to go up a semitone
 semitoneFreqMultiplier :: Rational
 semitoneFreqMultiplier = 1.05946309435929
 
--- Number of frames per second
-frameRate :: Int
-frameRate = 36000
-
--- Default amplitude of a wave
-amplitude :: Int32
-amplitude = 1 `shiftL` 27
 
 {-# INLINE [0] zipWithHom #-}
 zipWithHom :: (a -> a -> a) -> [a] -> [a] -> [a]
@@ -40,68 +32,34 @@ zipWithHom f = go
 mergeSamples :: [WAVESamples] -> WAVESamples
 mergeSamples = foldl1' (zipWithHom (zipWithHom (+)))
 
-genWAVE :: AST -> Either Text WAVE
-genWAVE (File decls) =
-    WAVE header <$> (
-        genMainSamples
-        . Map.fromList
-        . fmap envEntryFromDecl
-        $ decls
-    )
+genSamples :: Env Core -> Int -> Int -> Core -> Either Text WAVESamples
+genSamples env bpm frameRate = memoGenSamples
   where
-    header :: WAVEHeader
-    header =
-        WAVEHeader {
-            waveNumChannels = 1,
-            waveFrameRate = frameRate,
-            waveBitsPerSample = 16,
-            waveFrames = Nothing
-        }
-    envEntryFromDecl :: AST -> (Text, AST)
-    envEntryFromDecl (Decl vName binding) =
-        (vName, binding)
-    envEntryFromDecl _ =
-        error "Parser should ensure this is a Decl"
-genWAVE _ = error "Should only call genWAVE on Files"
+    memoGenSamples :: Core -> Either Text WAVESamples
+    memoGenSamples (CoreVar vName) = cache Map.! vName
+    memoGenSamples coreExpr        = go coreExpr
 
-genMainSamples :: Env -> Either Text WAVESamples
-genMainSamples env =
-    case Map.lookup "main" env of
-        Nothing ->
-            Left "No `main` melody found"
-        Just (Song bpm lineExpr) ->
-            genSamples env bpm lineExpr
-        _ ->
-            Left "`main` must be a song"
+    -- Note: Strict Map is ok here since getting WHNF of Either Text WaveSamples
+    --       will not evaluate past the constructor calls (Left, Right)
+    cache :: Map Text (Either Text WAVESamples)
+    cache = fmap go env
 
--- Line Expressions
-genSamples :: Env -> Int -> AST -> Either Text WAVESamples
-genSamples env bpm = go
-  where
-    go :: AST -> Either Text WAVESamples
-    go (Var v) =
-        case Map.lookup v env of
-            Nothing ->
-                Left $ mconcat
-                    [ "Undefined variable `"
-                    , v
-                    , "`"
-                    ]
-            Just lineExpr ->
-                go lineExpr
-    go (LineNote note) =
-        pure $ noteToSamples bpm note
-    go (LineApp lineFun lineArgs) =
-        applyLineFun lineFun lineArgs
-    go _ = error "Should only call genSamples on LineExpressions"
+    go :: Core -> Either Text WAVESamples
+    go (CoreVar vName)            = memoGenSamples (env Map.! vName)
+    go (CoreNote note)            = pure $ noteToSamples bpm frameRate note
+    go (CoreApp lineFun lineArgs) = applyLineFun lineFun lineArgs
+    go _                          = error "Should not be called on CoreSongs"
 
-    applyLineFun :: LineFun -> [AST] -> Either Text WAVESamples
+    applyLineFun :: LineFun -> [Core] -> Either Text WAVESamples
     applyLineFun Seq =
-        fmap mconcat . traverse go
+        fmap mconcat
+        . traverse memoGenSamples
     applyLineFun Merge =
-        fmap mergeSamples . traverse go
+        fmap mergeSamples
+        . traverse memoGenSamples
     applyLineFun (Repeat n) =
-        fmap (mconcat . replicate n . mconcat) . traverse go
+        fmap (mconcat . replicate n . mconcat)
+        . traverse memoGenSamples
 
 applyModifier :: WAVESamples -> NoteModifier -> WAVESamples
 applyModifier samples Detached = chopped ++ remainingSilence
@@ -117,26 +75,22 @@ applyModifier samples Staccato = chopped ++ remainingSilence
     (chopped, remaining) = splitAt splitPoint samples
     remainingSilence = [0] <$ remaining
 
-noteToSamples :: Int -> Note -> WAVESamples
-noteToSamples bpm (Note noteMods beats pitch) =
+noteToSamples :: Int -> Int -> Note -> WAVESamples
+noteToSamples bpm frameRate (Note noteMods beats pitch) =
     let secondsPerBeat = (beats / toRational bpm) * 60
         durationFrames = secondsPerBeat * toRational frameRate
         unmodifiedSamples =
             take (round durationFrames)
             . mconcat
             . repeat
-            $ pitchWave pitch
+            $ pitchWave frameRate pitch
      in foldl' applyModifier unmodifiedSamples noteMods
 
 -- Sample line constituting a single wavelength of the pitch.
 -- frameRate / frequency = wavelength in frames
-pitchWave :: Pitch -> WAVESamples
-pitchWave Rest = [[0]]
-pitchWave (Sound letter accidental octave) =
-     mconcat
-         [ replicate halfWaveFrames [amplitude]
-         , replicate halfWaveFrames [-amplitude]
-         ]
+pitchWave :: Int -> Pitch -> WAVESamples
+pitchWave _ Rest = [[0]]
+pitchWave frameRate (Sound letter accidental octave) = squareWave
   where
     -- Frequency of `Sound letter Nothing 4`
     -- Obtained from https://en.wikipedia.org/wiki/Piano_key_frequencies
@@ -165,8 +119,10 @@ pitchWave (Sound letter accidental octave) =
     frequency =
         accidentalMultiplier * baseFrequency * (2^^(octave - 4))
 
-    halfWaveFrames :: Int
-    halfWaveFrames =
-        fromEnum $
-            (toRational frameRate / frequency) / 2
-
+    squareWave :: WAVESamples
+    squareWave =
+        let halfFrames = fromEnum $ (toRational frameRate / frequency) / 2
+         in mconcat
+                [ replicate halfFrames [-amplitude]
+                , replicate halfFrames [amplitude]
+                ]

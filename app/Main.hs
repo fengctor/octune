@@ -1,27 +1,28 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE OverloadedStrings    #-}
+
 module Main where
 
 import           System.Environment
 import           System.Exit
 import           System.IO
 
-import           Control.Monad
-
 import           Data.Bifunctor
 import           Data.Foldable
 
-import           Data.Text          (Text)
-import qualified Data.Text          as T
-import qualified Data.Text.IO       as TIO
-
+import           Data.Text             (Text)
+import qualified Data.Text             as T
+import qualified Data.Text.IO          as TIO
 
 import           Text.Megaparsec
 
 import           Data.WAVE
 
+import           Octune.Annotate
+import           Octune.CodeGen
 import           Octune.Parser
-import           Octune.WaveGen
+import           Octune.StaticAnalysis
+import           Octune.Types
 
 
 main :: IO ()
@@ -38,7 +39,7 @@ runOctune = do
         _  -> pure ()
     case traverse (uncurry compile) (zip fileNames fileContents) of
         Left errMsg ->
-            TIO.hPutStrLn stderr errMsg
+            TIO.hPutStrLn stderr (T.append "error: " errMsg)
             *> exitWith (ExitFailure 1)
         Right songWAVEs ->
             -- traverse_ (print . length . waveSamples) songWAVEs
@@ -49,7 +50,9 @@ runOctune = do
                 songNames = fmap ((++ ".wav") . takeWhile (/= '.')) fileNames
   where
     compile :: String -> Text -> Either Text WAVE
-    compile fileName =
-        genWAVE <=<
-            first (T.pack . errorBundlePretty)
-            . runParser pFile fileName
+    compile fileName fileContents = do
+        ast <- first (T.pack . errorBundlePretty) $
+                   runParser pFile fileName fileContents
+        let env = annotateBeatLengths (buildASTEnv ast)
+        staticAnalysis env ast
+        genWAVE (coreEnv env)
