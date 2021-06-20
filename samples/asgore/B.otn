@@ -1,0 +1,65 @@
+module Asgore.B
+
+-- B SECTION
+
+self = [+ r l bass +]
+    
+r = [
+    |2> 'eE4 e_ 'eD#4 e_
+
+    |16> [* 3 : rRiff *]
+         rRiffTail1
+    |16> [* 3 : rRiff *]
+         rRiffTail2
+
+    |16> [* 3 : [+ rRiff rRiffUpOctave +] *]
+         [+ rRiffTail1 rRiffTail1UpOctave +]
+    |16> [* 3 : [+ rRiff rRiffUpOctave +] *] 
+         [+ rRiffTail2 rRiffTail2UpOctave +]
+    |32> [+
+             [
+                 |16> [* 3 : [+ rRiff rRiffUpOctave +] *]
+                      [+ rRiffTail1 rRiffTail1UpOctave +]
+                 |16> [* 3 : [+ rRiff rRiffUpOctave +] *] 
+                      [+ rRiffTail2 rRiffTail2UpOctave +]
+             ]
+             [* 2 : 8C#4 4D#4 4_ *]
+         +]
+]
+rRiff =
+    [ |4> 'sC#4 'sE4 'sD#4 'sE4 'sC#4 e_ eC#4 'sD#4 'sE4 'sB4 'sG#4 e._ ]
+rRiffUpOctave =
+    [ |4> 'sC#5 'sE5 'sD#5 'sE5 'sC#5 e_ eC#5 'sD#5 'sE5 'sB5 'sG#5 e._ ]
+rRiffTail1 =
+    [ |4> e.B3 'e.F#4 'eE4 0.05D4 0.2D#4 'eC#4 'e.B3 eD#4 ]
+rRiffTail1UpOctave =
+    [ |4> e.B4 'e.F#5 'eE5 0.05D5 0.2D#5 'eC#5 'e.B4 eD#5 ]
+rRiffTail2 =
+    [ |4> e.C4 'e.F#4 'eE4 0.05D4 0.2D#4 'eC#4 'e.C4 eD#4 ]
+rRiffTail2UpOctave =
+    [ |4> e.C5 'e.F#5 'eE5 0.05D5 0.2D#5 'eC#5 'e.C5 eD#5 ]
+
+l = [
+    |2> 'eA3 e_ 'eG#3 e_ |
+    [* 6 : 
+        |4> 'e.E3 'e.E3 'tD#3 'tD#3 'tD#3 tE3 'eE3 'eE3 'eE3 'eD#3
+        |4> 'e.E3 'e.E3 sD#3 'e.E3 'eE3 'eE3 'tF#3 'tF#3 'tF#3 'tF#3
+        |4> 'e.G#3 'e.G#3 'tF#3 'tF#3 'tF#3 tG#3 'eG#3 'eG#3 'eG#3 'eF#3
+        |4> 'e.D#3 'e.D#3 'eD#3 sF#3 'eF#3 'e.F#3 'eD#3
+    *]
+]
+
+bass = [
+    |2> 'eC#3 e_ 'eB2 e_ |
+    [* 3 :
+        |4> 'e.A2 'e.A2 'tG#2 'tG#2 'tG#2 tA2 'eA2 'eA2 'eA2 'eG#2
+        |4> 'e.A2 'e.A2 sG#2 'e.A2 'eA2 'eA2 'tB2 'tB2 'tB2 tB2
+        |4> ''e.C#3 'e.C#3 'tB2 'tB2 'tB2 tC#3 'eC#3 'eC#3 'eC#3 'eB2
+        |4> 'e.F#2 'e.F#2 'eF#2 'e.F#2 'e.F#2 'eF#2
+
+        |4> 'e.A2 'e.A2 'tG#2 'tG#2 'tG#2 tA2 'eA2 'eA2 'eA2 'eG#2
+        |4> 'e.A2 'e.A2 sG#2 'e.A2 'eA2 'eA2 'tB2 'tB2 'tB2 tB2
+        |4> ''e.C#3 'e.C#3 'tB2 'tB2 'tB2 tC#3 'eC#3 'eC#3 'eC#3 'eB2
+        |4> 'e.G#2 'e.G#2 'eG#2 'e.G#2 'e.B2 'eB2
+    *]
+]

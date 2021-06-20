@@ -3,16 +3,19 @@ module Octune.Types.Env where
 import           Data.Map.Strict  (Map)
 import qualified Data.Map.Strict  as Map
 
-import           Data.Text        (Text)
-
 import           Octune.Types.AST
 
-type Env = Map Text
+type Env = Map QualifiedName
 
-buildASTEnv :: AST a -> Env (AST a)
-buildASTEnv (File _ decls) = Map.fromList (fmap envEntryFromDecl decls)
+-- TODO: normalize bare variables in decls by mapping name -> (name, module)
+buildASTEnv :: [AST a] -> Env (AST a)
+buildASTEnv asts = Map.fromList $ envBindingList =<< asts
   where
-    envEntryFromDecl :: AST a -> (Text, AST a)
-    envEntryFromDecl (Decl _ vName binding) = (vName, binding)
-    envEntryFromDecl _ = error "Parser should ensure this is a Decl"
-buildASTEnv _ = error "Should only call buildEnv on Files"
+    envBindingList :: AST a -> [(QualifiedName, AST a)]
+    envBindingList (File _ moduleName decls) = fmap envEntryFromDecl decls
+      where
+        envEntryFromDecl :: AST a -> (QualifiedName, AST a)
+        envEntryFromDecl (Decl _ vName binding) =
+            (QualName moduleName vName, binding)
+        envEntryFromDecl _ = error "Parser should ensure this is a Decl"
+    envBindingList _ = error "Should only be called on Files"

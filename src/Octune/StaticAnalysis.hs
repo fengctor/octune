@@ -1,18 +1,6 @@
-module Octune.StaticAnalysis where
+module Octune.StaticAnalysis (
+    module S
+) where
 
-import           Data.Foldable
-
-import           Data.Text                      (Text)
-
-import           Octune.StaticAnalysis.BarBeats
-import           Octune.StaticAnalysis.VarUsage
-import           Octune.Types
-
-staticAnalysis :: Env (AST Ann) -> AST Ann -> Either Text ()
-staticAnalysis env ast = traverse_ ($ env) checks
-  where
-    checks =
-        [ checkVarsDeclared
-        , checkNoVarCycles
-        , checkBeatsAssertions
-        ]
+import           Octune.StaticAnalysis.BarBeats as S
+import           Octune.StaticAnalysis.VarUsage as S

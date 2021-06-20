@@ -1,0 +1,29 @@
+module Asgore.Coda
+
+-- CODA
+
+self = [+ r l bass +]
+
+r = [
+    'eB4
+    |8> [+ 6C#5 6G#4 +] q._ eB4
+    |2> 'eC#5 q._
+]
+
+l = [
+    'eG#3
+    |8> [* 2 : 'e.C#4 'e.G#3 'eB3 'e.A#3 'e.F#3 'eC#3 *]
+    |2> 'eE4 q._
+]
+
+bass = [
+    'eB2
+    |8>
+    [* 2 : 
+        [+
+            [ 'eC#3 s_ 'eG#2 s_ 'eB2 'eA#2 s_ 'eF#2 s_ 'eC#2 ]
+            [* 8 : 'eC#2 *]
+        +]
+    *]
+    |2> 'eC#3 q._
+]

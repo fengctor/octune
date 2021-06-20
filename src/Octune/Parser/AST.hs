@@ -1,5 +1,8 @@
 module Octune.Parser.AST where
 
+import           Data.Text            (Text)
+import qualified Data.Text            as T
+
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
 
@@ -18,8 +21,21 @@ initAnn srcPos =
 getAnn :: Parser Ann
 getAnn = initAnn <$> getSourcePos
 
+pModuleComponent :: Parser Text
+pModuleComponent = T.pack <$> ((:) <$> upperChar <*> many lowerChar)
+
+pModuleDeclaration :: Parser [Text]
+pModuleDeclaration = lexeme $
+    moduleKW *> pModuleComponent `sepBy1` char '.'
+
 pFile :: Parser (AST Ann)
-pFile = File <$> getAnn <*> (lexeme space *> some pDecl <* eof)
+pFile = lexeme space *> pFileBase
+  where
+    pFileBase =
+        File
+        <$> getAnn
+        <*> pModuleDeclaration
+        <*> some pDecl <* eof
 
 pDecl :: Parser (AST Ann)
 pDecl = Decl <$> getAnn <*> (identifier <* equal) <*> pRhs
@@ -33,8 +49,12 @@ pSongExpr = between openSong closeSong $
 pLineExpr :: Parser (AST Ann)
 pLineExpr = try pLineNote <|> pVar <|> pLineApp
 
+pQualifiedName :: Parser QualifiedName
+pQualifiedName =
+    QualName <$> many (pModuleComponent <* char '.') <*> identifier
+
 pVar :: Parser (AST Ann)
-pVar = Var <$> getAnn <*> identifier
+pVar = Var <$> getAnn <*> pQualifiedName
 
 pLineNote :: Parser (AST Ann)
 pLineNote = LineNote <$> getAnn <*> pNote

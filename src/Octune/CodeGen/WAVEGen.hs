@@ -15,9 +15,9 @@ import           Octune.Types
 frameRate :: Int
 frameRate = 36000
 
-genWAVE :: Env Core -> Either Text WAVE
-genWAVE env =
-    case Map.lookup "main" env of
+genWAVE :: Env Core -> [Text] -> Either Text WAVE
+genWAVE env mainModule =
+    case Map.lookup (QualName mainModule "main") env of
         Just (CoreSong bpm coreExpr) ->
             WAVE header <$> genSamples env bpm frameRate coreExpr
         Just _ ->

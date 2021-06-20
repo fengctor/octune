@@ -36,12 +36,12 @@ genSamples :: Env Core -> Int -> Int -> Core -> Either Text WAVESamples
 genSamples env bpm frameRate = memoGenSamples
   where
     memoGenSamples :: Core -> Either Text WAVESamples
-    memoGenSamples (CoreVar vName) = cache Map.! vName
+    memoGenSamples (CoreVar qName) = cache Map.! qName
     memoGenSamples coreExpr        = go coreExpr
 
     -- Note: Strict Map is ok here since getting WHNF of Either Text WaveSamples
     --       will not evaluate past the constructor calls (Left, Right)
-    cache :: Map Text (Either Text WAVESamples)
+    cache :: Map QualifiedName (Either Text WAVESamples)
     cache = fmap go env
 
     go :: Core -> Either Text WAVESamples

@@ -1,0 +1,82 @@
+module Asgore.A
+
+-- A SECTION
+
+self = [
+    [+ 
+        r1
+        l1
+        bass1
+    +]
+    [+
+        r2
+        l2
+        bass2
+    +]
+
+    [+ 
+        r1
+        l1
+        bass1
+    +]
+    [+
+        synth2
+        r2
+        l2
+        bass2
+    +]
+]
+
+r1 = [
+    |2> 'eE4 e_ 'eG#4 e_
+    |4> tF4 s.F#4 'qF#4 'eG#4 e.C#4 e.D#4 eE4 
+    |4> q.G#4 e_ 'eE4 e_ 'eG#4 e_
+    |4> tF4 s.F#4 'qF#4 'eG#4 e.C#4 e.D#4 eB4
+    |2> q.G#4 e_
+]
+
+l1 = [
+    |2> 'eG#3 ''eG#3 eB2 ''eB2
+    |12> [* 3 : 'e.C#4 'e.C#4 'eB3 'eG#3 e_ 'eB3 e_ *]
+    |2> 'e.C#4 'e.C#4 'eB3
+]
+
+bass1 = [
+    |2> 'eC#3 ''eC#3 'eE3 ''eE3
+    |6> [* 3 : sA2 'sA2 sE3 'sA2 'sA2 'sA2 sA3 'sA2 *]
+    |2> 'eA2 e_ 'eB2 e_
+    |6> [* 3 : sC#3 'sC#3 sG#3 'sC#3 'sC#3 'sC#3 sC#4 'sC#3 *]
+]
+
+
+synth2 = [
+    |2> 'eE5 e_ 'eF#5 e_
+    |4> tF#5 tF5 e.F#5 hF#5 q_
+    |4> tF#5 tF5 e.F#5 hF#5 q_
+    |4> h.G#5 q_
+    |2> qF#5 q_
+]
+
+r2 = [
+    |2> 'eG#4 e_ 'eA4 e_
+    |4> tA4 s.B4 'qB4 eC#5 e.E4 e.F#4 eG#4
+    |4> tA4 s.B4 'qB4 eC#5 'e.D#5 e.D#5 eB4
+    |4> tG4 s.G#4 eG#4 hG#4 e_ sA4 sG#4
+    |2> qF#4 q_
+]
+
+l2 = [
+    |2> 'eC#3 ''eC#3 'eB2 ''eB2
+    |4> [* 2 : 'e.E4 'e.E4 'eD#4 *]
+    |4> [* 2 : 'e.F#4 'e.F#4 'eE4 *]
+    |4> [* 2 : 'e.C#4 'e.C#4 'eC#4 *]
+    |2> qD#4 q_
+]
+
+bass2 = [
+    |2> 'eG#3 ''eC#3 'eE3 ''eE3
+    |4> [* 2 : sA2 'sA2 sE3 'sA2 'sA2 'sA2 sA3 'sA2 *]
+    |4> [* 2 : sB2 'sB2 sF#3 'sB2 'sB2 'sB2 sB3 'sB2 *]
+    |4> [* 2 : sA2 'sA2 sE3 'sA2 'sA2 'sA2 sA3 'sA2 *]
+    |2> qB2 q_
+]

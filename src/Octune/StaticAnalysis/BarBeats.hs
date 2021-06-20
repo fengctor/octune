@@ -3,6 +3,8 @@
 
 module Octune.StaticAnalysis.BarBeats where
 
+import           GHC.Real            (Ratio (..))
+
 import           Control.Monad
 
 import           Data.Foldable
@@ -48,9 +50,9 @@ checkBeatsAssertions env = traverse_ go env
                           , ":"
                           , "\n    - Beat assertion failure"
                           , "\n      Expected beats: "
-                          , show beats
+                          , showRational beats
                           , "\n        Actual beats: "
-                          , show curBarLength
+                          , showRational curBarLength
                           ]
                 _ -> error "Should not have Nothing beatLength in line-exprs"
     checkBeatsList es = checkBeatsList (dropWhile notBeatsAssertion es)
@@ -58,3 +60,7 @@ checkBeatsAssertions env = traverse_ go env
     notBeatsAssertion :: AST Ann -> Bool
     notBeatsAssertion BeatsAssertion{} = False
     notBeatsAssertion _                = True
+
+    showRational :: Rational -> String
+    showRational (n :% 1) = show n
+    showRational (n :% d) = show n ++ "/" ++ show d

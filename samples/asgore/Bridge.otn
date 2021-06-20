@@ -1,0 +1,81 @@
+module Asgore.Bridge
+
+-- BRIDGE
+
+self = [ pass lead ]
+
+pass = [+ rPass lPass bassPass +]
+
+rPass = [
+    |4> tC#5 tC5 q..C#5 q_ 'eG#4 'eB4
+    |4> tC#5 tC5 e.C#5 e_ 'eE5 'sF#5 'eE5 'e.D#5 'eE5
+    |4> tC5 s.C#5 eC#5 q_ 'eG#4 s_ 'eB4 s_ 'eE5
+    |2> tD5 s.D#5 qD#5 e_
+]
+
+lPass = [
+    |4> hG#4 q_ 'eE4 'eF#4
+    |4> qG#4 e_ 'eB4 'sC#5 'eB4 'e.G#4 'eB4
+    |4> qG#4 h._
+    |2> h_
+]
+
+bassPass = [
+    |4> [* 4 : [+ [ 'sA2 'sA2 'sA2 'sA2 ] [ e_ 'sA3 s_ ] +] *]
+    |4> [* 4 : [+ [ 'sB2 'sB2 'sB2 'sB2 ] [ e_ 'sB3 s_ ] +] *]
+    |4> [* 4 : [+ [ 'sC#3 'sC#3 'sC#3 'sC#3 ] [ e_ 'sC#4 s_ ] +] *]
+    |2> [* 2 : [+ [ 'sG#2 'sG#2 'sG#2 'sG#2 ] [ e_ 'sG#3 s_ ] +] *]
+]
+
+lead = [+
+    rLead
+    lLead
+    suppLead
+    bassLead
++]
+
+rLead = [
+    |2> 'e.C#5 'e.E5 'eF#5
+    |4> hG#5 q_ 'eE5 'eF#5
+    |4> qG#5 e_ eF#5 eE5 sF#5 e.D#5 eB4
+    |4> hC#5 q_ 'eE5 'eF#5
+    |4> qG#5 e_ eF#5 eE5 sF#5 e.D#5 eB5
+    |4> hG#5 q_ 'eE5 'eF#5
+    |4> qG#5 e_ eF#5 eE5 sF#5 e.D#5 eB4
+    |4> h.C#5 q_
+    |4> [+ [ 'h.D#5 q_ ] rToC +]
+]
+rToC = [
+    q._ 'eE5 'sD#5 'eC#5 'e.B4 'eD#5
+]
+
+lLead = [
+    |2> 'e.E4 'e.G#4 'eB4
+    |4> hC#5 h_ 
+    |4> qC#5 e_ 'eB4 eG#4 sB4 'e.G#4 eG#4
+    |4> hA4 h_
+    |4> qC#5 e_ 'eB4 eG#4 sB4 'e.G#4 eG#4
+    |4> hF#4 h_
+    |4> qG#4 e_ 'eB4 eG#4 sB4 'e.G#4 eG#4
+    |4> h.A4 q_
+    |4> h.G#4 q_
+]
+
+suppLead = [
+    |2> h_
+    |28> [* 7 : |4> Asgore.B.rRiff *]
+    |4> q._ 'eG#4 'sF#4 'eG#4 'e.D#4 'eB3
+]
+
+bassLead = [
+    |2> 'e.G#2 'e.G#2 eG#2
+    |4> [* 4 : [+ [ 'sF#2 'sF#2 'sF#2 'sF#2 ] [ e_ 'sF#3 s_ ] +] *]
+    |4> [* 4 : [+ [ 'sG#2 'sG#2 'sG#2 'sG#2 ] [ e_ 'sG#3 s_ ] +] *]
+    |4> [* 4 : [+ [ 'sA2 'sA2 'sA2 'sA2 ] [ e_ 'sA3 s_ ] +] *]
+    |4> [* 4 : [+ [ 'sG#2 'sG#2 'sG#2 'sG#2 ] [ e_ 'sG#3 s_ ] +] *]
+
+    |4> [* 4 : [+ [ 'sF#2 'sF#2 'sF#2 'sF#2 ] [ e_ 'sF#3 s_ ] +] *]
+    |4> [* 4 : [+ [ 'sG#2 'sG#2 'sG#2 'sG#2 ] [ e_ 'sG#3 s_ ] +] *]
+    |4> [* 4 : [+ [ 'sA2 'sA2 'sA2 'sA2 ] [ e_ 'sA3 s_ ] +] *]
+    |4> 'e.G#2 'e.G#2 'eG#2 'e.B2 'e.D#3 'eG#3
+]

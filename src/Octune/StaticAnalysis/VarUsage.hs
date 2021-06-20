@@ -14,25 +14,28 @@ import qualified Data.Text           as T
 
 import           Text.Megaparsec.Pos
 
-import           Octune.Types        (AST (..), Ann (..), Env)
+import           Octune.Types
 
 -- Checks that variables used have all been declared
 checkVarsDeclared :: Env (AST Ann) -> Either Text ()
 checkVarsDeclared env = traverse_ (uncurry checkDeclRhs) (Map.toList env)
   where
-    checkDeclRhs :: Text -> AST Ann -> Either Text ()
-    checkDeclRhs declName (Song _ _ expr) =
-        checkDeclRhs declName expr
-    -- TODO: use linePos for better error message
-    checkDeclRhs declName (Var ann vName) =
-        case Map.lookup vName env of
+    checkDeclRhs :: QualifiedName -> AST Ann -> Either Text ()
+    checkDeclRhs qDeclName (Song _ _ expr) =
+        checkDeclRhs qDeclName expr
+    checkDeclRhs qDeclName (Var ann qVarName) =
+        case Map.lookup qVarName env of
             Nothing ->
                 Left $ mconcat
                     [ T.pack (sourcePosPretty $ pos ann)
                     , ":\nUndefined variable `"
-                    , vName
-                    , "` in declaration of `"
-                    , declName
+                    , variableName qVarName
+                    , "` in module `"
+                    , T.intercalate "." (moduleQual qVarName)
+                    , "` used in the declaration of `"
+                    , variableName qDeclName
+                    , "` in module `"
+                    , T.intercalate "." (moduleQual qDeclName)
                     , "`"
                     ]
             Just _ ->
@@ -49,10 +52,13 @@ checkVarsDeclared env = traverse_ (uncurry checkDeclRhs) (Map.toList env)
 checkNoVarCycles :: Env (AST Ann) -> Either Text ()
 checkNoVarCycles env = errorOnSelfEdges *> errorOnCycles
   where
-    edgesFromVar :: Text -> AST Ann -> (Text, Text, [Text])
+    edgesFromVar
+        :: QualifiedName
+        -> AST Ann
+        -> (QualifiedName, QualifiedName, [QualifiedName])
     edgesFromVar v expr = (v, v, varsIn expr)
 
-    varsIn :: AST Ann -> [Text]
+    varsIn :: AST Ann -> [QualifiedName]
     varsIn (Song _ _ expr)    = varsIn expr
     varsIn (Var _ v)          = [v]
     varsIn LineNote{}         = []
@@ -65,7 +71,7 @@ checkNoVarCycles env = errorOnSelfEdges *> errorOnCycles
     (varGraph, varNodeFromVertex, _) =
         Graph.graphFromEdges $ fmap (uncurry edgesFromVar) (Map.toList env)
 
-    varFromVertex :: Graph.Vertex -> Text
+    varFromVertex :: Graph.Vertex -> QualifiedName
     varFromVertex vertex = let (v,_,_) = varNodeFromVertex vertex in v
 
     errorOnSelfEdges :: Either Text ()
@@ -75,7 +81,7 @@ checkNoVarCycles env = errorOnSelfEdges *> errorOnCycles
             cs ->
                 Left $ mconcat
                     [ "Variables cannot reference themselves:\n"
-                    , T.unlines $ fmap (T.append "\t- ") badVars
+                    , T.unlines $ fmap (T.append "    - ") badVars
                     ]
                   where
                     showVar = denoteVar . varFromVertex . fst
@@ -95,8 +101,15 @@ checkNoVarCycles env = errorOnSelfEdges *> errorOnCycles
                                 fmap
                                     (denoteVar . varFromVertex)
                                     (toList component)
-                         in T.intercalate " -> " (cycleVars ++ [v])
+                         in T.intercalate " -> " (cycleVars ++ [v,"..."])
                     badComponents = fmap showComponent cs
 
-    denoteVar :: Text -> Text
-    denoteVar var = mconcat ["`",var,"`"]
+    denoteVar :: QualifiedName -> Text
+    denoteVar qName =
+        mconcat
+            [ "`"
+            , T.intercalate "." (moduleQual qName)
+            , "."
+            , variableName qName
+            , "`"
+            ]

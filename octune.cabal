@@ -30,6 +30,7 @@ library
       Octune.CodeGen
       Octune.CodeGen.SamplesGen
       Octune.CodeGen.WAVEGen
+      Octune.NameResolution
       Octune.Parser
       Octune.Parser.AST
       Octune.Parser.Lexeme

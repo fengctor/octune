@@ -46,9 +46,12 @@ openMerge = () <$ lexeme (string "[+")
 closeMerge :: Parser ()
 closeMerge = () <$ lexeme (string "+]")
 
+moduleKW :: Parser Text
+moduleKW = lexeme (string "module")
+
 identifier :: Parser Text
 identifier = T.pack <$>
-    lexeme ((:) <$> letterChar <*> many idChar <?> "identifier")
+    lexeme ((:) <$> lowerChar <*> many idChar <?> "identifier")
   where
     idChar :: Parser Char
     idChar = alphaNumChar <|> char '#'
