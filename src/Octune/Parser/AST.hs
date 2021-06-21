@@ -22,7 +22,7 @@ getAnn :: Parser Ann
 getAnn = initAnn <$> getSourcePos
 
 pModuleComponent :: Parser Text
-pModuleComponent = T.pack <$> ((:) <$> upperChar <*> many lowerChar)
+pModuleComponent = T.pack <$> ((:) <$> upperChar <*> many letterChar)
 
 pModuleDeclaration :: Parser [Text]
 pModuleDeclaration = lexeme $
