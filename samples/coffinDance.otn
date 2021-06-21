@@ -1,3 +1,5 @@
+module CoffinDance
+
 -- Coffin Dance
 
 main = { 120 : chorus }

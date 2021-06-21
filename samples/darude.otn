@@ -1,3 +1,5 @@
+module Darude
+
 -- Darude Sandstorm
 
 main = { 136 : [+ melody bass +] }
