@@ -60,7 +60,7 @@ pLineNote :: Parser (AST Ann)
 pLineNote = LineNote <$> getAnn <*> pNote
 
 pLineApp :: Parser (AST Ann)
-pLineApp = pRepeatApp <|> pMergeApp <|> pSeqApp
+pLineApp = pRepeatApp <|> try pMergeApp <|> pChord <|> pSeqApp
   where
     pRepeatApp = between openRepeat closeRepeat $
         LineApp
@@ -83,3 +83,19 @@ pBeatAssert = lexeme $
     BeatsAssertion
     <$> getAnn
     <*> (char '|' *> optional (pBeats <* char '>'))
+
+
+-- Syntactic sugar
+
+-- Parses `[+ mb : p1 ... pn +]`, -- equivalent to `[+ mbp1 ... mbpn +]`
+-- where `m` is a note modifier list, `b` is a beat count and
+-- `p1`, ..., `pn` are pitches
+pChord :: Parser (AST Ann)
+pChord = between openMerge closeMerge $ do
+    ann <- getAnn
+    noteMods <- many pNoteModifier
+    beats <- lexeme pBeats
+    colon
+    pitches <- many (lexeme pPitch)
+    let notes = Note noteMods beats <$> pitches
+    pure $ LineApp ann Merge (LineNote ann <$> notes)
