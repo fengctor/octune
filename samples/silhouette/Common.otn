@@ -1,0 +1,24 @@
+module Silhouette.Common
+
+mainBass = [
+    [+ 4F#2 [* 8 : ''eF#3 *] +]
+    [+ 4G2 [* 8 : ''eG3 *] +]
+    [+ 4A2 [* 8 : ''eA3 *] +]
+    [+ 4A#2 [* 8 : ''eA#3 *] +]
+    [+ 4B2 [* 8 : ''eB3 *] +]
+    [+ 4F#2 [* 8 : ''eF#3 *] +]
+    [+ 4G2 [* 8 : ''eG3 *] +]
+    [+ 4A2 [* 8 : ''eA3 *] +]
+]
+
+nanimo = [ qB4 qA4 qD4 ]
+nanimoHigh = [ qB5 qA5 qD5 ]
+
+guitarRiff = [
+    |4> e_ eD4 eE4 'qA4 'qA4 eD4
+    |4> eE4 'qA4 'qA4 eG4 eF#4 eD4
+]
+guitarRiffDownOctave = [
+    |4> e_ eD3 eE3 'qA3 'qA3 eD3
+    |4> eE3 'qA3 'qA3 eG3 eF#3 eD3
+]

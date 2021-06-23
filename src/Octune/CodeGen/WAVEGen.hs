@@ -13,7 +13,7 @@ import           Octune.Types
 
 -- Number of frames per second
 frameRate :: Int
-frameRate = 36000
+frameRate = 48000
 
 genWAVE :: Env Core -> [Text] -> Either Text WAVE
 genWAVE env mainModule =

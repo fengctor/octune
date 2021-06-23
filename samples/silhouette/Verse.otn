@@ -1,0 +1,47 @@
+module Silhouette.Verse
+
+self = [+ r l bass +]
+
+r = [
+    melody 
+    melodyUpOctave
+]
+melody = [
+    |8> qF#4 qD4 qE4 h.F#4 q_ qD4
+    |8> 'eF#4 eF#4 eE4 eD4 qE4 'eA4 q.A4 qE4 qC#4 qE4
+    |16> qD4 q_ Silhouette.Common.nanimo q_ Silhouette.Common.nanimo
+         q_ qD4 'qC#4 qC#4 qD4 qE4 qD4
+]
+melodyUpOctave = [
+    |8> qF#5 qD5 qE5 h.F#5 q_ qD5
+    |8> 'eF#5 eF#5 eE5 eD5 qE5 'eA5 q.A5 qE5 qC#5 qE5
+    |16> qD5 q_ Silhouette.Common.nanimoHigh q_ Silhouette.Common.nanimoHigh
+         q_ qD5 'qC#5 qC#5 qD5 qE5 qD5
+]
+
+l = [
+    |4> q_ ''qD3 q_ ''qD3
+    |4> q_ ''qE3 q_ ''qE3
+    |4> q_ ''qF#3 q_ ''qF#3
+    |4> q_ ''qG3 q_ ''qG3
+    |4> q_ ''qA3 q_ ''qA3
+    |4> q_ ''qD3 q_ ''qD3
+    |4> q_ ''qE3 q_ ''qE3
+    |4> q_ ''qC#3 q_ ''qC#3
+
+    |32> [* 4 : Silhouette.Common.guitarRiff *]
+]
+
+bass = [
+    Silhouette.Common.mainBass
+
+    |4> [+ 4F#2 [* 8 : ''eF#3 *] +]
+    |4> [+ 4G2 [* 8 : ''eG3 *] +]
+    |4> [+ 4A2 [* 8 : ''eA3 *] +]
+    |4> [+ 4A#2 [* 8 : ''eA#3 *] +]
+    |4> [+ 4B2 [* 8 : ''eB3 *] +]
+    |4> [+ 4C3 [* 8 : ''eC4 *] +] -- Change of bass here
+    |4> [+ 4G2 [* 8 : ''eG3 *] +]
+    |4> [+ 4A2 [* 8 : ''eA3 *] +]
+
+]

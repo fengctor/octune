@@ -1,0 +1,121 @@
+module Silhouette.Chorus
+
+self = [+ r l bass guitarLine +]
+
+r = [
+    |16> melodyA
+    |16> qD5 q_
+         Silhouette.Common.nanimoHigh q_
+         Silhouette.Common.nanimoHigh q_
+         qD5 'qC#5 qC#5 qD5 qE5 qF#5
+
+    |16> melodyB
+    |16> qD5 q_
+         Silhouette.Common.nanimoHigh q_
+         Silhouette.Common.nanimoHigh q_
+         qD5 'qC#5 qC#5 qD5 qE5 qD5
+]
+
+melodyA = [
+    |4> qD5 qA4 qD5 'qF#5
+    |4> qF#5 eE5 eD5 'hE5
+    |4> qE5 qA4 qC#5 qE5
+    |4> qG5 eF#5 eE5 qF#5 qE5
+]
+melodyB = [
+    |4> qD5 qA4 qD5 'qF#5
+    |4> qF#5 eE5 eD5 'hE5
+    |4> qE5 qA4 qC#5 'eE5 eE5
+    |4> qG5 'qF#5 qF#5 qE5
+]
+
+l = [
+    |16> accomp
+    |16> 'qB4 q_
+         'qD5 qD5 qA4 q_
+         'qD5 qD5 qB4 q_
+         qB4 'qA4 qA4 qB4 'qC#5 qC#5
+
+    |16> accomp
+    |16> 'qB4 q_
+         'qD5 qD5 qA4 q_
+         'qD5 qD5 qB4 q_
+         qB4 'qA4 qA4 qB4 'qC#5 qA4
+]
+accomp = [
+    |4> qA4 qD4 qF#4 'qA4
+    |4> qA4 eG4 eF#4 'hG4
+    |4> qA4 qE4 qA4 qC#5
+    |4> 'qA#4 eA#4 eB4 qC#5 qA#4
+]
+
+bass = [* 2 : Silhouette.Common.mainBass *]
+
+guitarLine = [
+    32_
+    |32> [* 4 : Silhouette.Common.guitarRiffDownOctave *]
+]
+
+
+-- TODO: chop off first 4 beats of all lines except r
+reprise = [+ repriseR repriseL repriseBass repriseGuitarLine +]
+
+repriseR = [
+    |16> melodyA
+    |16> qD5 q_
+         Silhouette.Common.nanimoHigh q_
+         Silhouette.Common.nanimoHigh q_
+         qD5 'qC#5 qC#5 qD5 qE5 qF#5
+
+    |16> melodyB
+    |16> qD5 q_
+         Silhouette.Common.nanimoHigh q_
+         Silhouette.Common.nanimoHigh q_
+         hD5 qG5 qA5 qE5 qF#5
+
+    |16> melodyC
+    |16> qD5 q_
+         Silhouette.Common.nanimoHigh q_
+         Silhouette.Common.nanimoHigh q_
+         hD5 qC#5 qA5 qE5 qF#5
+
+    |16> melodyD 
+    |16> qD5 q_
+         Silhouette.Common.nanimoHigh q_
+         Silhouette.Common.nanimoHigh q_
+         hD5 qC#5 qD5 qE5 qD5
+]
+
+melodyC = [
+    |4> qD5 qA4 qD5 'qF#5
+    |4> qF#5 eE5 eD5 'hE5
+    |4> qE5 qA4 qC#5 qE5
+    |4> qG5 'eF#5 'eF#5 qF#5 qE5
+]
+melodyD = [
+    |4> qD5 qA4 qD5 'qF#5
+    |4> qF#5 eE5 eD5 'hE5
+    |4> qE5 qA4 qC#5 'eE5 eE5
+    |4> qG5 qA5 qF#5 qE5
+]
+
+repriseL = [* 2 : l *]
+
+repriseBass = [* 2 : bass *]
+
+repriseGuitarLine = [
+    |32> 4_ repriseGuitarRiffTail
+    |96> 
+    [* 3 : 
+        |32> 4F#4 repriseGuitarRiffTail
+    *]
+]
+repriseGuitarRiffTail = [
+    |4> 4E4
+    |4> q.F#4 eG4 hG4
+    |4> q.C#4 eE4 hE4
+    |4> 4D4
+    |4> q.E4 eF#4 hF#4
+    |4> 4G4
+    |4> q.C#4 eE4 hE4
+]

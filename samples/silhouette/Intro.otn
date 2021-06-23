@@ -1,0 +1,58 @@
+module Silhouette.Intro
+
+self = [
+    [+ r1 bass1 +]
+    [+ r2 l2 Silhouette.Common.mainBass +]
+]
+
+r1 = [ 
+    |8> r1Riff eG5 eF#5 eD5
+    |8> r1Riff eB5 eG5 eD5
+    |8> r1Riff eG5 eF#5 eD5
+    |8> r1Riff q._
+]
+r1Riff = [
+    |4> eB4 eA4 eB4 'qD5 eA4 eB4 eA4
+    |2.5> eB4 'qD5 eA4 eB4
+]
+
+bass1 = [
+    [* 2 :
+        |8> eB2 [* 3 : 'eB3 *]
+            eA2 [* 3 : 'eA3 *]
+            eG2 [* 3 : 'eG3 *]
+            eA2 [* 3 : 'eA3 *]
+    *]
+
+    |8> [* 2 : 'eB2 'eB3 *]
+        [* 2 : 'eA2 'eA3 *]
+        [* 2 : 'eG2 'eG3 *]
+        [* 2 : 'eA2 'eA3 *]
+
+    |8> [* 4 : [+ 'eB2 'eB3 +] *]
+        [* 4 : [+ 'eA2 'eA3 +] *]
+        [* 8 : [+ 'sG2 'sG3 +] *]
+        [+ eA2 eA3 +] q._
+]
+
+r2 = [
+    |4> q.D4 q.A3 qD4
+    |4> q.E4 q.A3 qE4
+    |4> q.F#4 q.G4 eF#4 eE4
+    |4> q.D4 q.G5 qF#5
+    |4> q.D5 q.G5 qF#5
+    |4> h.D5 q_
+    |4> q.G5 q.F#5 qD5
+    |4> q.E5 q.F#5 qC#5
+]
+
+l2 = [
+    |4> 'q.A3 'q.F#3 'qA3
+    |4> 'q.B3 'q.G3 'qB3
+    |4> 'q.C#4 'q.C#4 'eB3 'eA3
+    |4> 'q.F#3 'q.A#3 'qC#4
+    |4> 'q.F#4 'q.B4 'qA4
+    |4> h.A4 q_
+    |4> 'q.B4 'q.C#5 'qB4
+    |4> 'q.C#5 'q.A4 'qE4
+]

@@ -1,0 +1,63 @@
+module Silhouette.Bridge
+
+self = [
+    [+ r1 l1 bass1 +]
+    [+ r2 synth2 l2 bass2 +]
+]
+
+r1 = [
+    |8> Silhouette.Intro.r1Riff eG5 eF#5 eD5
+    |8> Silhouette.Intro.r1Riff eB5 eG5 eD5
+
+    |4> eB4 eA4 eB4 'qB5 eA4 eB4 eA4
+    |4> eB4 'qB5 eA4 eB4 eF#5 eG5 eA5
+    |8> Silhouette.Intro.r1Riff eD5 qE5
+]
+
+l1 = [* 4 :
+    |4> eF#4 eE4 eF#4 qB4 eE4 eF#4 eE4
+    |4> eF#4 'qB4 eE4 qF#4 qA4
+*]
+
+bass1 = Silhouette.Intro.bass1
+
+r2 = [
+    |4> q_ eA5 q.F#5 'qE5
+    |4> 'qE5 eA5 q.F#5 'qE5
+    |4> 'qE5 eB5 q.F#5 'qE5
+    |4> qD5 q_ qB4 qC#5
+    |4> 'hD5 'hD5
+    |4> 'eF#5 eF#5 eE5 q.F#5 qE5
+    |8> 'q.D5 'q.D5 'q.D5 'q.D5 qD5 qE5
+    |8> hF#5 hE5 hG5 hA5
+]
+
+synth2 = [
+    4D5
+    4C#5
+    4D5
+    '2B4
+]
+
+l2 = [
+    |4> q.D4 'q.C#4 qC#4
+    |4> q.D4 'q.C#4 qC#4
+    |4> q.E4 q.D4 qF#4
+    |4> q.E4 'q.D4 qD4
+    |4> q.F#4 'q.E4 qB3
+    |4> q.F#4 'q.E4 qB3
+    |8> 'q.B3 q.B3 'q.G4 q.G4 'qB4 qB4
+    |8> 8C#5
+]
+
+bass2 = [
+    |4> [+ [ 'q.G2 'q.G2 qG2 ] [* 8 : ''eG3 *] +]
+    |4> [+ [ 'q.A2 'q.A2 qA2 ] [* 8 : ''eA3 *] +]
+    |4> [+ [ 'q.B2 'q.B2 qB2 ] [* 8 : ''eB3 *] +]
+    |4> [+ [ 'q.F#2 'q.F#2 qF#2 ] [* 8 : ''eF#3 *] +]
+    |4> [+ [ 'q.E2 'q.E2 qE2 ] [* 8 : ''eE3 *] +]
+    |4> [+ [ 'q.F#2 'q.F#2 qF#2 ] [* 8 : ''eF#3 *] +]
+    |8> [+ [ 'q.G2 'q.G2 'q.G2 'q.G2 'qG2 qG2 ] [* 16 : ''eG3 *] +]
+    |8> [* 4 : [+ 'qA2 ''qA3 +] *]
+        [+ 4A2 4A3 +]
+]
