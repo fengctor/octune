@@ -13,7 +13,7 @@ import           Octune.Types
 
 -- Default amplitude of a wave
 amplitude :: Int32
-amplitude = 1 `shiftL` 27
+amplitude = 1 `shiftL` 28
 
 -- Multiplier for frequency to go up a semitone
 semitoneFreqMultiplier :: Rational
