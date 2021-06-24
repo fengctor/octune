@@ -1,7 +1,7 @@
 module Silhouette.Outro
 
 self = [
-    [+ r l bass +]
+    [+ r l bass drums +]
     coda
     introClosing
 ]
@@ -25,15 +25,21 @@ l = [
 ]
 
 bass = [
-    |4> [+ ['q.G2 'q.G2 'qG2 ] [* 8 : ''eG3 *] +]
-    |4> [+ ['q.A2 'q.A2 'qA2 ] [* 8 : ''eA3 *] +]
-    |4> [+ ['q.A#2 'q.A#2 'qA#2 ] [* 8 : ''eA#3 *] +]
+    |4> 'q.G2 'q.G2 'qG2
+    |4> 'q.A2 'q.A2 'qA2
+    |4> 'q.A#2 'q.A#2 'qA#2
     |4> [ [+ 'hB2 'hB3 +] [+ qB2 qB3 +] [+ qA2 qA3 +] ]
-    |4> [+ ['q.G2 'q.G2 'qG2 ] [* 8 : ''eG3 *] +]
-    |4> [+ ['q.A2 'q.A2 'qA2 ] [* 8 : ''eA3 *] +]
+    |4> 'q.G2 'q.G2 'qG2
+    |4> 'q.A2 'q.A2 'qA2
 ]
 
-coda = [+ codaR woOh codaL codaGuitarLine codaBass +]
+drums = [
+    |16> [* 3 : e%% e% e% e%% e% e% e%% e% *]
+         h%% q% q%
+    |8> [* 4 : Silhouette.Common.drumRiff *]
+]
+
+coda = [+ codaR woOh codaL codaGuitarLine codaBass codaDrums +]
 
 codaR = [
     |4> eE5 eD5 eE5 eD5 hD5
@@ -90,14 +96,14 @@ codaGuitarLine = [
 
 codaBass = [
     [* 2 :
-        |4> [+ ['q.F#2 'q.F#2 'qF#2 ] [* 8 : ''eF#3 *] +]
-        |4> [+ ['q.G2 'q.G2 'qG2 ] [* 8 : ''eG3 *] +]
-        |4> [+ ['q.A2 'q.A2 'qA2 ] [* 8 : ''eA3 *] +]
-        |4> [+ ['q.A#2 'q.A#2 'qA#2 ] [* 8 : ''eA#3 *] +]
-        |4> [+ ['q.B2 'q.B2 'qB2 ] [* 8 : ''eB3 *] +]
-        |4> [+ ['q.F#2 'q.F#2 'qF#2 ] [* 8 : ''eF#3 *] +]
-        |4> [+ ['q.G2 'q.G2 'qG2 ] [* 8 : ''eG3 *] +]
-        |4> [+ ['q.A2 'q.A2 'qA2 ] [* 8 : ''eA3 *] +]
+        |4> 'q.F#2 'q.F#2 'qF#2
+        |4> 'q.G2 'q.G2 'qG2
+        |4> 'q.A2 'q.A2 'qA2
+        |4> 'q.A#2 'q.A#2 'qA#2
+        |4> 'q.B2 'q.B2 'qB2
+        |4> 'q.F#2 'q.F#2 'qF#2
+        |4> 'q.G2 'q.G2 'qG2
+        |4> 'q.A2 'q.A2 'qA2
     *]
 
     [* 2 :
@@ -108,7 +114,14 @@ codaBass = [
     *]
 ]
 
-introClosing = [+ introClosingR introClosingBass +]
+codaDrums = [
+    [* 64 : e%% e% *]
+
+    |16> [* 14 : q%% *]
+         e%% s% s% q%%
+]
+
+introClosing = [+ introClosingR introClosingBass introClosingDrums +]
 
 introClosingR = [
     |8> Silhouette.Intro.r1Riff eG5 eF#5 eD5
@@ -125,4 +138,9 @@ introClosingBass = [
         [+ hA2 [ 'eA3 [* 3 : [+ 'eF#3 'eA3 +] *] ] +]
     |4> [+ hG2 [ 'eG3 [* 3 : [+ 'eD3 'eG3 +] *] ] +]
         [+ hA2 [ 'eA3 [* 3 : [+ 'eE3 'eA3 +] *] ] +]
+]
+
+introClosingDrums = [
+    [* 8 : e%% e% *]
+    |8> e_ q%% q.%% e% q%% q%% e% [* 4 : e%% *]
 ]

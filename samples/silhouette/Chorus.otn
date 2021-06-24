@@ -1,6 +1,6 @@
 module Silhouette.Chorus
 
-self = [+ r l bass guitarLine +]
+self = [+ r l bass guitarLine drums +]
 
 r = [
     |16> melodyA
@@ -56,9 +56,17 @@ guitarLine = [
     |32> [* 4 : Silhouette.Common.guitarRiffDownOctave *]
 ]
 
+drums = [
+    |64> [* 3 :
+             [* 6 : Silhouette.Common.drumRiff *]
+             e% e% e%% e% e% e%% e%% s%% s%%
+         *]
+         [* 8 : Silhouette.Common.drumRiff *]
+]
+
 
 -- TODO: chop off first 4 beats of all lines except r
-reprise = [+ repriseR repriseL repriseBass repriseGuitarLine +]
+reprise = [+ repriseR repriseL repriseBass repriseGuitarLine repriseDrums +]
 
 repriseR = [
     |16> melodyA
@@ -85,7 +93,6 @@ repriseR = [
          Silhouette.Common.nanimoHigh q_
          hD5 qC#5 qD5 qE5 qD5
 ]
-
 melodyC = [
     |4> qD5 qA4 qD5 'qF#5
     |4> qF#5 eE5 eD5 'hE5
@@ -97,6 +104,26 @@ melodyD = [
     |4> qF#5 eE5 eD5 'hE5
     |4> qE5 qA4 qC#5 'eE5 eE5
     |4> qG5 qA5 qF#5 qE5
+]
+
+repriseDrums = [
+    |32> 4_
+         [* 4 : Silhouette.Common.drumRiff *]
+         [ e% e% e%% e% e% e%% e%% s%% s%% ]
+         [* 6 : Silhouette.Common.drumRiff *]
+         [ e% e% e%% e% e% e%% e%% s%% s%% ]
+
+    |64> [* 2 :
+             [* 6 : Silhouette.Common.drumRiff *]
+             [ e% e% e%% e% e% e%% e%% s%% s%% ]
+             [* 6 : Silhouette.Common.drumRiff *]
+             [ e% e% e%% e% e% e%% s%% s% s%% s% ]
+         *]
+
+    |32> [* 6 : Silhouette.Common.drumRiff *]
+         [ e% e% e%% e% e% e%% e%% s%% s%% ]
+         [* 6 : Silhouette.Common.drumRiff *]
+         [ e% e% e%% e% e%% e%% e%% e%% ]
 ]
 
 repriseL = [* 2 : l *]

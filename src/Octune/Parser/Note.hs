@@ -48,11 +48,19 @@ pOctave = digitChar >>= validateOctave
     validateOctave n =
         pure $ digitToInt n
 
+pPercussion :: Parser Percussion
+pPercussion = do
+    _ <- char '%'
+    mClap <- optional (char '%')
+    pure $ case mClap of
+        Nothing -> Snare
+        Just _  -> Clap
+
 pPitch :: Parser Pitch
 pPitch =
     Rest <$ char '_'
     <|>
-    Snare <$ char '%'
+    Drum <$> pPercussion
     <|>
     Tone <$> pLetter <*> optional (try pAccidental) <*> pOctave
 

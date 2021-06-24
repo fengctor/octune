@@ -11,9 +11,14 @@ data Accidental
 
 type Octave = Int
 
+data Percussion
+    = Snare
+    | Clap
+    deriving (Show, Read, Eq)
+
 data Pitch
     = Tone !Letter !(Maybe Accidental) !Octave
-    | Snare
+    | Drum Percussion
     | Rest
     deriving (Show, Read, Eq)
 

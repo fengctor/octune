@@ -3,7 +3,7 @@ module Silhouette
 main = { 183 : silhouette }
 
 silhouette = [
-    [* 4 : [+ ''qG#3 ''qA3 +] *]
+    [* 4 : q%% *]
     Silhouette.Intro.self
     [+ 6D5 Silhouette.Verse.self +]
     Silhouette.Prechorus.first
@@ -21,4 +21,5 @@ chorusVerseTransition = [+
     [ |8> 'eD4 'eD4 e_ 'eE4 'eE4 e_ 'eF#4 eF#4 e_ 'eG4 eG4 e_ h_ ]
     [ |8> 'eB3 'eB3 e_ 'eC#4 'eC#4 e_ 'eD4 eD4 e_ 'eE4 'eE4 e_ h_ ]
     [ |8> 'eB2 'eB2 e_ 'eC#3 'eC#3 e_ 'eD3 eD3 e_ 'eE3 'eE3 e_ h_ ]
+    [ |8> q.%% q.%% q.%% q.%% [* 4 : s% *] e% e% ]
 +]

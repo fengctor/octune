@@ -93,7 +93,10 @@ noteToSamples bpm frameRate (Note noteMods beats pitch) =
 pitchWave :: Int -> Pitch -> WAVESamples
 pitchWave _ Rest = [[0]]
 -- TODO: adjust based on framerate
-pitchWave _ Snare = snare ++ repeat [0]
+pitchWave _ (Drum percussion) =
+    case percussion of
+        Snare -> snareSample ++ repeat [0]
+        Clap  -> clapSample ++ repeat [0]
 pitchWave frameRate (Tone letter accidental octave) = squareWave
   where
     -- Frequency of `Sound letter Nothing 4`

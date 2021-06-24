@@ -22,3 +22,5 @@ guitarRiffDownOctave = [
     |4> e_ eD3 eE3 'qA3 'qA3 eD3
     |4> eE3 'qA3 'qA3 eG3 eF#3 eD3
 ]
+
+drumRiff = [ e% e% e%% e% ]

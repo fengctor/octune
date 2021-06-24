@@ -1,8 +1,8 @@
 module Silhouette.Intro
 
 self = [
-    [+ r1 bass1 +]
-    [+ r2 l2 Silhouette.Common.mainBass +]
+    [+ r1 bass1 drums1 +]
+    [+ r2 l2 Silhouette.Common.mainBass drums2 +]
 ]
 
 r1 = [ 
@@ -35,6 +35,16 @@ bass1 = [
         [+ eA2 eA3 +] q._
 ]
 
+drums1 = [
+    |16> [* 8 :  q_ q%% *]
+
+    |8> [* 4 : q_ q%% *]
+
+    |8> [* 4 : q%% *]
+        [* 8 : s%% *]
+        [+ h%% h%% +]
+]
+
 r2 = [
     |4> q.D4 q.A3 qD4
     |4> q.E4 q.A3 qE4
@@ -55,4 +65,9 @@ l2 = [
     |4> h.A4 q_
     |4> 'q.B4 'q.C#5 'qB4
     |4> 'q.C#5 'q.A4 'qE4
+]
+
+drums2 = [
+    |32> [* 14 : Silhouette.Common.drumRiff *]
+         e% e% e%% e% e% e%% e% s%% s%%
 ]

@@ -1,6 +1,6 @@
 module Silhouette.Verse
 
-self = [+ r l bass +]
+self = [+ r l bass drums +]
 
 r = [
     melody 
@@ -35,13 +35,22 @@ l = [
 bass = [
     Silhouette.Common.mainBass
 
-    |4> [+ 4F#2 [* 8 : ''eF#3 *] +]
-    |4> [+ 4G2 [* 8 : ''eG3 *] +]
-    |4> [+ 4A2 [* 8 : ''eA3 *] +]
-    |4> [+ 4A#2 [* 8 : ''eA#3 *] +]
-    |4> [+ 4B2 [* 8 : ''eB3 *] +]
-    |4> [+ 4C3 [* 8 : ''eC4 *] +] -- Change of bass here
-    |4> [+ 4G2 [* 8 : ''eG3 *] +]
-    |4> [+ 4A2 [* 8 : ''eA3 *] +]
+    |4> 4F#2
+    |4> 4G2
+    |4> 4A2
+    |4> 4A#2
+    |4> 4B2
+    |4> 4C3 -- Change of bass here
+    |4> 4G2
+    |4> 4A2
 
+]
+
+drums = [
+    |32> [* 16 : Silhouette.Common.drumRiff *]
+
+    |16> [* 4 : e% e% e%% e% e% e% e%% e%% *]
+    |16> [* 3 : e% e% e%% e% e% e% e%% e%% *]
+         e% e% e%% e% e% e%% e%% s%% s%%
+         
 ]
