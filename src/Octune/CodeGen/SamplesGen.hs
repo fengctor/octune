@@ -9,6 +9,8 @@ import           Data.Text       (Text)
 
 import           Data.WAVE       (WAVESamples)
 
+import           Data.Sounds
+
 import           Octune.Types
 
 -- Default amplitude of a wave
@@ -90,7 +92,9 @@ noteToSamples bpm frameRate (Note noteMods beats pitch) =
 -- frameRate / frequency = wavelength in frames
 pitchWave :: Int -> Pitch -> WAVESamples
 pitchWave _ Rest = [[0]]
-pitchWave frameRate (Sound letter accidental octave) = squareWave
+-- TODO: adjust based on framerate
+pitchWave _ Snare = snare ++ repeat [0]
+pitchWave frameRate (Tone letter accidental octave) = squareWave
   where
     -- Frequency of `Sound letter Nothing 4`
     -- Obtained from https://en.wikipedia.org/wiki/Piano_key_frequencies

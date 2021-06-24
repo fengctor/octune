@@ -12,7 +12,8 @@ data Accidental
 type Octave = Int
 
 data Pitch
-    = Sound !Letter !(Maybe Accidental) !Octave
+    = Tone !Letter !(Maybe Accidental) !Octave
+    | Snare
     | Rest
     deriving (Show, Read, Eq)
 

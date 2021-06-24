@@ -52,7 +52,9 @@ pPitch :: Parser Pitch
 pPitch =
     Rest <$ char '_'
     <|>
-    Sound <$> pLetter <*> optional (try pAccidental) <*> pOctave
+    Snare <$ char '%'
+    <|>
+    Tone <$> pLetter <*> optional (try pAccidental) <*> pOctave
 
 pNoteModifier :: Parser NoteModifier
 pNoteModifier = do

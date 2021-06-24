@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Data.Combinator
+      Data.Sounds
       Octune.Annotate
       Octune.CodeGen
       Octune.CodeGen.SamplesGen
