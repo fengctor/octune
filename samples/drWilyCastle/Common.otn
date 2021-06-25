@@ -1,0 +1,3 @@
+module DrWilyCastle.Common
+
+drums = [ |2> e% s% s% e%% s% s% ]

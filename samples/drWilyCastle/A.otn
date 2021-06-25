@@ -1,0 +1,72 @@
+module DrWilyCastle.A
+
+base1 = [+
+    riff1
+    bass
+    drums
++]
+
+base2 = [+
+    riff2
+    bass
+    drums
++]
+
+riff1 = [ |32> riffHead eD#5 eE5 ]
+riff2 = [ |32> riffHead eB4 eC#5 ]
+riffHead = [
+    |4> e_ 'sE4 'sE4 'eE4 'sE4 'sE4 eE4 eC#4 e_ 'sC#4 sC#4
+    |4> 'eE4 'sE4 'sE4 eE4 eC#4 e_ eG#4 eF#4 eG#4
+
+    |4> e_ 'sE4 'sE4 'eE4 'sE4 'sE4 eE4 eC#4 e_ eG#4
+    |4> e_ eF#4 e_ eE4 e_ eF#4 q_
+
+    |4> e_ 'sF#4 'sF#4 'eF#4 'sF#4 'sF#4 eF#4 eD#4 e_ eG#4
+    |11> e_ eF#4 e_ eE4 e_ eD#4 e_ 
+         'qC#4 eC#4 eG#4 eB4 qA#4 e_
+         'qC#4 eC#4 eG#4 eB4 qA#4 
+]
+
+support1 = [ |32> supportHead eB4 eC#5 ]
+support2 = [ |32> supportHead q_ ]
+supportHead = [
+    |4> e_ 'sC#4 'sC#4 'eC#4 'sC#4 'sC#4 eC#4 eG#3 e_ 'sG#3 sG#3
+    |4> 'eC#4 'sC#4 'sC#4 eC#4 eG#3 e_ eE4 eD#4 eE4
+
+    |4> e_ 'sC#4 'sC#4 'eC#4 'sC#4 'sC#4 eC#4 eA3 e_ 'eE4
+    |4> e_ eD#4 e_ eC#4 e_ eD#4 q_
+
+    |4> e_ 'sD#4 'sD#4 'eD#4 'sD#4 'sD#4 eD#4 eB3 e_ eE4
+    |4> e_ eD#4 e_ eC#4 e_ eB3 q_
+
+    |4> h_ h_
+    |3> h_ q_ 
+]
+
+bass = [
+    |8> [* 16 : 'eC#4 *]
+
+    |8> [* 16 : 'eA3 *]
+
+    |8> [* 16 : 'eB3 *]
+
+    |8> [* 14 : 'eC#4 *]
+        eB3 'eC#4
+]
+
+drums = [
+    |32> [* 16 : DrWilyCastle.Common.drums *]
+]
+
+variantMelody1 = [
+    |8> h.G#3 eF#3 qB3 qA3 qG#3 qA3 eG#3
+    |8> h.G#3 eF#3 qB3 qA3 qG#3 qA3 eE3
+    |8> 'hE3 eE3 eF#3 eG#3 3.5D#3 q_
+]
+
+variantMelody2 = [
+    |8> 'hC#5 qC#5 eB4 qC#5 q.E5 eG#5 eF#5 eE5 eD#5
+    |8> 'hC#5 qC#5 eB4 qC#5 'q.E5 eE5 eF#5 qE5
+    |8> 'hD#5 eD#5 eC#5 eB4 q.G#5 qF#5 qE5 'qD#5
+    |4> eD#5 eE5 eD#5 2.5C#5
+]

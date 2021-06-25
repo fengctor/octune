@@ -1,0 +1,33 @@
+module DrWilyCastle
+
+main = { 180 : drWilyCastle }
+
+drWilyCastle = [
+    [+ 
+        DrWilyCastle.A.base1
+        DrWilyCastle.A.support1
+    +]
+    [+
+        DrWilyCastle.A.base2
+        DrWilyCastle.A.support2
+    +]
+
+    DrWilyCastle.B.self
+
+    [+
+        DrWilyCastle.A.base2
+        DrWilyCastle.A.variantMelody1
+    +]
+
+    [+
+        DrWilyCastle.A.base2
+        DrWilyCastle.A.variantMelody2
+    +]
+
+    [+
+        DrWilyCastle.B.self
+        [ 31.5_ [+ e : A3 C#4 E4 +] ]
+    +]
+
+    DrWilyCastle.C.self
+]
