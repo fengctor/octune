@@ -27,7 +27,7 @@ support = [
 
     |4> e_ 'eC#4 eC#4 eB3 qC#4 eE4 eD#4
     |4> 'eD#4 'qD#4 'qD#4 'qD#4 e_
-    |4> 4_
+    |4> e_ [* 3 : 'sG#3 'sG#3 'eG#3 *] 'sG#3 'sG#3
     |4> 4_
 ]
 
