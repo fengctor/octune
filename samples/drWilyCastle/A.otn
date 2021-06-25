@@ -2,12 +2,14 @@ module DrWilyCastle.A
 
 base1 = [+
     riff1
+    support1
     bass
     drums
 +]
 
 base2 = [+
     riff2
+    support2
     bass
     drums
 +]
@@ -44,14 +46,14 @@ supportHead = [
 ]
 
 bass = [
-    |8> [* 8 : 'eC#4 'sC#4 'sC#4 *]
+    |8> [* 8 : 'eC#3 'sC#3 'sC#3 *]
 
-    |8> [* 8 : 'eA3 'sA3 'sA3 *]
+    |8> [* 8 : 'eA2 'sA2 'sA2 *]
 
-    |8> [* 8 : 'eB3 'sB3 'sB3 *]
+    |8> [* 8 : 'eB2 'sB2 'sB2 *]
 
-    |8> [* 7 : 'eC#4 'sC#4 'sC#4 *]
-        eB3 'eC#4
+    |8> [* 7 : 'eC#3 'sC#3 'sC#3 *]
+        eB2 'eC#3
 ]
 
 drums = [

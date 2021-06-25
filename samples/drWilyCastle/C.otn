@@ -2,7 +2,8 @@ module DrWilyCastle.C
 
 self = [+
     melody
-    support
+    support1
+    support2
     bass
     drums
 +]
@@ -19,7 +20,7 @@ melody = [
     |4> 4_
 ]
 
-support = [
+support1 = [
     |4> e_ 'eC#4 eC#4 eB3 qC#4 eE4 eD#4
     |4> 'eD#4 'qD#4 'qD#4 'qD#4 eD#4
     |4> e_ 'eE4 eE4 e_ eE4 q_ eD#4
@@ -31,7 +32,7 @@ support = [
     |4> 4_
 ]
 
-bass = [
+support2 = [
     |4> e_ 'eA3 'eA3 eA3 qA3 eA3 eB3
     |4> 'eB3 'qB3 'qB3 qB3 eC#3
     |4> e_ 'eC#4 eD#3 'eD#4 eE3 'eE4 eD#3 eC#3
@@ -40,7 +41,17 @@ bass = [
     |4> e_ 'eA3 'eA3 eA3 qA3 eA3 eB3
     |4> 'eB3 'qB3 'qB3 eB3 qC4
     |4> eB3 eC#4 eB3 2.5G#3
-    |4> e_ eC4 eC#4 e_ eB3 eC4 eC#4 e_
+]
+
+bass = [
+    |4> [* 4 : 'eA2 'sA2 'sA2 *]
+    |4> [* 4 : 'eB2 'sB2 'sB2 *]
+    |4> e_ 'eC#3 eD#2 'eD#3 eE2 'eE3 eD#2 eC#2
+    |4> e_ 'eC#3 eD#2 'eD#3 eE2 'eE3 eD#2 eA2
+    |4> [* 4 : 'eA2 'sA2 'sA2 *]
+    |4> [* 3 : 'eB2 'sB2 'sB2 *] 'eC2 'sC2 'sC2
+    |4> [* 4 : 'eC#3 'sC#3 'sC#3 *]
+    |4> e_ eC3 eC#3 e_ eB2 eC3 eC#3 e_
 ]
 
 drums = [ |32> [* 16 : DrWilyCastle.Common.drums *] ]
