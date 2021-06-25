@@ -105,26 +105,39 @@ pitchWave frameRate (Tone letter accidental octave) = squareWave
     -- frequency calculation below
     baseFrequency :: Rational
     baseFrequency =
-        case letter of
-            C -> 261.6256
-            D -> 293.6648
-            E -> 329.6276
-            F -> 349.2282
-            G -> 391.9954
-            A -> 440.0000
-            B -> 493.8833
+        case (letter, accidental) of
+            (C, Just Flat)  -> 246.9417
+            (C, Nothing)    -> 261.6256
+            (C, Just Sharp) -> 277.1826
+            (D, Just Flat)  -> 277.1826
+            (D, Nothing)    -> 293.6648
+            (D, Just Sharp) -> 311.1270
+            (E, Just Flat)  -> 311.1270
+            (E, Nothing)    -> 329.6276
+            (E, Just Sharp) -> 349.2282
+            (F, Just Flat)  -> 329.6276
+            (F, Nothing)    -> 349.2282
+            (F, Just Sharp) -> 369.9944
+            (G, Just Flat)  -> 369.9944
+            (G, Nothing)    -> 391.9954
+            (G, Just Sharp) -> 415.3047
+            (A, Just Flat)  -> 415.3047
+            (A, Nothing)    -> 440.0000
+            (A, Just Sharp) -> 466.1638
+            (B, Just Flat)  -> 466.1638
+            (B, Nothing)    -> 493.8833
+            (B, Just Sharp) -> 523.2511
 
-    accidentalMultiplier :: Rational
+    {-accidentalMultiplier :: Rational
     accidentalMultiplier =
         case accidental of
             Nothing    -> 1
             Just Flat  -> 1 / semitoneFreqMultiplier
-            Just Sharp -> semitoneFreqMultiplier
+            Just Sharp -> semitoneFreqMultiplier-}
 
     -- Note: `octave` should be valid (0 <= octave <= 8) from parsing
     frequency :: Rational
-    frequency =
-        accidentalMultiplier * baseFrequency * (2^^(octave - 4))
+    frequency = baseFrequency * (2^^(octave - 4))
 
     squareWave :: WAVESamples
     squareWave =
