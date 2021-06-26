@@ -141,8 +141,12 @@ pitchWave frameRate (Tone letter accidental octave) = squareWave
 
     squareWave :: WAVESamples
     squareWave =
-        let halfFrames = fromEnum $ (toRational frameRate / frequency) / 2
+        let wavelenFrames = round $ (toRational frameRate / frequency)
+            firstHalf = wavelenFrames `div` 2
+            secondHalf = wavelenFrames - firstHalf
          in mconcat
-                [ replicate halfFrames [-amplitude]
-                , replicate halfFrames [amplitude]
+                [ replicate firstHalf [-amplitude]
+                , replicate firstHalf [amplitude]
+                , replicate secondHalf [-amplitude]
+                , replicate secondHalf [amplitude]
                 ]
