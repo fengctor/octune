@@ -80,6 +80,14 @@ mantissaToRational = go (1 / 10)
     go colMult (d:ds) =
         colMult * toRational (digitToInt d) + go (colMult / 10) ds
 
+pRational :: Parser Rational
+pRational = do
+    base <- L.decimal
+    mMantissa <- optional (char '.' *> many digitChar)
+    pure $ case mMantissa of
+        Nothing       -> base
+        Just mantissa -> base + mantissaToRational mantissa
+
 pBeats :: Parser Beats
 pBeats = pRelativeBeats <|> pRational
   where
@@ -104,14 +112,6 @@ pBeats = pRelativeBeats <|> pRational
         -- Note: 1 + 1/2 + 1/4 + 1/8 + ... + 1/(2^n)
         --     = 2 - (1/2)^n
         pure $ base * (2 - (1/2)^^length dots)
-
-    pRational :: Parser Beats
-    pRational = do
-        base <- L.decimal
-        mMantissa <- optional (char '.' *> many digitChar)
-        pure $ case mMantissa of
-            Nothing       -> base
-            Just mantissa -> base + mantissaToRational mantissa
 
 pNote :: Parser Note
 pNote = lexeme $ Note <$> many pNoteModifier <*> pBeats <*> pPitch

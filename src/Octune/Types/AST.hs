@@ -8,6 +8,7 @@ data LineFun
     = Seq
     | Merge
     | Repeat !Int
+    | Volume Rational
     deriving (Show, Read, Eq)
 
 data QualifiedName

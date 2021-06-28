@@ -60,7 +60,14 @@ pLineNote :: Parser (AST Ann)
 pLineNote = LineNote <$> getAnn <*> pNote
 
 pLineApp :: Parser (AST Ann)
-pLineApp = pRepeatApp <|> try pMergeApp <|> pChord <|> pSeqApp
+pLineApp =
+    pRepeatApp
+    <|>
+    try pMergeApp <|> pChord
+    <|>
+    pVolumeApp
+    <|>
+    pSeqApp
   where
     pRepeatApp = between openRepeat closeRepeat $
         LineApp
@@ -76,6 +83,11 @@ pLineApp = pRepeatApp <|> try pMergeApp <|> pChord <|> pSeqApp
         LineApp
         <$> getAnn
         <^> Seq
+        <*> some (pBeatAssert <|> pLineExpr)
+    pVolumeApp = between openVolume closeVolume $
+        LineApp
+        <$> getAnn
+        <*> (Volume <$> (lexeme pRational <* colon))
         <*> some (pBeatAssert <|> pLineExpr)
 
 pBeatAssert :: Parser (AST Ann)

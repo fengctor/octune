@@ -42,6 +42,7 @@ annotateBeatLengths env = cache
                 Seq      -> ((+), id)
                 Merge    -> (max, id)
                 Repeat n -> ((+), (* toRational n))
+                Volume _ -> ((+), id)
         foldFun acc = fmap (combineFun acc . beatFun) . beatLength . getAug
         thisBeatLength = foldM foldFun 0 annotatedArgs
         newAnnotation = a { beatLength = thisBeatLength }

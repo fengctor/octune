@@ -1,5 +1,7 @@
 module Octune.CodeGen.SamplesGen where
 
+import           GHC.Real        (Ratio (..))
+
 import           Data.Bits
 import           Data.Int
 import           Data.List
@@ -15,7 +17,7 @@ import           Octune.Types
 
 -- Default amplitude of a wave
 amplitude :: Int32
-amplitude = 1 `shiftL` 28
+amplitude = 1 `shiftL` 27 + 1 `shiftL` 26
 
 -- Multiplier for frequency to go up a semitone
 semitoneFreqMultiplier :: Rational
@@ -61,6 +63,11 @@ genSamples env bpm frameRate = memoGenSamples
         . traverse memoGenSamples
     applyLineFun (Repeat n) =
         fmap (mconcat . replicate n . mconcat)
+        . traverse memoGenSamples
+    applyLineFun (Volume (num :% denom)) =
+        fmap
+            ((fmap . fmap) ((`div` fromIntegral denom) . (* fromIntegral num))
+            . mconcat)
         . traverse memoGenSamples
 
 applyModifier :: WAVESamples -> NoteModifier -> WAVESamples
@@ -128,13 +135,6 @@ pitchWave frameRate (Tone letter accidental octave) = squareWave
             (B, Nothing)    -> 493.8833
             (B, Just Sharp) -> 523.2511
 
-    {-accidentalMultiplier :: Rational
-    accidentalMultiplier =
-        case accidental of
-            Nothing    -> 1
-            Just Flat  -> 1 / semitoneFreqMultiplier
-            Just Sharp -> semitoneFreqMultiplier-}
-
     -- Note: `octave` should be valid (0 <= octave <= 8) from parsing
     frequency :: Rational
     frequency = baseFrequency * (2^^(octave - 4))
@@ -146,7 +146,5 @@ pitchWave frameRate (Tone letter accidental octave) = squareWave
             secondHalf = wavelenFrames - firstHalf
          in mconcat
                 [ replicate firstHalf [-amplitude]
-                , replicate firstHalf [amplitude]
-                , replicate secondHalf [-amplitude]
                 , replicate secondHalf [amplitude]
                 ]

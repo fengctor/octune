@@ -46,6 +46,12 @@ openMerge = () <$ lexeme (string "[+")
 closeMerge :: Parser ()
 closeMerge = () <$ lexeme (string "+]")
 
+openVolume :: Parser ()
+openVolume = () <$ lexeme (string "[!")
+
+closeVolume :: Parser ()
+closeVolume = () <$ lexeme (string "!]")
+
 moduleKW :: Parser Text
 moduleKW = lexeme (string "module")
 
