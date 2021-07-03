@@ -146,5 +146,7 @@ pitchWave frameRate (Tone letter accidental octave) = squareWave
             secondHalf = wavelenFrames - firstHalf
          in mconcat
                 [ replicate firstHalf [-amplitude]
+                , replicate firstHalf [amplitude]
+                , replicate secondHalf [-amplitude]
                 , replicate secondHalf [amplitude]
                 ]
