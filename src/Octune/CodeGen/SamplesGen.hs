@@ -2,6 +2,8 @@ module Octune.CodeGen.SamplesGen where
 
 import           GHC.Real        (Ratio (..))
 
+import           Control.Lens
+
 import           Data.Bits
 import           Data.Int
 import           Data.List
@@ -54,21 +56,25 @@ genSamples env bpm frameRate = memoGenSamples
     go (CoreApp lineFun lineArgs) = applyLineFun lineFun lineArgs
     go _                          = error "Should not be called on CoreSongs"
 
+    intMultRat :: Rational -> Int32 -> Int32
+    intMultRat (num :% denom) =
+        (`div` fromIntegral denom)
+        . (* fromIntegral num)
+
     applyLineFun :: LineFun -> [Core] -> Either Text WAVESamples
-    applyLineFun Seq =
-        fmap mconcat
-        . traverse memoGenSamples
-    applyLineFun Merge =
-        fmap mergeSamples
-        . traverse memoGenSamples
-    applyLineFun (Repeat n) =
-        fmap (mconcat . replicate n . mconcat)
-        . traverse memoGenSamples
-    applyLineFun (Volume (num :% denom)) =
-        fmap
-            ((fmap . fmap) ((`div` fromIntegral denom) . (* fromIntegral num))
-            . mconcat)
-        . traverse memoGenSamples
+    applyLineFun Seq cs =
+        cs & traversed %%~ memoGenSamples
+           & _Right %~ mconcat
+    applyLineFun Merge cs =
+        cs & traversed %%~ memoGenSamples
+           & _Right %~ mergeSamples
+    applyLineFun (Repeat n) cs =
+        cs & traversed %%~ memoGenSamples
+           & _Right %~ mconcat . replicate n . mconcat
+    applyLineFun (Volume rat) cs =
+        cs & traversed %%~ memoGenSamples
+           & _Right %~ mconcat
+           & _Right . traversed . traversed %~ intMultRat rat
 
 applyModifier :: WAVESamples -> NoteModifier -> WAVESamples
 applyModifier samples Detached = chopped ++ remainingSilence
