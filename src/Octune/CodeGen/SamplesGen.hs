@@ -91,23 +91,23 @@ applyModifier Staccato samples =
 -- TODO: figure out how to use Folds to get `unmodifiedSamples`
 --       without sacrificing performance
 noteToSamples :: Int -> Int -> Note -> WAVESamples
-noteToSamples bpm frameRate (Note noteMods beats pitch) =
+noteToSamples bpm frameRate (Note noteMods beats sound) =
     foldlOf' traversed (flip applyModifier) unmodifiedSamples noteMods
   where
     secondsPerBeat = (beats / toRational bpm) * 60
     durationFrames = round (secondsPerBeat * toRational frameRate)
-    unmodifiedSamples = take durationFrames $ cycle (pitchWave frameRate pitch)
+    unmodifiedSamples = take durationFrames $ cycle (soundWave frameRate sound)
 
--- Sample line constituting a single wavelength of the pitch.
+-- Sample line constituting a single wavelength of the sound.
 -- frameRate / frequency = wavelength in frames
-pitchWave :: Int -> Pitch -> WAVESamples
-pitchWave _ Rest = [[0]]
+soundWave :: Int -> Sound -> WAVESamples
+soundWave _ Rest = [[0]]
 -- TODO: adjust based on framerate
-pitchWave _ (Drum percussion) =
+soundWave _ (Drum percussion) =
     case percussion of
         Snare -> snareSample ++ repeat [0]
         Clap  -> clapSample ++ repeat [0]
-pitchWave frameRate (Tone letter accidental octave) = squareWave
+soundWave frameRate (Pitch letter accidental octave) = squareWave
   where
     -- Frequency of `Sound letter accidental 4`
     -- Obtained from https://en.wikipedia.org/wiki/Piano_key_frequencies

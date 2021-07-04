@@ -57,13 +57,13 @@ pPercussion = do
         Nothing -> Snare
         Just _  -> Clap
 
-pPitch :: Parser Pitch
-pPitch =
+pSound :: Parser Sound
+pSound =
     Rest <$ char '_'
     <|>
     Drum <$> pPercussion
     <|>
-    Tone <$> pLetter <*> optional (try pAccidental) <*> pOctave
+    Pitch <$> pLetter <*> optional (try pAccidental) <*> pOctave
 
 pNoteModifier :: Parser NoteModifier
 pNoteModifier = do
@@ -115,6 +115,6 @@ pBeats = pRelativeBeats <|> pRational
         pure $ base * (2 - (1/2)^^length dots)
 
 pNote :: Parser Note
-pNote = lexeme $ Note <$> many pNoteModifier <*> pBeats <*> pPitch
+pNote = lexeme $ Note <$> many pNoteModifier <*> pBeats <*> pSound
 
 

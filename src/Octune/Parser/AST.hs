@@ -110,6 +110,6 @@ pChord = between openMerge closeMerge $ do
     noteMods <- many pNoteModifier
     beats <- lexeme pBeats
     colon
-    pitches <- many (lexeme pPitch)
+    pitches <- many (lexeme pSound)
     let notes = Note noteMods beats <$> pitches
     pure $ LineApp ann Merge (LineNote ann <$> notes)

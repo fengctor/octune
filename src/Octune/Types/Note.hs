@@ -16,8 +16,8 @@ data Percussion
     | Clap
     deriving (Show, Read, Eq)
 
-data Pitch
-    = Tone !Letter !(Maybe Accidental) !Octave
+data Sound
+    = Pitch !Letter !(Maybe Accidental) !Octave
     | Drum Percussion
     | Rest
     deriving (Show, Read, Eq)
@@ -30,7 +30,7 @@ data NoteModifier
 
 type Beats = Rational
 
-data Note = Note [NoteModifier] !Beats Pitch
+data Note = Note [NoteModifier] !Beats Sound
     deriving (Show, Read, Eq)
 
 
