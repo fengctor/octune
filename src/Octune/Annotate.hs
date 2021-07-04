@@ -1,8 +1,8 @@
 module Octune.Annotate where
 
-import           Control.Monad
-
 import qualified Data.Map.Strict as Map
+
+import           Control.Lens
 
 import           Octune.Types
 
@@ -17,23 +17,23 @@ annotateBeatLengths env = cache
     memoAnnotate expr          = go expr
 
     go :: AST Ann -> AST Ann
-    go (Song a bpm expr) =
+    go (Song ann bpm expr) =
         Song newAnnotation bpm annotatedExpr
       where
         annotatedExpr = memoAnnotate expr
-        thisBeatLength = beatLength (getAug annotatedExpr)
-        newAnnotation = a { beatLength = thisBeatLength }
-    go (Var a vName) =
+        thisBeatLength = annotatedExpr ^. annotation . beatLength
+        newAnnotation = ann & beatLength .~ thisBeatLength
+    go (Var ann vName) =
         Var newAnnotation vName
       where
         annotatedExpansion = memoAnnotate (env Map.! vName)
-        thisBeatLength = beatLength (getAug annotatedExpansion)
-        newAnnotation = a { beatLength = thisBeatLength }
-    go (LineNote a note@(Note _ beats _)) =
+        thisBeatLength = annotatedExpansion ^. annotation . beatLength
+        newAnnotation = ann & beatLength .~ thisBeatLength
+    go (LineNote ann note@(Note _ beats _)) =
         LineNote newAnnotation note
       where
-        newAnnotation = a { beatLength = Just beats }
-    go (LineApp a lFun args) =
+        newAnnotation = ann & beatLength ?~ beats
+    go (LineApp ann lFun args) =
         LineApp newAnnotation lFun annotatedArgs
       where
         annotatedArgs = fmap memoAnnotate args
@@ -43,11 +43,13 @@ annotateBeatLengths env = cache
                 Merge    -> (max, id)
                 Repeat n -> ((+), (* toRational n))
                 Volume _ -> ((+), id)
-        foldFun acc = fmap (combineFun acc . beatFun) . beatLength . getAug
-        thisBeatLength = foldM foldFun 0 annotatedArgs
-        newAnnotation = a { beatLength = thisBeatLength }
-    go (BeatsAssertion a mb) =
-        BeatsAssertion newAnnotation mb
-      where
-        newAnnotation = a { beatLength = Just 0 }
+        thisBeatLength =
+            foldlOf'
+                (traversed . annotation . beatLength . _Just)
+                (\a c -> combineFun a (beatFun c))
+                0
+                annotatedArgs
+        newAnnotation = ann & beatLength ?~ thisBeatLength
+    -- Beats assertions do not take up time
+    go b@BeatsAssertion{} = b
     go _ = error "Should not have File or Decl from parsing"

@@ -2,6 +2,10 @@ module Octune.Types.AST where
 
 import           Data.Text         (Text)
 
+import           Control.Lens
+
+import           Data.Combinator
+
 import           Octune.Types.Note
 
 data LineFun
@@ -36,11 +40,18 @@ data AST a
     | BeatsAssertion a (Maybe Beats)
     deriving (Show, Read, Eq)
 
-getAug :: AST a -> a
-getAug (File a _ _)         = a
-getAug (Decl a _ _)         = a
-getAug (Song a _ _)         = a
-getAug (Var a _)            = a
-getAug (LineNote a _)       = a
-getAug (LineApp a _ _)      = a
-getAug (BeatsAssertion a _) = a
+annotation :: Lens' (AST a) a
+annotation handler (File ann m ds) =
+    File <$> handler ann <^> m <^> ds
+annotation handler (Decl ann v expr) =
+    Decl <$> handler ann <^> v <^> expr
+annotation handler (Song ann bpm expr) =
+    Song <$> handler ann <^> bpm <^> expr
+annotation handler (Var ann v) =
+    Var <$> handler ann <^> v
+annotation handler (LineNote ann note) =
+    LineNote <$> handler ann <^> note
+annotation handler (LineApp ann lFun args) =
+    LineApp <$> handler ann <^> lFun <^> args
+annotation handler (BeatsAssertion ann mBeats) =
+    BeatsAssertion <$> handler ann <^> mBeats

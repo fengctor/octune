@@ -14,8 +14,8 @@ import           Octune.Types
 initAnn :: SourcePos -> Ann
 initAnn srcPos =
     Ann
-        { pos = srcPos
-        , beatLength = Nothing
+        { _pos = srcPos
+        , _beatLength = Nothing
         }
 
 getAnn :: Parser Ann
