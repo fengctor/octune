@@ -1,3 +1,5 @@
+{-# LANGUAGE ApplicativeDo #-}
+
 module Octune.Parser.AST where
 
 import           Data.Text            (Text)
