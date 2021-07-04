@@ -3,7 +3,16 @@ Octune is a domain-specific language (DSL) for creating 8-bit music,
 compiling to WAV.
 
 The name is a pun on "oct-" for the 8-bit music produced and
-"tune" for, well, tune.
+"tune" for, well, tune .
+
+- [Usage](#usage)
+- [Language Description](#language-description)
+  * [Syntax](#syntax)
+  * [Semantics](#semantics)
+    + [Line Expressions](#line-expressions)
+    + [Songs](#songs)
+- [Octune Music Examples](#octune-music-examples)
+- [Documentation TODO](#documentation-todo)
 
 # Usage
 Octune is used simply by feeding the executable the Octune song files (`.otn`)
