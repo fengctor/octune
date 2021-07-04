@@ -39,6 +39,7 @@ The syntax for an Octune file is given by the following grammar in EBNF:
 
 
 <line_expression> ::= <note>
+                   |  <variable_usage>
                    |  <sequence>
                    |  <merge>
                    |  <repeat>
@@ -50,8 +51,10 @@ The syntax for an Octune file is given by the following grammar in EBNF:
 <note_modifier> ::= "'"
                  |  "''"
 
-<beats> ::= non-negative decimal number
+<beats> ::= <non_negative_decimal>
          |  <musical_length> {"."}
+
+<non_negative_decimal> ::= non-negative decimal number
 
 <musical_length> ::= "t" | "s" | "e" | "q" | "h"
 
@@ -70,6 +73,10 @@ The syntax for an Octune file is given by the following grammar in EBNF:
 <percussion> ::= "%" | "%%"
 
 
+<variable_usage> ::= <variable>
+                  |  <module_component>, ".", <variable_usage>
+
+
 <sequence> ::= "[" {<line_expression>}+ "]"
 
 
@@ -79,6 +86,9 @@ The syntax for an Octune file is given by the following grammar in EBNF:
 <repeat> ::= "[*" <non_negative_int> ":" {<line_expression>}+ "*]"
 
 <non_negative_int> ::= non-negative integer
+
+
+<volume_modify> ::= "[!" <non_negative_decimal> ":" {<line_expression>}+ "!]"
 ```
 Furthermore, line comments are preceded by `--` and
 block comments are surrounded by `{-` and `-}`.
