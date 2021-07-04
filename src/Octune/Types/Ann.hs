@@ -1,11 +1,22 @@
 module Octune.Types.Ann where
 
-import           Octune.Types.Note (Beats)
+import           Control.Lens
+
 import           Text.Megaparsec
+
+import           Octune.Types.Note (Beats)
 
 data Ann
     = Ann
-        { pos        :: !SourcePos
-        , beatLength :: Maybe Beats
+        { _pos        :: !SourcePos
+        , _beatLength :: Maybe Beats
         }
     deriving (Show, Read, Eq)
+
+pos :: Lens' Ann SourcePos
+pos handler ann =
+    fmap (\p -> ann { _pos = p }) $ handler (_pos ann)
+
+beatLength :: Lens' Ann (Maybe Beats)
+beatLength handler ann =
+    fmap (\b -> ann { _beatLength = b }) $ handler (_beatLength ann)

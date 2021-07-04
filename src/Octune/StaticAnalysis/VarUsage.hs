@@ -3,6 +3,9 @@
 
 module Octune.StaticAnalysis.VarUsage where
 
+import           Control.Lens
+import           Data.Text.Lens
+
 import           Data.Foldable
 
 import           Data.Graph          (Graph)
@@ -27,7 +30,7 @@ checkVarsDeclared env = traverse_ (uncurry checkDeclRhs) (Map.toList env)
         case Map.lookup qVarName env of
             Nothing ->
                 Left $ mconcat
-                    [ T.pack (sourcePosPretty $ pos ann)
+                    [ ann ^. pos . to sourcePosPretty . packed
                     , ":\nUndefined variable `"
                     , variableName qVarName
                     , "` in module `"

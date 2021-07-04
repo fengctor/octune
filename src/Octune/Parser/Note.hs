@@ -1,3 +1,4 @@
+{-# LANGUAGE ApplicativeDo    #-}
 {-# LANGUAGE TypeApplications #-}
 
 module Octune.Parser.Note where

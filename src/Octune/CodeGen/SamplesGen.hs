@@ -2,6 +2,8 @@ module Octune.CodeGen.SamplesGen where
 
 import           GHC.Real        (Ratio (..))
 
+import           Control.Lens
+
 import           Data.Bits
 import           Data.Int
 import           Data.List
@@ -24,7 +26,7 @@ semitoneFreqMultiplier :: Rational
 semitoneFreqMultiplier = 1.05946309435929
 
 
-{-# INLINE [0] zipWithHom #-}
+-- {-# INLINE [0] zipWithHom #-}
 zipWithHom :: (a -> a -> a) -> [a] -> [a] -> [a]
 zipWithHom f = go
   where
@@ -54,46 +56,47 @@ genSamples env bpm frameRate = memoGenSamples
     go (CoreApp lineFun lineArgs) = applyLineFun lineFun lineArgs
     go _                          = error "Should not be called on CoreSongs"
 
+    multRat :: Rational -> Int32 -> Int32
+    multRat (num :% denom) =
+        (`div` fromIntegral denom)
+        . (* fromIntegral num)
+
     applyLineFun :: LineFun -> [Core] -> Either Text WAVESamples
-    applyLineFun Seq =
-        fmap mconcat
-        . traverse memoGenSamples
-    applyLineFun Merge =
-        fmap mergeSamples
-        . traverse memoGenSamples
-    applyLineFun (Repeat n) =
-        fmap (mconcat . replicate n . mconcat)
-        . traverse memoGenSamples
-    applyLineFun (Volume (num :% denom)) =
-        fmap
-            ((fmap . fmap) ((`div` fromIntegral denom) . (* fromIntegral num))
-            . mconcat)
-        . traverse memoGenSamples
+    applyLineFun Seq cs =
+        cs & traversed %%~ memoGenSamples
+           & _Right %~ mconcat
+    applyLineFun Merge cs =
+        cs & traversed %%~ memoGenSamples
+           & _Right %~ mergeSamples
+    applyLineFun (Repeat n) cs =
+        cs & traversed %%~ memoGenSamples
+           & _Right %~ mconcat . replicate n . mconcat
+    applyLineFun (Volume rat) cs =
+        cs & traversed %%~ memoGenSamples
+           & _Right %~ mconcat
+           & _Right . traversed . traversed %~ multRat rat
 
-applyModifier :: WAVESamples -> NoteModifier -> WAVESamples
-applyModifier samples Detached = chopped ++ remainingSilence
-  where
+applyModifier :: NoteModifier -> WAVESamples -> WAVESamples
+applyModifier Detached samples =
     -- Make the last 20% of the note silent
-    splitPoint = div (4 * length samples) 5
-    (chopped, remaining) = splitAt splitPoint samples
-    remainingSilence = [0] <$ remaining
-applyModifier samples Staccato = chopped ++ remainingSilence
+    samples & dropping keptSamples traversed . traversed .~ 0
   where
+    keptSamples = div (4 * length samples) 5
+applyModifier Staccato samples =
     -- Make the last 75% of the note silent
-    splitPoint = div (length samples) 4
-    (chopped, remaining) = splitAt splitPoint samples
-    remainingSilence = [0] <$ remaining
+    samples & dropping keptSamples traversed . traversed .~ 0
+  where
+    keptSamples = div (length samples) 4
 
+-- TODO: figure out how to use Folds to get `unmodifiedSamples`
+--       without sacrificing performance
 noteToSamples :: Int -> Int -> Note -> WAVESamples
 noteToSamples bpm frameRate (Note noteMods beats pitch) =
-    let secondsPerBeat = (beats / toRational bpm) * 60
-        durationFrames = secondsPerBeat * toRational frameRate
-        unmodifiedSamples =
-            take (round durationFrames)
-            . mconcat
-            . repeat
-            $ pitchWave frameRate pitch
-     in foldl' applyModifier unmodifiedSamples noteMods
+    foldlOf' traversed (flip applyModifier) unmodifiedSamples noteMods
+  where
+    secondsPerBeat = (beats / toRational bpm) * 60
+    durationFrames = round (secondsPerBeat * toRational frameRate)
+    unmodifiedSamples = take durationFrames $ cycle (pitchWave frameRate pitch)
 
 -- Sample line constituting a single wavelength of the pitch.
 -- frameRate / frequency = wavelength in frames
@@ -106,7 +109,7 @@ pitchWave _ (Drum percussion) =
         Clap  -> clapSample ++ repeat [0]
 pitchWave frameRate (Tone letter accidental octave) = squareWave
   where
-    -- Frequency of `Sound letter Nothing 4`
+    -- Frequency of `Sound letter accidental 4`
     -- Obtained from https://en.wikipedia.org/wiki/Piano_key_frequencies
     -- We assume most notes will be close to octave 4 to optimize
     -- frequency calculation below

@@ -9,6 +9,8 @@ import           Control.Monad
 
 import           Data.Foldable
 
+import           Control.Lens
+
 import           Data.Text           (Text)
 import qualified Data.Text           as T
 
@@ -34,19 +36,21 @@ checkBeatsAssertions env = traverse_ go env
     hasBeatsAssertionsArgs Merge = False
     hasBeatsAssertionsArgs _     = True
 
+    -- TODO: figure out how to build a traversal focusing on "bars"
+    --       paired with their expected beats
     checkBeatsList :: [AST Ann] -> Either Text ()
     checkBeatsList [] = pure ()
     checkBeatsList (BeatsAssertion ann mBeats : es) =
         let (curBar, nextBar) = span notBeatsAssertion es
-            foldFun acc = fmap (+ acc) . beatLength . getAug
-            mCurBarLength = foldM foldFun 0 curBar
-         in case (mBeats, mCurBarLength) of
-                (Nothing, _) -> checkBeatsList nextBar
-                (Just beats, Just curBarLength)
+            curBarLength =
+                sumOf (traversed . annotation . beatLength . _Just) curBar
+         in case mBeats of
+                Nothing -> checkBeatsList nextBar
+                Just beats
                   | beats == curBarLength -> checkBeatsList nextBar
                   | otherwise ->
                       Left . T.pack $ mconcat
-                          [ sourcePosPretty (pos ann)
+                          [ ann ^. pos . to sourcePosPretty
                           , ":"
                           , "\n    - Beat assertion failure"
                           , "\n      Expected beats: "
@@ -54,7 +58,6 @@ checkBeatsAssertions env = traverse_ go env
                           , "\n        Actual beats: "
                           , showRational curBarLength
                           ]
-                _ -> error "Should not have Nothing beatLength in line-exprs"
     checkBeatsList es = checkBeatsList (dropWhile notBeatsAssertion es)
 
     notBeatsAssertion :: AST Ann -> Bool
