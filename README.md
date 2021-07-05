@@ -1,7 +1,10 @@
 # Octune
+<img src="logo.png" alt="Octune logo" width="400"/>
+
+Logo made by [@Weelam](https://github.com/Weelam) 🙏
+
 Octune is a domain-specific language (DSL) for creating 8-bit music,
 compiling to WAV.
-
 The name is a pun on "oct-" for the 8-bit music produced and
 "tune" for, well, tune 🙂.
 
