@@ -64,11 +64,14 @@ The syntax for an Octune file is given by the following grammar in EBNF:
                  |  "''"
 
 <beats> ::= <non_negative_decimal>
-         |  <musical_length> {"."}
+         |  <musical_length>, <dots>
 
 <non_negative_decimal> ::= non-negative decimal number
 
 <musical_length> ::= "t" | "s" | "e" | "q" | "h"
+
+<dots> ::= ""
+        |  ".", <dots>
 
 <sound> ::= "_"
          |  <pitch>
