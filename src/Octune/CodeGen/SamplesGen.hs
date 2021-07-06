@@ -3,13 +3,13 @@ module Octune.CodeGen.SamplesGen where
 import           GHC.Real        (Ratio (..))
 
 import           Control.Lens
+import           Control.Monad
 
 import           Data.Bits
 import           Data.Int
 import           Data.List
 import           Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
-import           Data.Text       (Text)
 
 import           Data.WAVE       (WAVESamples)
 
@@ -38,21 +38,21 @@ zipWithHom f = go
 mergeSamples :: [WAVESamples] -> WAVESamples
 mergeSamples = foldl1' (zipWithHom (zipWithHom (+)))
 
-genSamples :: Env Core -> Int -> Int -> Core -> Either Text WAVESamples
+genSamples :: Env Core -> Int -> Int -> Core -> WAVESamples
 genSamples env bpm frameRate = memoGenSamples
   where
-    memoGenSamples :: Core -> Either Text WAVESamples
+    memoGenSamples :: Core -> WAVESamples
     memoGenSamples (CoreVar qName) = cache Map.! qName
     memoGenSamples coreExpr        = go coreExpr
 
-    -- Note: Strict Map is ok here since getting WHNF of Either Text WaveSamples
-    --       will not evaluate past the constructor calls (Left, Right)
-    cache :: Map QualifiedName (Either Text WAVESamples)
+    -- Note: Strict Map is ok here since getting WHNF of WAVESamples
+    --       will not evaluate the spine of the list
+    cache :: Map QualifiedName WAVESamples
     cache = fmap go env
 
-    go :: Core -> Either Text WAVESamples
+    go :: Core -> WAVESamples
     go (CoreVar vName)            = memoGenSamples (env Map.! vName)
-    go (CoreNote note)            = pure $ noteToSamples bpm frameRate note
+    go (CoreNote note)            = noteToSamples bpm frameRate note
     go (CoreApp lineFun lineArgs) = applyLineFun lineFun lineArgs
     go _                          = error "Should not be called on CoreSongs"
 
@@ -61,20 +61,11 @@ genSamples env bpm frameRate = memoGenSamples
         (`div` fromIntegral denom)
         . (* fromIntegral num)
 
-    applyLineFun :: LineFun -> [Core] -> Either Text WAVESamples
-    applyLineFun Seq cs =
-        cs & traversed %%~ memoGenSamples
-           & _Right %~ mconcat
-    applyLineFun Merge cs =
-        cs & traversed %%~ memoGenSamples
-           & _Right %~ mergeSamples
-    applyLineFun (Repeat n) cs =
-        cs & traversed %%~ memoGenSamples
-           & _Right %~ mconcat . replicate n . mconcat
-    applyLineFun (Volume rat) cs =
-        cs & traversed %%~ memoGenSamples
-           & _Right %~ mconcat
-           & _Right . traversed . traversed %~ multRat rat
+    applyLineFun :: LineFun -> [Core] -> WAVESamples
+    applyLineFun Seq          = (memoGenSamples =<<)
+    applyLineFun Merge        = mergeSamples . fmap memoGenSamples
+    applyLineFun (Repeat n)   = join . replicate n . (memoGenSamples =<<)
+    applyLineFun (Volume rat) = (fmap . fmap) (multRat rat) . (memoGenSamples =<<)
 
 applyModifier :: NoteModifier -> WAVESamples -> WAVESamples
 applyModifier Detached samples =

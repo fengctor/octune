@@ -23,6 +23,7 @@ dependencies:
 - base >= 4.7 && < 5
 - text
 - containers
+- optparse-applicative
 - lens
 - megaparsec
 - WAVE

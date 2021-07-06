@@ -84,7 +84,7 @@ checkNoVarCycles env = errorOnSelfEdges *> errorOnCycles
             cs ->
                 Left $ mconcat
                     [ "Variables cannot reference themselves:\n"
-                    , T.unlines $ fmap (T.append "    - ") badVars
+                    , T.unlines $ fmap ("    - " <>) badVars
                     ]
                   where
                     showVar = denoteVar . varFromVertex . fst
@@ -96,7 +96,7 @@ checkNoVarCycles env = errorOnSelfEdges *> errorOnCycles
             cs ->
                 Left $ mconcat
                     [ "Variable usages cannot form a cycle:\n"
-                    , T.unlines $ fmap (T.append "\t- ") badComponents
+                    , T.unlines $ fmap ("    - " <>) badComponents
                     ]
                   where
                     showComponent component =
