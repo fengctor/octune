@@ -135,7 +135,7 @@ soundWave frameRate (Pitch letter accidental octave) = squareWave
 
     squareWave :: WAVESamples
     squareWave =
-        let wavelenFrames = round $ (toRational frameRate / frequency)
+        let wavelenFrames = round (toRational frameRate / frequency)
             firstHalf = wavelenFrames `div` 2
             secondHalf = wavelenFrames - firstHalf
          in mconcat

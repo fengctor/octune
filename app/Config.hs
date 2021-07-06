@@ -13,7 +13,7 @@ data Config
 config :: Parser Config
 config =
     Config
-    <$> (optional $
+    <$> optional (
             strOption
             ( long "output"
            <> short 'o'

@@ -19,7 +19,7 @@ import           Text.Megaparsec.Pos
 import           Octune.Types
 
 checkBeatsAssertions :: Env (AST Ann) -> Either Text ()
-checkBeatsAssertions env = traverse_ go env
+checkBeatsAssertions = traverse_ go
   where
     go :: AST Ann -> Either Text ()
     go (Song _ _ expr)  = go expr

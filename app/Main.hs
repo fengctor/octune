@@ -58,13 +58,13 @@ runOctune cfg = do
     (checkedEnv, mainModule) <- exitOnError checkResult
 
     when (onlyCheck cfg) $
-        putStrLn "No issues found." *> exitWith ExitSuccess
+        putStrLn "No issues found." *> exitSuccess
 
     songWAVE <- exitOnError $ genWAVE (coreEnv checkedEnv) mainModule
     let defaultSongName = T.unpack (last mainModule)
     let songName = fromMaybe defaultSongName (output cfg)
     putWAVEFile (songName ++ ".wav") songWAVE
-    putStrLn ("Produced:\n" ++ songName)
+    putStrLn ("Produced: " ++ songName)
 
 exitOnError :: Either Text b -> IO b
 exitOnError (Right b) = pure b
@@ -87,13 +87,6 @@ checkFiles nameContentList = do
     checkBeatsAssertions beatLenEnv
     mainModule <- findMainModule asts
     pure (beatLenEnv, mainModule)
-
-    {-compile :: [(String, Text)] -> Either Text (String, WAVE)
-compile nameContentList = do
-    (checkedEnv, mainModule) <- checkFiles nameContentList
-    mainWAVE <- genWAVE (coreEnv checkedEnv) mainModule
-    -- Default song name is the last component of the main module name
-    pure (T.unpack (last mainModule), mainWAVE)-}
 
 -- TODO: error if multiple `main`s?
 findMainModule :: [AST a] -> Either Text [Text]
