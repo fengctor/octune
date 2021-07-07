@@ -27,6 +27,13 @@ and possibly uses variables from `other1.otn ... otherk.otn`,
 `path/to/octune mainModule.otn other1.otn ... otherk.otn`
 produces `Main.wav` if the files are successfully compiled.
 
+Use the `-o`/`--output` option to choose the name of the song produced;
+`-o SongName` will output the song to `SongName.wav`.
+
+The `--check` option will perform the checks done before sample generation
+without generating samples and outputting them to a file.
+This is useful for periodically verifying your Octune files are well-formed.
+
 # Language Description
 ## Syntax
 The syntax for an Octune file is given by the following grammar in EBNF:
@@ -92,18 +99,24 @@ The syntax for an Octune file is given by the following grammar in EBNF:
                   |  <module_component>, ".", <variable_usage>
 
 
-<sequence> ::= "[" {<line_expression>}+ "]"
+<sequence> ::= "[" {<line_expr_or_beat_assert>}+ "]"
 
 
 <merge> ::= "[+" {<line_expression>}+ "+]"
 
 
-<repeat> ::= "[*" <non_negative_int> ":" {<line_expression>}+ "*]"
+<repeat> ::= "[*" <non_negative_int> ":" {<line_expr_or_beat_assert>}+ "*]"
 
 <non_negative_int> ::= non-negative integer
 
 
-<volume_modify> ::= "[!" <non_negative_decimal> ":" {<line_expression>}+ "!]"
+<volume_modify> ::= "[!" <non_negative_decimal> ":" {<line_expr_or_beat_assert>}+ "!]"
+
+
+<line_expr_or_beat_assert> ::= <line_expression>
+                            |  <beat_assertion>
+                        
+<beat_assertion> ::= "|", [<non_negative_decimal>, ">"]
 ```
 Furthermore, line comments are preceded by `--` and
 block comments are surrounded by `{-` and `-}`.
