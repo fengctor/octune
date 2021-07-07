@@ -1,0 +1,181 @@
+module MyDearest.Chorus
+
+self = [
+    [+
+        melody1
+        [! 0.6 : choir !]
+        [! 0.75 : piano !]
+        bass1
+        drums1
+    +]
+    [+ 
+        melody2
+        [! 0.6 : choir !]
+        [! 0.7 : strings !]
+        [! 0.7 : piano2 !]
+        [! 1.25 : bass2 !]
+        drums2
+    +]
+
+]
+
+melody1 = [
+    |8> melodyRiff1
+    |8> qE5 eF5 qE5 qF5 qE5 'eD5 eD5 q.C5 e_ eG5
+    |8> melodyRiff1
+    |8> qE5 eF5 qE5 qF5 qE5 eD5 hC5 e_ eG5
+
+    |8> melodyRiff1
+    |8> qE5 eF5 qE5 qF5 qE5 'eD5 eD5 qC5 e_ qG5
+    |8> qC6 eB5 qC6 e_ qG5 qD6 eC6 qD6 e_ 'eG5 eG5
+    |8> qE6 eF6 qE6 qF6 qE6 'eD6 eD6 q.C6 e_ eC5
+]
+
+melody2 = [
+    |8> melodyRiff1
+    |8> qE5 eF5 qE5 qF5 qE5 'eD5 eD5 q.C5 e_ eC5
+    |8> melodyRiff1
+    |8> qE5 eF5 qE5 qF5 qG5 'eA5 qG5 q_ qG5
+
+    |8> melodyRiff2
+    |8> qE5 eF5 qE5 qF5 qE5 eD5 q.C5 q.B4
+    |8> 8C5
+    |8> 5_ qC5 qD5 eC5 eD5
+]
+
+melodyRiff1 = [
+    |8> qC6 eB5 qA5 'qG5 qG5 qD5 qE5 qF5 'eE5
+]
+
+melodyRiff2 = [
+    |8> qC6 eB5 qA5 'qG5 qG5 qD5 q.E5 qF5
+]
+
+choir = [
+    |8> 8_
+    |8> h._
+        [+ 
+            [ 'qC5 hC5 qD5 'qC5 ]
+            [ 'qE5 hE5 qF5 'qF5 ]
+        +]
+    |8> [+ 6 : C5 E5 +] h_
+    |8> h._
+        [+ 
+            [ 'qC5 hC5 qD5 'qC5 ]
+            [ 'qE5 hE5 qF5 'qF5 ]
+        +]
+
+    |8> [+ 7 : C5 E5 +] qD5
+    |8> 8C5
+    |8> q._ q.C5 qG4 q.F4 q.E4 qD4
+    | hC4
+]
+
+piano = [
+    |8> h.C5 q_ q.C5 q.B4 qA4
+    |8> h.G4 q_ q.G4 q.F4 qE4
+    |8> h.D4 q_ q.D4 q.E4 qF4
+    |8> 4E4 4D4
+
+    |8> h.C5 q_ q.C5 q.B4 qC5
+    |8> h.G5 q_ q.G5 q.F5 qE5
+    |8> h.D5 q_ q.D5 q.E5 qF5
+    | hG5
+]
+
+piano2 = [
+    {-
+    |8> h.C4 q_ q.C4 q.B3 qA3
+    |8> h.G3 q_ q.G3 q.F3 qE3
+    |8> h.D3 q_ q.D3 q.E3 qF3
+    |8> 4E3 4D3
+
+    |8> h.C4 q_ q.C4 q.B4 qC4
+    |8> 7G4 eF4 eE4
+    |8> 8C4
+    -}
+    |8> h.C5 q_ q.C5 q.B4 qA4
+    |8> h.G4 q_ q.G4 q.F4 qE4
+    |8> h.D4 q_ q.D4 q.E4 qF4
+    |8> 4E4 4D4
+
+    |8> h.C5 q_ q.C5 q.B4 qC5
+    |8> 7G5 eF5 eE5
+    |8> 8C5
+]
+
+
+strings = [
+{-
+    |8> h.C5 eB4 eC5 h.C5 eB4 eC5
+    |8> 5G5 q.F5 eE5 eC5 eD5
+    |8> q.C5 qA4 eB4 eC5 h.D5 eC5 eD5 eE5
+    |8> 8E5
+
+    |8> q.A4 q.C5 qA5 4G5
+    |8> 7G5 eF5 eE5
+    |8> 4C5 4D5
+    |8> 4E5 4F5
+-}
+    |8> h.C4 eB3 eC4 h.C4 eB3 eC4
+    |8> 5G4 q.F4 eE4 eC4 eD4
+    |8> q.C4 qA3 eB3 eC4 h.D4 eC4 eD4 eE4
+    |8> 8E4
+
+    |8> q.A3 q.C4 qA4 4G4
+    |8> 7G4 eF4 eE4
+    |8> 4C4 4D4
+    |8> 4E4 4F4
+]
+
+bass1 = [
+    |8> 4F2 4G2
+    |8> 4A2 4E2
+    |8> 4F2 q.G2 2.5G#2
+    |8> 4A2 4E2
+
+    |8> 4F2 4G2
+    |8> 4A2 4E2
+    |8> 4F2 hG2 hG#2
+    |8> hA2 4_ hC2
+]
+
+bass2 = [
+    |8> [* 16 : 'eF2 *]
+    |8> [* 16 : 'eG2 *]
+    |8> [* 16 : 'eA2 *]
+    |8> [* 16 : 'eC2 *]
+
+    |8> [* 16 : 'eF2 *]
+    |8> [* 16 : 'eA2 *]
+    |8> [* 8 : 'eD2 *] [* 8 : 'eE2 *]
+    |8> [* 8 : 'eF2 *] [* 8 : 'eG2 *]
+]
+
+drums1 = [
+    |8> [+ e%% MyDearest.Verse.lightQuintDrum +] MyDearest.Verse.lightQuintDrum
+    |8> MyDearest.Verse.lightQuintDrum MyDearest.Verse.lightQuintDrum
+    |8> [+ e%% MyDearest.Verse.lightQuintDrum +] MyDearest.Verse.lightQuintDrum
+    |8> MyDearest.Verse.lightQuintDrum 
+        [+ 
+            MyDearest.Verse.lightQuintDrum
+            [ e_ e%% e%% e% e%% e% e%% e% ]
+        +]
+
+    |8> e%% [* 14 : e% *] e%%
+    |8> e%% [* 15 : e% *]
+    |8> [* 16 : s%% s% *]
+    |8> 6%% [* 8 : s%% *]
+]
+
+drums2 = [
+    |8> [* 4 : e%% e% e% *] [* 2 : e%% e% *]
+    |8> [* 4 : e%% e% e% *] [* 2 : e%% e% *]
+    |8> [* 4 : e%% e% e% *] [* 2 : e%% e% *]
+    |8> [* 4 : e%% e% e% *] e%% e% [* 4 : s%% *]
+
+    |8> [* 4 : e%% e% e% *] [* 2 : e%% e% *]
+    |8> [* 4 : e%% e% e% *] [* 2 : e%% e% *]
+    |8> [* 4 : e%% e% e% *] [* 2 : e%% e% *]
+    |8> [* 4 : e%% e% e% *] [* 8 : s%% *]
+]

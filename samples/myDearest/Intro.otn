@@ -1,0 +1,97 @@
+module MyDearest.Intro
+
+self = [
+    [+
+        melody1 
+        [! 0.5 : accomp1 !]
+        bass1 
+    +]
+    [+
+        6C5
+        stringMelody2
+        [! 0.75 : highAccomp2 !]
+        [! 0.75 : lowAccomp2 !]
+        bass2 
+        drums2 
+    +]
+]
+
+melody1 = [
+    |4> h._ qG5 
+    |8> qC6 eB5 qA5 'qG5 qG5 qD5 q.E5 qF5
+    |8> qE5 eF5 qE5 qF5 qE5 eD5 q.C5 q.B4
+    |8> 8C5
+    |8> 5_ qC5 qD5 eC5 eD5
+]
+
+accomp1 = [
+    |4> 4_
+    |8> [* 4 : pianoRiff *]
+    |8> [* 4 : pianoRiff *]
+    |8> [* 4 : pianoRiff *]
+    |4> 4C6
+]
+pianoRiff = [ eC5 eG4 eC5 eG5 ]
+
+bass1 = [
+    |4> 4_
+    |8> 4F3 4G3
+    |8> 4A3 4E3
+    |15> 15F3
+]
+
+stringMelody2 = [
+    |8> h.C6 e_ 'sC6 'sC6 q.C6 q.B5 qA5
+    |8> h.G5 e_ 'sG5 'sG5 q.G5 q.F5 qE5
+    |8> h.D5 e_ 'sD5 'sD5 q.D5 q.E5 qF5
+    |8> 4E5 4D5
+
+    |8> h.C6 e_ 'sC6 'sC6 q.C6 q.B5 qC6
+    |8> h.G6 e_ 'sG6 'sG6 q.G6 q.F6 qE6
+    |8> 4D6 q_ qF5 qA5 qC6
+    |8> 4D6 4E6
+]
+
+highAccomp2 = [
+    |8> h.A5 q_ q.A5 q.E5 'qC5
+    |8> h.C5 q_ q.C5 q.A4 qC5
+    |8> h.B4 q_ q.B4 q.G4 qB4
+    |8> 4C5 sA3 sB3 sC4 sD4 sE4 sF4 sG4 sA4 sB4 sC5 sD5 sE5 sF5 sG5 sA5 sB5
+
+    |8> h.A5 q_ q.A5 q.E5 qA5
+    |8> h.B5 q_ q.B5 q.C6 qB5
+    |8> 4A5 q_ qC5 qF5 'qA5
+    |8> 4A5 4B5
+]
+
+lowAccomp2 = [
+    |8> 6C4 qB3 qC4
+    |8> 4A3 hB3 hC4
+    |8> 4B3 hC4 hD4
+    |8> [+ 4C4 [ q_ qG4 qC5 qE5 ] +] 4B3
+
+    |8> 6A3 qB3 qC4
+    |8> 6E4 sG5 sF5 sE5 sD5 sC5 sB4 sA4 sG4
+    |8> 8A4
+    |8> 4A4 4G#4
+]
+
+bass2 = [
+    |8> [+ 8 : A2 A3 +]
+    |8> [+ 8 : F2 F3 +]
+    |8> [+ 8 : G2 G3 +]
+    |8> [+ 4 : C3 C4 +] [+ 4 : G2 G3 +]
+
+    |8> [+ 8 : A2 A3 +]
+    |8> [+ 8 : E2 E3 +]
+    |8> [+ 8 : F2 F3 +]
+    |8> 8G2
+]
+
+drums2 = [
+    [* 7 : 
+        |8> [* 3 : s%% s% s% s% *] s%% s% s% s%%
+            e%% e% e% e%% e% e% e%% e%
+    *]
+    |8> e%% e% e% e%% e% e%% e%% e% [* 7 : s%% s% *] s%% s%%
+]

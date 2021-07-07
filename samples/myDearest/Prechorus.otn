@@ -1,0 +1,89 @@
+module MyDearest.Prechorus
+
+self = [+
+    melody 
+    choir
+    [! 0.75 : strings !]
+    [! 0.60 : piano !]
+    bass 
+    drums
++]
+
+melody = [
+    |8> qC5 'eC6 [* 6 : 'qC6 *] 'eC6
+    |8> qC6 eB5 qA5 'qG5 2.5G5 q_ eC5 eD5
+    |8> qE5 eF5 qE5 e_ eC5 eD5 qE5 eF5 qE5 e_ eC5 eD5
+    |8> qE5 eF5 qE5 qF5 qE5 qD5 qC5 'qD5 eD5
+
+    |8> 4C5 q_ 'qC5 [* 4 : 'eC5 *]
+    |8> qA4 'eG4 eG4 2G4 q._ eC5 eD5 'q.E5
+    |8> h.E5 eF5 sE5 sF5 h.E5 e_ eC5
+    |8> 7E5 eD5 eF5
+
+    |8> 8F5
+    |8> 5G5 2.5_ eG5
+]
+
+choir = [
+    |8> 8_
+    |8> 4_ qC5 eB4 qA4 'qG4 eG4
+]
+
+strings = [
+    |8> 4A3 hB3 hC4
+    |8> 4B3 hD4 hG4
+    |8> 7G5 eF5 eE5
+    |8> 6C5 qC4 qD4
+
+    |8> 8E4
+    |8> 3.5_ sF#4 sF4 4E4
+    |8> 8C4
+    |8> 8G#3
+
+    |8> hC4 hD4 hE4 hF4
+    | 4G4
+]
+
+piano = [
+    |8> 8G4
+    |8> 8G4
+    |8> 8G4
+    |8> 8G4
+
+    |8> 'q.G4 'q.G4 'q.G4 'q.G4 'qG4 'qG4
+    |8> 'q.G4 'q.G4 'q.G4 'q.G4 'qG4 'qG4
+    |8> 'q.G4 'q.G4 'q.G4 'q.G4 'qG4 'qG4
+    |8> h._ eE4 eF4 q.G4 q.F4 eE4 eD4
+
+    |8> 8D4
+]
+
+bass = [
+    |8> 8F2
+    |8> 8G2
+    |8> 8A2
+    |8> 8E2
+
+    |8> 8F2
+    |8> 8E2
+    |8> 8D2
+    |8> 8F2
+    |8> 8G2
+    | 4G2
+]
+
+drums = [
+    [* 2 : 
+        |8> [* 2  : e%% e% e% e%% e% e% e%% s%% s%% *]
+        |8> e%% e% e% e%% e% e% e%% s%% s%%
+            e%% e% e% e%% e%% e%% e%% e%%
+    *]
+    |8> [* 16 : e%% *]
+    |8> [* 16 : e%% *]
+    |8> [* 8 : s%% s% s% s% *]
+    |8> [* 8 : s%% s% s% s% *]
+
+    |8> e%% e% e% e% e%% e% e% e%% 
+        e% e%% e% e% e%% e% e% e%%
+    |8> e%% e% e% e% e%% e% e% e%% h_ e%% q%% e%%
+]

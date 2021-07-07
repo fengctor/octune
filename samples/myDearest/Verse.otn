@@ -1,0 +1,137 @@
+module MyDearest.Verse
+
+self = [
+    [+
+        melody1
+        [! 0.5 : pianoChords1 !]
+        bass1 
+        drums1
+    +]
+
+    [+
+        melody2
+        [! 0.5 : pianoChords2 !]
+        [! 0.75 : strings2 !]
+        bass2
+        drums2
+    +]
+]
+
+melody1 = [
+    |8> eD5 3.5E5 h._ eG4 'eG5
+    |8> q.G5 q.F5 q.E5 q.C5 qD5 qC5
+    |8> q.D5 sC5 sD5 hC5 h._ eB4 eC5
+    |8> hB4 qC5 hB4 hG4 qC4
+
+    |8> qG4 'eA4 eA4 hA4 h._ qC5
+    |8> 4G4 h._ eD5 'eE5
+    |8> qE5 'eF5 6F5 'eE5
+    |8> eE5 q.D5 q_ qC5 h.B4 'eC5 eC5
+]
+
+melody2 = [
+    |8> 4C5 h._ eG4 'eG5
+    |8> q.G5 q.F5 q.E5 q.C5 qD5 qC5
+    |8> q.D5 sE5 sD5 hC5 h._ eB4 eC5
+    |8> hA4 qC#5 hD5 hE5 qF5
+
+    |8> qE5 'eD5 eD5 hC5 h._ qA4
+    |8> 4G4 h._ 'qE5
+    |8> qE5 'eF5 6F5 'eE5
+    |8> 4D5 q_ qC5 qE5 qD5
+]
+
+pianoChords1 = [
+    |8> [* 2 : [+ 'h : G3 C4 +] *]
+        [+ 'h : G3 B3 +] [+ 'h : G3 C4 +]
+
+    |8> [* 4 : [+ 'h : G#3 D4 +] *]
+
+    |8> [* 2 : [+ 'h : A3 E4 +] *] 
+        [+ 'h : B3 E4 +] [+ 'h : A3 E4 +]
+
+    |8> [* 2 : [+ 'h : G3 E4 +] *]
+        [* 2 : [+ 'h : G3 D4 +] *]
+
+    |8> [* 2 : [+ 'h : F3 A3 +] *]
+        [+ 'h : F3 B3 +] [+ 'h : F3 C4 +]
+
+    |8> [* 2 : [+ 'h : E3 C4 +] *]
+        [+ 'h : E3 D4 +] [+ 'h : E3 E4 +]
+
+    |8> [* 2 : [+ 'h : C4 A4 +] *]
+        [* 2 : [+ 'h : C4 G#4 +] *]
+
+    |8> [* 2 : [+ 'h : B3 G4 +] *]
+        [+ 4 : B3 G4 +]
+]
+
+pianoChords2 = [
+    |8> [* 2 : [+ 'h : G3 C4 +] *]
+        [+ 'h : G3 B3 +] [+ 'h : G3 C4 +]
+
+    |8> [* 4 : [+ 'h : G#3 D4 +] *]
+
+    |8> [* 2 : [+ 'h : A3 E4 +] *] 
+        [+ 'h : B3 E4 +] [+ 'h : A3 E4 +]
+
+    |8> [* 4 : [+ 'h : A3 C#4 +] *]
+
+    |8> [* 2 : [+ 'h : F3 A3 +] *]
+        [+ 'h : F3 B3 +] [+ 'h : F3 C4 +]
+
+    |8> [* 2 : [+ 'h : E3 C4 +] *]
+        [+ 'h : E3 D4 +] [+ 'h : E3 E4 +]
+
+    |8> [* 2 : [+ 'h : C4 A4 +] *]
+        [* 2 : [+ 'h : C4 G#4 +] *]
+
+    |8> [* 2 : [+ 'h : B3 G4 +] *]
+        [+ 4 : B3 G4 +]
+]
+
+bass1 = [
+    |8> 8C3
+    |8> 8B2
+    |8> 8A2
+    |8> 8G2
+    |8> 8F2
+    |8> 8E2
+    |8> 8F2
+    |8> 8G2
+]
+
+bass2 = [
+    |8> 8C3
+    |8> 8B2
+    |8> 8A2
+    |8> 8A2
+    |8> 8F2
+    |8> 8E2
+    |8> 8F2
+    |8> 8G2
+]
+
+drums1 = [
+    [* 15 : lightQuintDrum *]
+    4%
+]
+
+drums2 = [
+    [* 15 : [+ e%% lightQuintDrum +] *]
+    e%% e% e% e%% e% e%% e%% e%%
+]
+
+lightQuintDrum = [ |4> s% 0.55% [* 4 : 0.8% *] ]
+
+strings2 = [
+    |8> 4_ hG3 hC4
+    |8> 4C4 hG#3 hB3
+    |8> 4C4 hB3 hC4
+    |8> 8C#4
+
+    |8> 4D4 4E4
+    |8> 4C4 hB3 hC4
+    |8> 4A3 4C4
+    |8> 6B3 qC4 qB3
+]

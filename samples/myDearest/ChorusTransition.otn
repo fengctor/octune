@@ -1,0 +1,32 @@
+module MyDearest.ChorusTransition
+
+self = [+
+    melody
+    accomp
+    [! 1.5 : bass !]
+    drums
++]
+
+melody = [
+    |8> q.E4 q.D4 q.E4 q.F4 hG4
+    |8> eA4 eF4 eA4 eB4 eG4 eB4
+        eC5 eA4 'eC5 eE5 eC5 eG#4
+        'eD5 q.D5
+]
+
+accomp = [
+    |8> q.C4 q.B3 q.C4 q.D4 hE4
+    |8> eF4 eC4 eF4 eG4 eD4 eG4
+        eA4 eF4 eA4 eG#4 'eF4 eF4
+        'eB4 q.B4
+]
+
+bass = [
+    |8> 8_
+    |8> q.D2 q.E2 'q.F2 q.F2 'eG2 q.G2
+]
+
+drums = [
+    |8> [* 2 : MyDearest.Verse.lightQuintDrum *]
+    |8> [* 4 : e%% e% e% *] e%% q.%%
+]

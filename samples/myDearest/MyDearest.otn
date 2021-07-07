@@ -1,0 +1,14 @@
+module MyDearest
+
+main = { 170 : myDearest }
+
+myDearest = [
+    MyDearest.Intro.self
+    MyDearest.Verse.self
+    MyDearest.Prechorus.self
+    MyDearest.Chorus.self
+    [+ 
+        6C5
+        MyDearest.ChorusTransition.self
+    +]
+]
