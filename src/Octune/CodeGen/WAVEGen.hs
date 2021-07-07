@@ -19,7 +19,8 @@ genWAVE :: Env Core -> [Text] -> Either Text WAVE
 genWAVE env mainModule =
     case Map.lookup (QualName mainModule "main") env of
         Just (CoreSong bpm coreExpr) ->
-            pure $ WAVE header (genSamples env bpm frameRate coreExpr)
+            -- TODO: provide memoization flag based on something
+            pure $ WAVE header (genSamples env bpm frameRate False coreExpr)
         Just _ ->
             Left "`main` must be a song expression"
         Nothing ->

@@ -3,33 +3,33 @@
 
 module Octune.StaticAnalysis.BarBeats where
 
-import           GHC.Real            (Ratio (..))
+import           GHC.Real               (Ratio (..))
 
 import           Control.Monad
 
+import           Data.Either.Validation
 import           Data.Foldable
 
 import           Control.Lens
 
-import           Data.Text           (Text)
-import qualified Data.Text           as T
+import           Data.Text              (Text)
+import qualified Data.Text              as T
 
 import           Text.Megaparsec.Pos
 
 import           Octune.Types
 
-checkBeatsAssertions :: Env (AST Ann) -> Either Text ()
-checkBeatsAssertions = traverse_ go
+checkBeatsAssertions :: Env (AST Ann) -> Either [Text] ()
+checkBeatsAssertions = validationToEither . traverse_ go
   where
-    go :: AST Ann -> Either Text ()
+    go :: AST Ann -> Validation [Text] ()
     go (Song _ _ expr)  = go expr
     go Var{}            = pure ()
     go LineNote{}       = pure ()
     go BeatsAssertion{} = pure ()
-    go (LineApp _ lFun args) = do
-        when (hasBeatsAssertionsArgs lFun) $
-            checkBeatsList args
-        traverse_ go args
+    go (LineApp _ lFun args) =
+        when (hasBeatsAssertionsArgs lFun) (checkBeatsList args)
+        *> traverse_ go args
     go _ = error "Should only have Song and Line expressions in Env"
 
     hasBeatsAssertionsArgs :: LineFun -> Bool
@@ -38,7 +38,7 @@ checkBeatsAssertions = traverse_ go
 
     -- TODO: figure out how to build a traversal focusing on "bars"
     --       paired with their expected beats
-    checkBeatsList :: [AST Ann] -> Either Text ()
+    checkBeatsList :: [AST Ann] -> Validation [Text] ()
     checkBeatsList [] = pure ()
     checkBeatsList (BeatsAssertion ann mBeats : es) =
         let (curBar, nextBar) = span notBeatsAssertion es
@@ -49,16 +49,19 @@ checkBeatsAssertions = traverse_ go
                 Just beats
                   | beats == curBarLength -> checkBeatsList nextBar
                   | otherwise ->
-                      Left . T.pack $ mconcat
-                          [ ann ^. pos . to sourcePosPretty
-                          , ":"
-                          , "\n    - Beat assertion failure"
-                          , "\n      Expected beats: "
-                          , showRational beats
-                          , "\n        Actual beats: "
-                          , showRational curBarLength
+                      Failure
+                          [ T.pack $ mconcat
+                              [ ann ^. pos . to sourcePosPretty
+                              , ":"
+                              , "\n    - Beat assertion failure"
+                              , "\n      Expected beats: "
+                              , showRational beats
+                              , "\n        Actual beats: "
+                              , showRational curBarLength
+                              ]
                           ]
-    checkBeatsList es = checkBeatsList (dropWhile notBeatsAssertion es)
+                      *> checkBeatsList nextBar
+    checkBeatsList (_:es) = checkBeatsList es
 
     notBeatsAssertion :: AST Ann -> Bool
     notBeatsAssertion BeatsAssertion{} = False

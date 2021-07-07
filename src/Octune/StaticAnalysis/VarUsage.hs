@@ -1,45 +1,54 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE OverloadedStrings    #-}
 
-module Octune.StaticAnalysis.VarUsage where
+module Octune.StaticAnalysis.VarUsage (
+    checkVarUsage
+) where
 
 import           Control.Lens
 import           Data.Text.Lens
 
+import           Data.Either.Validation
 import           Data.Foldable
-
-import           Data.Graph          (Graph)
-import qualified Data.Graph          as Graph
-import qualified Data.Map.Strict     as Map
-
-import           Data.Text           (Text)
-import qualified Data.Text           as T
+import           Data.Graph             (Graph)
+import qualified Data.Graph             as Graph
+import qualified Data.Map.Strict        as Map
+import           Data.Text              (Text)
+import qualified Data.Text              as T
 
 import           Text.Megaparsec.Pos
 
 import           Octune.Types
 
+-- TODO: Use a type for error throughout to express multiple errors
+checkVarUsage :: Env (AST Ann) -> Either [Text] ()
+checkVarUsage env = validationToEither $
+    checkVarsDeclared env
+    *> checkNoVarCycles env
+
 -- Checks that variables used have all been declared
-checkVarsDeclared :: Env (AST Ann) -> Either Text ()
+checkVarsDeclared :: Env (AST Ann) -> Validation [Text] ()
 checkVarsDeclared env = traverse_ (uncurry checkDeclRhs) (Map.toList env)
   where
-    checkDeclRhs :: QualifiedName -> AST Ann -> Either Text ()
+    checkDeclRhs :: QualifiedName -> AST Ann -> Validation [Text] ()
     checkDeclRhs qDeclName (Song _ _ expr) =
         checkDeclRhs qDeclName expr
     checkDeclRhs qDeclName (Var ann qVarName) =
         case Map.lookup qVarName env of
             Nothing ->
-                Left $ mconcat
-                    [ ann ^. pos . to sourcePosPretty . packed
-                    , ":\nUndefined variable `"
-                    , variableName qVarName
-                    , "` in module `"
-                    , T.intercalate "." (moduleQual qVarName)
-                    , "` used in the declaration of `"
-                    , variableName qDeclName
-                    , "` in module `"
-                    , T.intercalate "." (moduleQual qDeclName)
-                    , "`"
+                Failure
+                    [ mconcat
+                        [ ann ^. pos . to sourcePosPretty . packed
+                        , ":\nUndefined variable `"
+                        , variableName qVarName
+                        , "` in module `"
+                        , T.intercalate "." (moduleQual qVarName)
+                        , "` used in the declaration of `"
+                        , variableName qDeclName
+                        , "` in module `"
+                        , T.intercalate "." (moduleQual qDeclName)
+                        , "`\n"
+                        ]
                     ]
             Just _ ->
                 pure ()
@@ -52,7 +61,7 @@ checkVarsDeclared env = traverse_ (uncurry checkDeclRhs) (Map.toList env)
     checkDeclRhs _ _ = error "Should not have File or Decl from parsing"
 
 -- Checks that usages of variables don't form a cycle
-checkNoVarCycles :: Env (AST Ann) -> Either Text ()
+checkNoVarCycles :: Env (AST Ann) -> Validation [Text] ()
 checkNoVarCycles env = errorOnSelfEdges *> errorOnCycles
   where
     edgesFromVar
@@ -77,26 +86,30 @@ checkNoVarCycles env = errorOnSelfEdges *> errorOnCycles
     varFromVertex :: Graph.Vertex -> QualifiedName
     varFromVertex vertex = let (v,_,_) = varNodeFromVertex vertex in v
 
-    errorOnSelfEdges :: Either Text ()
+    errorOnSelfEdges :: Validation [Text] ()
     errorOnSelfEdges =
         case filter (uncurry (==)) (Graph.edges varGraph) of
             [] -> pure ()
             cs ->
-                Left $ mconcat
-                    [ "Variables cannot reference themselves:\n"
-                    , T.unlines $ fmap ("    - " <>) badVars
+                Failure
+                    [ mconcat
+                        [ "Variables cannot reference themselves:\n"
+                        , T.unlines $ fmap ("    - " <>) badVars
+                        ]
                     ]
                   where
                     showVar = denoteVar . varFromVertex . fst
                     badVars = fmap showVar cs
-    errorOnCycles :: Either Text ()
+    errorOnCycles :: Validation [Text] ()
     errorOnCycles =
         case filter ((> 1) . length) (Graph.scc varGraph) of
             [] -> pure ()
             cs ->
-                Left $ mconcat
-                    [ "Variable usages cannot form a cycle:\n"
-                    , T.unlines $ fmap ("    - " <>) badComponents
+                Failure
+                    [ mconcat
+                        [ "Variable usages cannot form a cycle:\n"
+                        , T.unlines $ fmap ("    - " <>) badComponents
+                        ]
                     ]
                   where
                     showComponent component =

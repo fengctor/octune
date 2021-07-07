@@ -23,10 +23,11 @@ dependencies:
 - base >= 4.7 && < 5
 - text
 - containers
-- optparse-applicative
+- either
 - lens
 - megaparsec
 - WAVE
+- optparse-applicative
 
 library:
   source-dirs: src

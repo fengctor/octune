@@ -38,12 +38,23 @@ zipWithHom f = go
 mergeSamples :: [WAVESamples] -> WAVESamples
 mergeSamples = foldl1' (zipWithHom (zipWithHom (+)))
 
-genSamples :: Env Core -> Int -> Int -> Core -> WAVESamples
-genSamples env bpm frameRate = memoGenSamples
+-- TODO: Add option to turn memoization on.
+-- By the nature of Octune code, very few instances
+--   will benefit from memoizing samples for variables.
+-- Many times, variables will not be mentioned more
+--   than a couple of times, in which case the overhead
+--   of memoization is not worth it.
+-- When variables are "repeated", it is usually through
+--   a `Repeat` block ([* n : vars... *]), in which case
+--   the samples for each variable is still only generated once,
+--   with the generated samples themselves being replicated
+genSamples :: Env Core -> Int -> Int -> Bool -> Core -> WAVESamples
+genSamples env bpm frameRate memoize = memoGenSamples
   where
     memoGenSamples :: Core -> WAVESamples
-    memoGenSamples (CoreVar qName) = cache Map.! qName
-    memoGenSamples coreExpr        = go coreExpr
+    memoGenSamples coreExpr
+      | CoreVar qName <- coreExpr, memoize = cache Map.! qName
+      | otherwise                          = go coreExpr
 
     -- Note: Strict Map is ok here since getting WHNF of WAVESamples
     --       will not evaluate the spine of the list

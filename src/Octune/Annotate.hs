@@ -13,8 +13,10 @@ annotateBeatLengths env = cache
     cache = fmap go env
 
     memoAnnotate :: AST Ann -> AST Ann
-    memoAnnotate (Var _ vName) = cache Map.! vName
-    memoAnnotate expr          = go expr
+    memoAnnotate v@(Var _ vName) =
+        v & annotation . beatLength
+          .~ (cache Map.! vName) ^. annotation . beatLength
+    memoAnnotate expr            = go expr
 
     go :: AST Ann -> AST Ann
     go s@(Song _ _ expr) =

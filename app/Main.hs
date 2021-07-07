@@ -50,7 +50,7 @@ runOctune cfg = do
     let fileNames = files cfg
     fileContents <- traverse TIO.readFile fileNames
     case fileContents of
-        [] -> hPutStrLn stderr "Error: no files provided"
+        [] -> hPutStrLn stderr "error: no files provided"
               *> exitWith (ExitFailure 1)
         _  -> pure ()
 
@@ -69,7 +69,7 @@ runOctune cfg = do
 exitOnError :: Either Text b -> IO b
 exitOnError (Right b) = pure b
 exitOnError (Left errMsg) =
-    TIO.hPutStrLn stderr ("error: " <> errMsg)
+    TIO.hPutStrLn stderr ("error:\n" <> errMsg)
     *> exitWith (ExitFailure 1)
 
 -- Returns the checked environment and main moduile used for producing the WAV
@@ -81,10 +81,9 @@ checkFiles nameContentList = do
     let resolvedASTs = fmap resolveModuleVariables asts
     let initEnv = buildASTEnv resolvedASTs
 
-    checkVarsDeclared initEnv
-    checkNoVarCycles initEnv
+    first T.unlines $ checkVarUsage initEnv
     let beatLenEnv = annotateBeatLengths initEnv
-    checkBeatsAssertions beatLenEnv
+    first T.unlines $ checkBeatsAssertions beatLenEnv
     mainModule <- findMainModule asts
     pure (beatLenEnv, mainModule)
 
