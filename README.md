@@ -62,6 +62,7 @@ The syntax for an Octune file is given by the following grammar in EBNF:
                    |  <sequence>
                    |  <merge>
                    |  <repeat>
+                   |  <waveform_choice>
                    |  <volume_modify>
 
 
@@ -110,7 +111,7 @@ The syntax for an Octune file is given by the following grammar in EBNF:
 <non_negative_int> ::= non-negative integer
 
 
-<using_waveform> ::= "[^" <waveform> ":" {<line_expr_or_beat_assert>}+ "^]"
+<waveform_choice> ::= "[^" <waveform> ":" {<line_expr_or_beat_assert>}+ "^]"
 
 <waveform> ::= "SQUARE"
             |  "SAWTOOTH"
