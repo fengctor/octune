@@ -1,4 +1,6 @@
-{-# LANGUAGE ApplicativeDo #-}
+{-# LANGUAGE ApplicativeDo        #-}
+{-# LANGUAGE ExtendedDefaultRules #-}
+{-# LANGUAGE OverloadedStrings    #-}
 
 module Octune.Parser.AST where
 
@@ -22,6 +24,12 @@ initAnn srcPos =
 
 getAnn :: Parser Ann
 getAnn = initAnn <$> getSourcePos
+
+pWaveform :: Parser Waveform
+pWaveform = lexeme $
+    Square <$ string "SQUARE"
+    <|>
+    Sawtooth <$ string "SAWTOOTH"
 
 pModuleComponent :: Parser Text
 pModuleComponent = T.pack <$> ((:) <$> upperChar <*> many letterChar)
@@ -69,6 +77,8 @@ pLineApp =
     <|>
     pVolumeApp
     <|>
+    pUsingWaveformApp
+    <|>
     pSeqApp
   where
     pRepeatApp = between openRepeat closeRepeat $
@@ -81,15 +91,20 @@ pLineApp =
         <$> getAnn
         <^> Merge
         <*> some pLineExpr
-    pSeqApp = between openSeq closeSeq $
-        LineApp
-        <$> getAnn
-        <^> Seq
-        <*> some (pBeatAssert <|> pLineExpr)
     pVolumeApp = between openVolume closeVolume $
         LineApp
         <$> getAnn
         <*> (Volume <$> (lexeme pRational <* colon))
+        <*> some (pBeatAssert <|> pLineExpr)
+    pUsingWaveformApp = between openUsingWaveform closeUsingWaveform $
+        LineApp
+        <$> getAnn
+        <*> (UsingWaveform <$> (pWaveform <* colon))
+        <*> some (pBeatAssert <|> pLineExpr)
+    pSeqApp = between openSeq closeSeq $
+        LineApp
+        <$> getAnn
+        <^> Seq
         <*> some (pBeatAssert <|> pLineExpr)
 
 pBeatAssert :: Parser (AST Ann)

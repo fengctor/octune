@@ -10,6 +10,7 @@ import           Data.Int
 import           Data.List
 import           Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
+import           Data.Maybe
 
 import           Data.WAVE       (WAVESamples)
 
@@ -38,6 +39,9 @@ zipWithHom f = go
 mergeSamples :: [WAVESamples] -> WAVESamples
 mergeSamples = foldl1' (zipWithHom (zipWithHom (+)))
 
+waveformOrDefault :: Maybe Waveform -> Waveform
+waveformOrDefault = fromMaybe Square
+
 -- TODO: Add option to turn memoization on.
 -- By the nature of Octune code, very few instances
 --   will benefit from memoizing samples for variables.
@@ -49,34 +53,51 @@ mergeSamples = foldl1' (zipWithHom (zipWithHom (+)))
 --   the samples for each variable is still only generated once,
 --   with the generated samples themselves being replicated
 genSamples :: Env Core -> Int -> Int -> Bool -> Core -> WAVESamples
-genSamples env bpm frameRate memoize = memoGenSamples
+genSamples env bpm frameRate memoize = memoGenSamples Nothing
   where
-    memoGenSamples :: Core -> WAVESamples
-    memoGenSamples coreExpr
-      | CoreVar qName <- coreExpr, memoize = cache Map.! qName
-      | otherwise                          = go coreExpr
+    memoGenSamples :: Maybe Waveform -> Core -> WAVESamples
+    memoGenSamples mWaveform coreExpr
+      | CoreVar qName <- coreExpr, memoize =
+          cache Map.! waveformOrDefault mWaveform Map.! qName
+      | otherwise = go mWaveform coreExpr
 
     -- Note: Strict Map is ok here since getting WHNF of WAVESamples
     --       will not evaluate the spine of the list
-    cache :: Map QualifiedName WAVESamples
-    cache = fmap go env
+    cache :: Map Waveform (Map QualifiedName WAVESamples)
+    cache = Map.fromList
+        [ (Square, fmap (go $ Just Square) env)
+        , (Sawtooth, fmap (go $ Just Sawtooth) env)
+        ]
 
-    go :: Core -> WAVESamples
-    go (CoreVar vName)            = memoGenSamples (env Map.! vName)
-    go (CoreNote note)            = noteToSamples bpm frameRate note
-    go (CoreApp lineFun lineArgs) = applyLineFun lineFun lineArgs
-    go _                          = error "Should not be called on CoreSongs"
+    go :: Maybe Waveform -> Core -> WAVESamples
+    go mWaveform (CoreVar vName) =
+        memoGenSamples mWaveform (env Map.! vName)
+    go mWaveform (CoreNote note) =
+        noteToSamples bpm frameRate note mWaveform
+    go mWaveform (CoreApp lineFun lineArgs) =
+        applyLineFun mWaveform lineFun lineArgs
+    go _ _ = error "Should not be called on CoreSongs"
 
     multRat :: Rational -> Int32 -> Int32
     multRat (num :% denom) =
         (`div` fromIntegral denom)
         . (* fromIntegral num)
 
-    applyLineFun :: LineFun -> [Core] -> WAVESamples
-    applyLineFun Seq          = (memoGenSamples =<<)
-    applyLineFun Merge        = mergeSamples . fmap memoGenSamples
-    applyLineFun (Repeat n)   = join . replicate n . (memoGenSamples =<<)
-    applyLineFun (Volume rat) = (fmap . fmap) (multRat rat) . (memoGenSamples =<<)
+    applyLineFun :: Maybe Waveform -> LineFun -> [Core] -> WAVESamples
+    applyLineFun mWaveform Seq =
+        (memoGenSamples mWaveform =<<)
+    applyLineFun mWaveform Merge =
+        mergeSamples . fmap (memoGenSamples mWaveform)
+    applyLineFun mWaveform (Repeat n) =
+        join . replicate n . (memoGenSamples mWaveform =<<)
+    applyLineFun mWaveform (UsingWaveform setWaveform) =
+        (memoGenSamples nextMWaveform =<<)
+      where
+        -- Sets the new specified waveform if one has not been set
+        --   in an outer UsingWaveform block
+        nextMWaveform = Just $ fromMaybe setWaveform mWaveform
+    applyLineFun mWaveform (Volume rat) =
+        (fmap . fmap) (multRat rat) . (memoGenSamples mWaveform =<<)
 
 applyModifier :: NoteModifier -> WAVESamples -> WAVESamples
 applyModifier Detached samples =
@@ -92,24 +113,48 @@ applyModifier Staccato samples =
 
 -- TODO: figure out how to use Folds to get `unmodifiedSamples`
 --       without sacrificing performance
-noteToSamples :: Int -> Int -> Note -> WAVESamples
-noteToSamples bpm frameRate (Note noteMods beats sound) =
+noteToSamples :: Int -> Int -> Note -> Maybe Waveform -> WAVESamples
+noteToSamples bpm frameRate (Note noteMods beats sound) mWaveform =
     foldlOf' traversed (flip applyModifier) unmodifiedSamples noteMods
   where
     secondsPerBeat = (beats / toRational bpm) * 60
     durationFrames = round (secondsPerBeat * toRational frameRate)
-    unmodifiedSamples = take durationFrames $ cycle (soundWave frameRate sound)
+    unmodifiedSamples =
+        take durationFrames . cycle $
+            soundWave frameRate sound mWaveform
 
 -- Sample line constituting a single wavelength of the sound.
 -- frameRate / frequency = wavelength in frames
-soundWave :: Int -> Sound -> WAVESamples
-soundWave _ Rest = [[0]]
+soundWave :: Int -> Sound -> Maybe Waveform -> WAVESamples
+soundWave _ Rest _ = [[0]]
 -- TODO: adjust based on framerate
-soundWave _ (Drum percussion) =
+soundWave _ (Drum percussion) _ =
     case percussion of
         Snare -> snareSample ++ repeat [0]
         Clap  -> clapSample ++ repeat [0]
-soundWave frameRate (Pitch letter accidental octave) = squareWave
+soundWave frameRate (Pitch letter accidental octave) mWaveform =
+    case waveformOrDefault mWaveform of
+        Square ->
+            mconcat
+                [ replicate firstHalf [-amplitude]
+                , replicate firstHalf [amplitude]
+                , replicate secondHalf [-amplitude]
+                , replicate secondHalf [amplitude]
+                ]
+              where
+                firstHalf = wavelenFrames `div` 2
+                secondHalf = wavelenFrames - firstHalf
+        Sawtooth ->
+            -- `2*amplitude` max amplitude to reach the same energy as
+            -- a square wave with amplitude `amplitude`
+            fmap (pure . fromIntegral . lineEquation) [0..wavelenFrames-1]
+              where
+                intAmplitude = fromIntegral amplitude
+                -- slope is (2*amplitude - 2*(-amplitude)) / wavelenFrames
+                lineEquation i =
+                    ((4*intAmplitude*i) `div` wavelenFrames)
+                    -
+                    (2*intAmplitude)
   where
     -- Frequency of `Sound letter accidental 4`
     -- Obtained from https://en.wikipedia.org/wiki/Piano_key_frequencies
@@ -144,14 +189,5 @@ soundWave frameRate (Pitch letter accidental octave) = squareWave
     frequency :: Rational
     frequency = baseFrequency * (2^^(octave - 4))
 
-    squareWave :: WAVESamples
-    squareWave =
-        let wavelenFrames = round (toRational frameRate / frequency)
-            firstHalf = wavelenFrames `div` 2
-            secondHalf = wavelenFrames - firstHalf
-         in mconcat
-                [ replicate firstHalf [-amplitude]
-                , replicate firstHalf [amplitude]
-                , replicate secondHalf [-amplitude]
-                , replicate secondHalf [amplitude]
-                ]
+    wavelenFrames :: Int
+    wavelenFrames = round (toRational frameRate / frequency)

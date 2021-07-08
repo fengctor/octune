@@ -8,10 +8,16 @@ import           Data.Combinator
 
 import           Octune.Types.Note
 
+data Waveform
+    = Square
+    | Sawtooth
+    deriving (Show, Read, Eq, Ord)
+
 data LineFun
     = Seq
     | Merge
     | Repeat !Int
+    | UsingWaveform Waveform
     | Volume Rational
     deriving (Show, Read, Eq)
 

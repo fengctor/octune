@@ -46,6 +46,12 @@ openMerge = () <$ lexeme (string "[+")
 closeMerge :: Parser ()
 closeMerge = () <$ lexeme (string "+]")
 
+openUsingWaveform :: Parser ()
+openUsingWaveform = () <$ lexeme (string "[^")
+
+closeUsingWaveform :: Parser ()
+closeUsingWaveform = () <$ lexeme (string "^]")
+
 openVolume :: Parser ()
 openVolume = () <$ lexeme (string "[!")
 
