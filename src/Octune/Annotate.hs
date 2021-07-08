@@ -45,10 +45,11 @@ annotateBeatLengths env = cache
         annotatedArgs = fmap memoAnnotate args
         (combineFun, beatMod) =
             case lFun of
-                Seq      -> ((+), id)
-                Merge    -> (max, id)
-                Repeat n -> ((+), (* toRational n))
-                Volume _ -> ((+), id)
+                Seq             -> ((+), id)
+                Merge           -> (max, id)
+                Repeat n        -> ((+), (* toRational n))
+                UsingWaveform _ -> ((+), id)
+                Volume _        -> ((+), id)
     -- Beats assertions do not take up time
     go b@BeatsAssertion{} = b
     go _ = error "Should not have File or Decl from parsing"

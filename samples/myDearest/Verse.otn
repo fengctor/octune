@@ -11,7 +11,7 @@ self = [
     [+
         melody2
         [! 0.5 : pianoChords2 !]
-        [! 0.75 : strings2 !]
+        [^ SAWTOOTH : [! 0.75 : strings2 !] ^]
         bass2
         drums2
     +]

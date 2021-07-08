@@ -9,9 +9,12 @@ self = [+
 
 melody = [
     |8> q.E4 q.D4 q.E4 q.F4 hG4
-    |8> eA4 eF4 eA4 eB4 eG4 eB4
+    |8> 
+    [^ SAWTOOTH :
+        eA4 eF4 eA4 eB4 eG4 eB4
         eC5 eA4 'eC5 eE5 eC5 eG#4
         'eD5 q.D5
+    ^]
 ]
 
 accomp = [

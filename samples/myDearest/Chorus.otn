@@ -11,7 +11,7 @@ self = [
     [+ 
         melody2
         [! 0.6 : choir !]
-        [! 0.7 : strings !]
+        [^ SAWTOOTH : [! 0.7 : strings !] ^]
         [! 0.7 : piano2 !]
         [! 1.25 : bass2 !]
         drums2

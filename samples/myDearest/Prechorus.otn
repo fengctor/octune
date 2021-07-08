@@ -3,7 +3,7 @@ module MyDearest.Prechorus
 self = [+
     melody 
     choir
-    [! 0.75 : strings !]
+    [^ SAWTOOTH : [! 0.75 : strings !] ^]
     [! 0.60 : piano !]
     bass 
     drums

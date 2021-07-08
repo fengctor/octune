@@ -9,7 +9,7 @@ self = [
     [+
         6C5
         stringMelody2
-        [! 0.75 : highAccomp2 !]
+        [^ SAWTOOTH : [! 0.75 : highAccomp2 !] ^]
         [! 0.75 : lowAccomp2 !]
         bass2 
         drums2 
