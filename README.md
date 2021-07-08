@@ -110,6 +110,12 @@ The syntax for an Octune file is given by the following grammar in EBNF:
 <non_negative_int> ::= non-negative integer
 
 
+<using_waveform> ::= "[^" <waveform> ":" {<line_expr_or_beat_assert>}+ "^]"
+
+<waveform> ::= "SQUARE"
+            |  "SAWTOOTH"
+
+
 <volume_modify> ::= "[!" <non_negative_decimal> ":" {<line_expr_or_beat_assert>}+ "!]"
 
 
@@ -191,6 +197,32 @@ but with the sequence repeated `n` times.
 Examples:
 - `[* 2 : [+ 'sD2 'sD3 +] eF#2 e_ [* 4 : s%% *] *]`
 
+#### Waveform Choice
+Waveform choices are denoted by a waveform `w`, followed by `:`,
+followed by a whitespace-separated list of line expressions,
+together surrounded by `[^` and `^]`.
+They represent playing those line expressions one at a time,
+but generating waves with waveform `w`.
+There are currently square and sawtooth waveforms,
+denoted by `SQUARE` and `SAWTOOTH` respectively.
+Note that outer waveform choice blocks will override any inner ones,
+ie: `[^ SAWTOOTH : [^ SQUARE : expression ^] ^]` will generate `expression`
+using sawtooth waves.
+
+Examples:
+- `[^ SAWTOOTH : [+ 'sD2 'sD3 +] eF#2 e_ [* 4 : s%% *] ^]`
+
+#### Volume Modifiers
+Volume modifiers are denoted by a non-negative rational decimal `n`, followed by `:`,
+followed by a whitespace-separated list of line expressions,
+together surrounded by `[!` and `!]`.
+They represent playing those line expressions one at a time,
+but with the wave samples multiplied by `n`, 
+allowing you to increase or decrease their volume.
+
+Examples:
+`[! 0.75 : [^ SAWTOOTH : [+ 'sD2 'sD3 +] eF#2 e_ [* 4 : s%% *] ^] !]`
+
 #### Variables
 Variables can hold line expressions, and when they do they may be used by their names
 as line expressions themselves.
@@ -229,5 +261,4 @@ Try compiling them and giving them a listen!
 # Documentation TODO
 - Simple module system
 - Beats assertions
-- Volume modifier block
 - Getting Octune
