@@ -8,7 +8,7 @@ self = [+
     drums
 +]
 
-melody = [
+melody = [^ SAWTOOTH :
     |4> e_ 'eE4 eE4 eD#4 qE4 eC#5 eB4
     |4> eB4 qA4 qG#4 'qF#4 eF#4
     |4> e_ 'eG#4 eG#4 e_ eG#4 q_ eF#4
@@ -18,7 +18,7 @@ melody = [
     |4> eB4 qA4 qG#4 qF#4 e_
     |4> eD#4 eE4 eD#4 2.5C#4
     |4> 4_
-]
+^]
 
 support1 = [
     |4> e_ 'eC#4 eC#4 eB3 qC#4 eE4 eD#4

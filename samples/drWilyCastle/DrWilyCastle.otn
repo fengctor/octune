@@ -10,7 +10,7 @@ drWilyCastle = [
 
     [+
         DrWilyCastle.A.base2
-        DrWilyCastle.A.variantMelody1
+        [^ SAWTOOTH : DrWilyCastle.A.variantMelody1 ^]
     +]
 
     [+
@@ -20,7 +20,7 @@ drWilyCastle = [
 
     [+
         DrWilyCastle.B.self
-        [ 31.5_ [+ e : A3 C#4 E4 A2 +] ]
+        [ 31.5_ [^ SAWTOOTH : [+ e : A3 C#4 E4 +] ^] ]
     +]
 
     DrWilyCastle.C.self
