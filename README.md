@@ -222,7 +222,7 @@ but with the wave samples multiplied by `n`,
 allowing you to increase or decrease their volume.
 
 Examples:
-`[! 0.75 : [^ SAWTOOTH : [+ 'sD2 'sD3 +] eF#2 e_ [* 4 : s%% *] ^] !]`
+- `[! 0.75 : [^ SAWTOOTH : [+ 'sD2 'sD3 +] eF#2 e_ [* 4 : s%% *] ^] !]`
 
 #### Variables
 Variables can hold line expressions, and when they do they may be used by their names
