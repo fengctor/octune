@@ -1,7 +1,5 @@
 module Octune.CodeGen.SamplesGen where
 
-import           GHC.Real        (Ratio (..))
-
 import           Control.Lens
 import           Control.Monad
 
@@ -79,9 +77,7 @@ genSamples env bpm frameRate memoize = memoGenSamples Nothing
     go _ _ = error "Should not be called on CoreSongs"
 
     multRat :: Rational -> Int32 -> Int32
-    multRat (num :% denom) =
-        (`div` fromIntegral denom)
-        . (* fromIntegral num)
+    multRat rat = round . (* rat) . toRational
 
     applyLineFun :: Maybe Waveform -> LineFun -> [Core] -> WAVESamples
     applyLineFun mWaveform Seq =
