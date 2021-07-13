@@ -1,6 +1,6 @@
 module Silhouette.Chorus
 
-self = [+ r l bass guitarLine drums +]
+self = [+ r l bass [^ SAWTOOTH : guitarLine ^] drums +]
 
 r = [
     |16> melodyA
@@ -66,7 +66,7 @@ drums = [
 
 
 -- TODO: chop off first 4 beats of all lines except r
-reprise = [+ repriseR repriseL repriseBass repriseGuitarLine repriseDrums +]
+reprise = [+ repriseR repriseL repriseBass [^ SAWTOOTH : repriseGuitarLine ^] repriseDrums +]
 
 repriseR = [
     |16> melodyA

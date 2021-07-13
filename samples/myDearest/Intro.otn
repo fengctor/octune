@@ -9,8 +9,8 @@ self = [
     [+
         6C5
         stringMelody2
-        [^ SAWTOOTH : [! 0.75 : highAccomp2 !] ^]
-        [! 0.75 : lowAccomp2 !]
+        [! 0.75 : highAccomp2 !]
+        [^ SAWTOOTH : [! 1 : lowAccomp2 !] ^]
         bass2 
         drums2 
     +]
@@ -56,7 +56,7 @@ highAccomp2 = [
     |8> h.A5 q_ q.A5 q.E5 'qC5
     |8> h.C5 q_ q.C5 q.A4 qC5
     |8> h.B4 q_ q.B4 q.G4 qB4
-    |8> 4C5 sA3 sB3 sC4 sD4 sE4 sF4 sG4 sA4 sB4 sC5 sD5 sE5 sF5 sG5 sA5 sB5
+    |8> 4C5 4B4
 
     |8> h.A5 q_ q.A5 q.E5 qA5
     |8> h.B5 q_ q.B5 q.C6 qB5
@@ -68,7 +68,8 @@ lowAccomp2 = [
     |8> 6C4 qB3 qC4
     |8> 4A3 hB3 hC4
     |8> 4B3 hC4 hD4
-    |8> [+ 4C4 [ q_ qG4 qC5 qE5 ] +] 4B3
+    |8> [+ 4C4 [ q_ qG4 qC5 qE5 ] +]
+        sA3 sB3 sC4 sD4 sE4 sF4 sG4 sA4 sB4 sC5 sD5 sE5 sF5 sG5 sA5 sB5
 
     |8> 6A3 qB3 qC4
     |8> 6E4 sG5 sF5 sE5 sD5 sC5 sB4 sA4 sG4

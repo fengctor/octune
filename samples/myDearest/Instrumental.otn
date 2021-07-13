@@ -1,0 +1,70 @@
+module MyDearest.Instrumental
+
+self = [+
+    [^ SAWTOOTH : guitar ^]
+    accomp
+    [! 0.75 : piano !]
+    [! 1.25 : bass !]
+    drums
++]
+
+guitar = [
+    |8> 0.1C5 2.9D5 4C5 qC4
+    |8> 0.1C5 3.9D5 q_ hC5 qB4
+    |8> 6G4 e_ 'eF4 eF4 eE4
+    |8> eF4 eE4 eD4 h.C4 eG3 eA3 eC4 0.1Eb4 0.4E4 eD4 eC4 eA3
+
+    |8> qC4 q_ [* 5 : 'eB4 *] [* 3 : 'eC5 *] qD5 q_
+    |8> [* 3 : 'eB4 *] [* 3 : 'eC5 *] [* 3 : 'eD5 *] [* 3 : 'eE5 *] qD5 qC5
+    |8> q.E5 q.D5 q.C5 q.B4 qA4 qG4
+    |8> 8E4
+]
+
+accomp = [
+    |8> h.G4 5F4
+    |8> 4G4 q_ hG4 qD4
+    |8> 6C4 e_ eC4 eA3 eC4
+    |8> eG3 eA3 eG3 h.E3 eC3 eE3 eG3 eC4 eB3 eG3 eE3
+
+    |8> qF3 q_ [* 8 : 'eG4 *] qG4 q_
+    |8> [* 16 : 'eG4 *]
+    |8> q.C5 'q.A4 q.A4 'q.F4 qF4 qD4
+    |8> 8B3
+
+]
+
+piano = [
+    |8> 4_ q.G5 q.F5 qE5
+    |8> 4D5 q.G5 q.E5 qF5
+    |8> 4E5 4G5
+    |8> 4C5 hD5 hE5
+
+    |8> 4D5 hE5 hF5
+    |8> 4G5 hF5 hE5
+    |8> 4D5 hE5 hF5
+    |8> 8E5
+]
+
+drums = [
+    |8> [* 2 : e%% e% e% e%% e%% e% e% e% *]
+    |8> [* 2 : e%% e%% e% e%% e%% e% e% e% *]
+    |8> [* 2 : e%% e%% e% e%% e%% e% e% e% *]
+    |8> [* 2 : e%% e%% e% e%% e%% e% e% e% *]
+
+    |8> [* 3 : s%% s% s% s% *] s%% s% s% s%% [* 4 : s%% s% s% s% *]
+    |8> [* 3 : s%% s% s% s% *] s%% s% s% s%% [* 4 : s%% s% s% s% *]
+    |8> e%% e% e% e%% e%% e%% e%% e% e% e%% e%% e% e%% e% e%% e%
+    |8> [* 2 : MyDearest.Common.quintDrum *]
+]
+
+bass = [
+    |8> 4F2 q.F2 q.E2 qF2
+    |8> 4G2 q.G2 q.E2 qG2
+    |8> 4A2 q.A2 q.G2 qE2
+    |8> 8C2
+
+    |8> 8D2
+    |8> 8E2
+    |8> 8F2
+    |8> 8G2
+]

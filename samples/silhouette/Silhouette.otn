@@ -5,7 +5,7 @@ main = { 183 : silhouette }
 silhouette = [
     [* 4 : q%% *]
     Silhouette.Intro.self
-    [+ 6D5 Silhouette.Verse.self +]
+    [+ [^ SAWTOOTH : 6D5 ^] Silhouette.Verse.self +]
     Silhouette.Prechorus.first
     Silhouette.Chorus.self
     chorusVerseTransition

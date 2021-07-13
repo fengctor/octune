@@ -2,7 +2,7 @@ module Silhouette.Bridge
 
 self = [
     [+ r1 l1 bass1 drums1 +]
-    [+ r2 synth2 l2 bass2 drums2 +]
+    [+ r2 [^ SAWTOOTH : synth2 ^] l2 bass2 drums2 +]
 ]
 
 r1 = [
@@ -43,7 +43,10 @@ synth2 = [
     4D5
     4C#5
     4D5
-    '2B4
+    hB4 h_
+    8A4
+    8G4
+    8A4
 ]
 
 l2 = [

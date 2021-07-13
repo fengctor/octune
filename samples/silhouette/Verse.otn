@@ -29,7 +29,7 @@ l = [
     |4> q_ ''qE3 q_ ''qE3
     |4> q_ ''qC#3 q_ ''qC#3
 
-    |32> [* 4 : Silhouette.Common.guitarRiff *]
+    |32> [* 4 : [^ SAWTOOTH : Silhouette.Common.guitarRiff ^] *]
 ]
 
 bass = [

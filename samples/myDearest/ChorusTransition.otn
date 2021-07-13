@@ -30,6 +30,6 @@ bass = [
 ]
 
 drums = [
-    |8> [* 2 : MyDearest.Verse.lightQuintDrum *]
+    |8> [* 2 : MyDearest.Common.quintDrum *]
     |8> [* 4 : e%% e% e% *] e%% q.%%
 ]

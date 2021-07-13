@@ -39,7 +39,7 @@ drums = [
     |8> [* 4 : Silhouette.Common.drumRiff *]
 ]
 
-coda = [+ codaR woOh codaL codaGuitarLine codaBass codaDrums +]
+coda = [+ codaR woOh codaL [^ SAWTOOTH : codaGuitarLine ^] codaBass codaDrums +]
 
 codaR = [
     |4> eE5 eD5 eE5 eD5 hD5

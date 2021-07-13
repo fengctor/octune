@@ -2,7 +2,7 @@ module Silhouette.Intro
 
 self = [
     [+ r1 bass1 drums1 +]
-    [+ r2 l2 Silhouette.Common.mainBass drums2 +]
+    [+ [^ SAWTOOTH : r2 ^] l2 Silhouette.Common.mainBass drums2 +]
 ]
 
 r1 = [ 

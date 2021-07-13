@@ -1,0 +1,119 @@
+module MyDearest.Bridge
+
+self = [
+    [+
+        piano1
+        [! 0.75 : chords1 !]
+        drums1
+        bass1
+    +]
+
+    [+
+        melody2
+        [! 0.6 : piano2 !]
+        [! 0.6 : choir2 !]
+        [! 0.6 : chords2 !]
+        [! 0.75 : [^ SAWTOOTH : strings2 ^] !]
+        drums2
+        [! 1.5 : bass2 !]
+    +]
+]
+
+melody2 = [
+    |8> qD5 eC5 [* 3 : qD5 qC5 *] eG4
+    |8> qE5 eF5 qE5 qF5 qE5 eD5 hC5 e_ eG4
+    |8> qD5 eC5 [* 3 : qD5 qC5 *] eC5
+    |8> qA5 eG5 qE5 qG5 qE5 eD5 hC5 e_ eG4
+
+    |8> qD5 eC5 [* 3 : qD5 qC5 *] eG4
+    |8> qE5 eF5 qE5 qF5 qE5 eD5 hC5 qG5
+    |8> qC6 eB5 qC6 e_ qG5 qD6 eC6 qD6 e_ 'eG5 eG5
+    |8> qE6 eF6 qE6 qF6 qE6 'eD6 eD6 q.C6 e_ eC5
+]
+
+
+choir2 = [
+    |16> 16_
+    |8> 8_
+    |16> MyDearest.Common.ohMyDearest
+    |8> 8C5
+    |8> q._ q.C5 qG4 q.F4 q.E4 qD4
+    | hC4
+]
+
+
+strings2 = [
+    |32> 32_
+    |8> 8G4
+    |8> 4A4 4E4
+    |8> q.F4 q.G4 qA4 q.G4 q.A4 qB4
+    |8> hC5 hB4 hC5 
+        sC6 sB5 sA5 sG5 sF5 sE5 sD5 sC5
+]
+
+
+piano1 = [* 2 : pianoRiff *]
+
+piano2 = [* 4 : pianoRiff *]
+
+pianoRiff = [
+    |8> [* 4 : eC5 eG4 eC5 eG5 *]
+    |8> [* 3 : eC5 eG4 eC5 eG5 *] eC6 eG5 eC5 eG4
+]
+
+
+chords1 = [* 2 : chordRiff *]
+
+chords2 = [* 3 : chordRiff *]
+
+chordRiff = [
+    |8> [+ 4 : F3 C4 D4 +] [+ 4 : G3 C4 D4 +]
+    |8> [+ 4 : A3 C4 D4 +] [+ 4 : G3 C4 E4 +]
+]
+
+
+drums1 = [* 4 :
+    |8>
+    [+
+        [* 2 : MyDearest.Common.quintDrum *]
+        drumsRiff
+    +]
+*]
+
+drums2 = [
+    [* 6 : 
+        |8>
+        [+
+            [* 2 : MyDearest.Common.quintDrum *]
+            drumsRiff
+        +]
+    *]
+
+    |8> [* 16 : e%% *]
+    |8> e%% e% e%% e%% e%% e% e%% e%%
+        e% e%% e%% e% [* 8 : s%% *]
+]
+
+drumsRiff = [|8> e_ [* 4 : t% *] e%% e_ [* 4 : t% *] e%% 5_]
+
+
+bass1 = [
+    |8> 8C3
+    |8> 4C3 4G2
+    |8> 4F2 4G2
+    |8> 4A2 4E2
+]
+
+bass2 = [
+    |8> 4F2 4G2
+    |8> 4A2 4E2
+
+    |8> 4F2 q.G2 2.5G#2
+    |8> 4A2 4E2
+
+    |8> 4F2 4G2
+    |8> 4A2 4E2
+
+    |8> 4F2 hG2 hG#2
+    |8> hA2 hB2 hC3 hD3
+]

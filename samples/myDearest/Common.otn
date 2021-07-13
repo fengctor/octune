@@ -1,0 +1,12 @@
+module MyDearest.Common
+
+quintDrum = [ |4> s% 0.55% [* 4 : 0.8% *] ]
+
+ohMyDearest = [
+    |8>  h._
+    [+ 
+        [ 'qC5 hC5 qD5 'qC5 ]
+        [ 'qE5 hE5 qF5 'qF5 ]
+    +]
+    |8> [+ 6 : C5 E5 +] h_
+]
