@@ -258,6 +258,7 @@ Examples:
 The `samples/` directory in this repository contains Octune code
 for a few well-known songs.
 Try compiling them and giving them a listen!
+You can also find some of them on the [Octune YouTube channel](https://www.youtube.com/channel/UCOT2NzRZQnxI2se8Xi3x13A).
 
 # Documentation TODO
 - Simple module system
