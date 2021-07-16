@@ -7,6 +7,7 @@ module Main where
 import           System.Exit
 import           System.IO
 
+import           Control.Concurrent
 import           Control.Monad
 
 import           Data.Bifunctor
@@ -47,6 +48,8 @@ main = runOctune =<< execParser opts
 -- Currently compiles exactly 1 song per file
 runOctune :: Config -> IO ()
 runOctune cfg = do
+    setNumCapabilities (cores cfg)
+
     let fileNames = files cfg
     fileContents <- traverse TIO.readFile fileNames
     case fileContents of
