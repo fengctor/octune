@@ -2,15 +2,15 @@ module Octune.CodeGen.SamplesGen where
 
 import           Control.Lens
 import           Control.Monad
+import           Control.Monad.Par
 
 import           Data.Bits
 import           Data.Int
 import           Data.List
-import           Data.Map.Strict (Map)
-import qualified Data.Map.Strict as Map
+import qualified Data.Map.Strict   as Map
 import           Data.Maybe
 
-import           Data.WAVE       (WAVESamples)
+import           Data.WAVE         (WAVESamples)
 
 import           Data.Sounds
 
@@ -33,9 +33,24 @@ zipWithHom f = go
     go xs []         = xs
     go (x:xs) (y:ys) = f x y : go xs ys
 
+-- Combine a list of samples one after another
+sequenceSamples :: [WAVESamples] -> WAVESamples
+sequenceSamples = join
+
 -- Layer a list of samples over each other
 mergeSamples :: [WAVESamples] -> WAVESamples
 mergeSamples = foldl1' (zipWithHom (zipWithHom (+)))
+
+-- Sequence a list of samples,
+--   then repeat it a given number of times
+repeatSamples :: Int -> [WAVESamples] -> WAVESamples
+repeatSamples n = sequenceSamples . replicate n . sequenceSamples
+
+modifySamplesVolume :: Rational -> WAVESamples -> WAVESamples
+modifySamplesVolume multiplier = (fmap . fmap) (multRat multiplier)
+  where
+    multRat :: Rational -> Int32 -> Int32
+    multRat rat = round . (* rat) . toRational
 
 waveformOrDefault :: Maybe Waveform -> Waveform
 waveformOrDefault = fromMaybe Square
@@ -51,8 +66,9 @@ waveformOrDefault = fromMaybe Square
 --   the samples for each variable is still only generated once,
 --   with the generated samples themselves being replicated
 genSamples :: Env Core -> Int -> Int -> Bool -> Core -> WAVESamples
-genSamples env bpm frameRate memoize = memoGenSamples Nothing
+genSamples env bpm frameRate _memoize = runPar . go Nothing
   where
+    {-
     memoGenSamples :: Maybe Waveform -> Core -> WAVESamples
     memoGenSamples mWaveform coreExpr
       | CoreVar qName <- coreExpr, memoize =
@@ -66,34 +82,36 @@ genSamples env bpm frameRate memoize = memoGenSamples Nothing
         [ (Square, fmap (go $ Just Square) env)
         , (Sawtooth, fmap (go $ Just Sawtooth) env)
         ]
-
-    go :: Maybe Waveform -> Core -> WAVESamples
+    -}
+    go :: Maybe Waveform -> Core -> Par WAVESamples
     go mWaveform (CoreVar vName) =
-        memoGenSamples mWaveform (env Map.! vName)
+        go mWaveform (env Map.! vName)
     go mWaveform (CoreNote note) =
-        noteToSamples bpm frameRate note mWaveform
+        pure $ noteToSamples bpm frameRate note mWaveform
     go mWaveform (CoreApp lineFun lineArgs) =
         applyLineFun mWaveform lineFun lineArgs
     go _ _ = error "Should not be called on CoreSongs"
 
-    multRat :: Rational -> Int32 -> Int32
-    multRat rat = round . (* rat) . toRational
-
-    applyLineFun :: Maybe Waveform -> LineFun -> [Core] -> WAVESamples
+    applyLineFun :: Maybe Waveform -> LineFun -> [Core] -> Par WAVESamples
     applyLineFun mWaveform Seq =
-        (memoGenSamples mWaveform =<<)
+        fmap sequenceSamples
+        . parMapM (go mWaveform)
     applyLineFun mWaveform Merge =
-        mergeSamples . fmap (memoGenSamples mWaveform)
+        fmap mergeSamples
+        . parMapM (go mWaveform)
     applyLineFun mWaveform (Repeat n) =
-        join . replicate n . (memoGenSamples mWaveform =<<)
+        fmap (repeatSamples n)
+        . parMapM (go mWaveform)
     applyLineFun mWaveform (UsingWaveform setWaveform) =
-        (memoGenSamples nextMWaveform =<<)
+        fmap sequenceSamples
+        . parMapM (go nextMWaveform)
       where
         -- Sets the new specified waveform if one has not been set
         --   in an outer UsingWaveform block
         nextMWaveform = Just $ fromMaybe setWaveform mWaveform
     applyLineFun mWaveform (Volume rat) =
-        (fmap . fmap) (multRat rat) . (memoGenSamples mWaveform =<<)
+        fmap (modifySamplesVolume rat . sequenceSamples)
+        . parMapM (go mWaveform)
 
 applyModifier :: NoteModifier -> WAVESamples -> WAVESamples
 applyModifier Detached samples =

@@ -57,6 +57,7 @@ library
     , either
     , lens
     , megaparsec
+    , monad-par
     , optparse-applicative
     , text
   default-language: Haskell2010
@@ -68,7 +69,7 @@ executable octune
       Paths_octune
   hs-source-dirs:
       app
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N1
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N2 -O2
   build-depends:
       WAVE
     , base >=4.7 && <5
@@ -76,6 +77,7 @@ executable octune
     , either
     , lens
     , megaparsec
+    , monad-par
     , octune
     , optparse-applicative
     , text
@@ -96,6 +98,7 @@ test-suite octune-test
     , either
     , lens
     , megaparsec
+    , monad-par
     , octune
     , optparse-applicative
     , text
