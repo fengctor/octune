@@ -33,6 +33,13 @@ zipWithHom f = go
     go xs []         = xs
     go (x:xs) (y:ys) = f x y : go xs ys
 
+beatsToNumFrames :: Int -> Int -> Beats -> Int
+beatsToNumFrames bpm frameRate beats =
+    round (secondsPerBeat * toRational frameRate)
+  where
+    secondsPerBeat = (beats / toRational bpm) * 60
+
+
 -- Combine a list of samples one after another
 sequenceSamples :: [WAVESamples] -> WAVESamples
 sequenceSamples = join
@@ -51,6 +58,13 @@ modifySamplesVolume multiplier = (fmap . fmap) (multRat multiplier)
   where
     multRat :: Rational -> Int32 -> Int32
     multRat rat = round . (* rat) . toRational
+
+subsectionOfSamples :: Int -> Int -> Beats -> Beats -> WAVESamples -> WAVESamples
+subsectionOfSamples bpm frameRate beg end =
+    take durationFrames . drop beginningFrames
+  where
+    beginningFrames = beatsToNumFrames bpm frameRate beg
+    durationFrames = beatsToNumFrames bpm frameRate (end - beg)
 
 waveformOrDefault :: Maybe Waveform -> Waveform
 waveformOrDefault = fromMaybe Square
@@ -112,6 +126,9 @@ genSamples env bpm frameRate _memoize = runPar . go Nothing
     applyLineFun mWaveform (Volume rat) =
         fmap (modifySamplesVolume rat . sequenceSamples)
         . parMapM (go mWaveform)
+    applyLineFun mWaveform (Subsection beg end) =
+        fmap (subsectionOfSamples bpm frameRate beg end . sequenceSamples)
+        . parMapM (go mWaveform)
 
 applyModifier :: NoteModifier -> WAVESamples -> WAVESamples
 applyModifier Detached samples =
@@ -131,8 +148,7 @@ noteToSamples :: Int -> Int -> Note -> Maybe Waveform -> WAVESamples
 noteToSamples bpm frameRate (Note noteMods beats sound) mWaveform =
     foldlOf' traversed (flip applyModifier) unmodifiedSamples noteMods
   where
-    secondsPerBeat = (beats / toRational bpm) * 60
-    durationFrames = round (secondsPerBeat * toRational frameRate)
+    durationFrames = beatsToNumFrames bpm frameRate beats
     unmodifiedSamples =
         take durationFrames . cycle $
             soundWave frameRate sound mWaveform

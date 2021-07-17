@@ -75,9 +75,11 @@ pLineApp =
     <|>
     try pMergeApp <|> pChord
     <|>
+    pUsingWaveformApp
+    <|>
     pVolumeApp
     <|>
-    pUsingWaveformApp
+    pSubsectionApp
     <|>
     pSeqApp
   where
@@ -91,15 +93,22 @@ pLineApp =
         <$> getAnn
         <^> Merge
         <*> some pLineExpr
+    pUsingWaveformApp = between openUsingWaveform closeUsingWaveform $
+        LineApp
+        <$> getAnn
+        <*> (UsingWaveform <$> (pWaveform <* colon))
+        <*> some (pBeatAssert <|> pLineExpr)
     pVolumeApp = between openVolume closeVolume $
         LineApp
         <$> getAnn
         <*> (Volume <$> (lexeme pRational <* colon))
         <*> some (pBeatAssert <|> pLineExpr)
-    pUsingWaveformApp = between openUsingWaveform closeUsingWaveform $
+    pSubsectionApp = between openSubsection closeSubsection $
         LineApp
         <$> getAnn
-        <*> (UsingWaveform <$> (pWaveform <* colon))
+        <*> (Subsection
+             <$> (pRational <* char '~')
+             <*> (lexeme pRational <* colon))
         <*> some (pBeatAssert <|> pLineExpr)
     pSeqApp = between openSeq closeSeq $
         LineApp

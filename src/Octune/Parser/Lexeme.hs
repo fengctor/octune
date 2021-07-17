@@ -58,6 +58,12 @@ openVolume = () <$ lexeme (string "[!")
 closeVolume :: Parser ()
 closeVolume = () <$ lexeme (string "!]")
 
+openSubsection :: Parser ()
+openSubsection = () <$ lexeme (string "[-")
+
+closeSubsection :: Parser ()
+closeSubsection = () <$ lexeme (string "-]")
+
 moduleKW :: Parser Text
 moduleKW = lexeme (string "module")
 
