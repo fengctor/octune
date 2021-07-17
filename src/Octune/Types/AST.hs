@@ -14,11 +14,20 @@ data Waveform
     deriving (Show, Read, Eq, Ord)
 
 data LineFun
+    -- Sequence of samples
     = Seq
+    -- Layering samples
     | Merge
+    -- Repeating sequence of samples
     | Repeat !Int
+    -- Set waveform to use
     | UsingWaveform Waveform
+    -- Set amplitude of generated samples
     | Volume Rational
+    -- Take the subsection of a sequence of samples between
+    --   the ends of the given beats
+    -- Note: the end of the 0th beat is the beginning of the 1st beat
+    | Subsection Beats Beats
     deriving (Show, Read, Eq)
 
 data QualifiedName

@@ -1,5 +1,6 @@
 {-# LANGUAGE ExtendedDefaultRules #-}
 {-# LANGUAGE OverloadedStrings    #-}
+{-# LANGUAGE ScopedTypeVariables  #-}
 
 module Octune.Types.Core where
 
@@ -15,7 +16,7 @@ data Core
     | CoreApp !LineFun [Core]
     deriving (Show, Read, Eq)
 
-coreEnv :: Env (AST a) -> Env Core
+coreEnv :: forall a . Env (AST a) -> Env Core
 coreEnv = fmap go
   where
     go :: AST a -> Core
@@ -25,6 +26,5 @@ coreEnv = fmap go
     go (LineApp _ lFun lExprs) = CoreApp lFun (go <$> filter keep lExprs)
     go _ = error "Arg should only have song or line expressions"
 
-    keep :: AST a -> Bool
     keep BeatsAssertion{} = False
     keep _                = True

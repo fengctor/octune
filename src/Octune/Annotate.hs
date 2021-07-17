@@ -19,37 +19,38 @@ annotateBeatLengths env = cache
     memoAnnotate expr            = go expr
 
     go :: AST Ann -> AST Ann
-    go s@(Song _ _ expr) =
-        s & _Song . _3
+    go e@(Song _ _ expr) =
+        e & _Song . _3
           .~ annotatedExpr
           & annotation . beatLength
           .~ annotatedExpr ^. annotation . beatLength
       where
         annotatedExpr = memoAnnotate expr
-    go v@(Var _ vName) =
-        v & annotation . beatLength
+    go e@(Var _ vName) =
+        e & annotation . beatLength
           .~ memoAnnotate (env Map.! vName) ^. annotation . beatLength
-    go n@(LineNote _ (Note _ beats _)) =
-        n & annotation . beatLength
+    go e@(LineNote _ (Note _ beats _)) =
+        e & annotation . beatLength
           ?~ beats
-    go a@(LineApp _ lFun args) =
-        a & _LineApp . _3
+    go e@(LineApp _ lFun args) =
+        e & _LineApp . _3
           .~ annotatedArgs
           & annotation . beatLength
-          ?~ foldlOf'
+          ?~ adjustFun (foldlOf'
                  (traversed . annotation . beatLength . _Just)
-                 (\acc cur -> combineFun acc (beatMod cur))
+                 combineFun
                  0
-                 annotatedArgs
+                 annotatedArgs)
       where
         annotatedArgs = fmap memoAnnotate args
-        (combineFun, beatMod) =
+        (combineFun, adjustFun) =
             case lFun of
                 Seq             -> ((+), id)
                 Merge           -> (max, id)
                 Repeat n        -> ((+), (* toRational n))
                 UsingWaveform _ -> ((+), id)
                 Volume _        -> ((+), id)
+                Subsection l r  -> ((+), \total -> max 0 (min r total - l))
     -- Beats assertions do not take up time
     go b@BeatsAssertion{} = b
     go _ = error "Should not have File or Decl from parsing"
