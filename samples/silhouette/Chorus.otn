@@ -65,8 +65,17 @@ drums = [
 ]
 
 
--- TODO: chop off first 4 beats of all lines except r
-reprise = [+ repriseR repriseL repriseBass [^ SAWTOOTH : repriseGuitarLine ^] repriseDrums +]
+reprise = [+
+    repriseR
+    repriseL
+    [ 4_ [- 4~128 :
+        [+
+            repriseBass
+            [^ SAWTOOTH : repriseGuitarLine ^]
+            repriseDrums
+        +]
+    -]]
++]
 
 repriseR = [
     |16> melodyA
