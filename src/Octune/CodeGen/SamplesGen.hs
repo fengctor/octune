@@ -16,6 +16,7 @@ import           Data.Sounds
 
 import           Octune.Types
 
+
 -- Default amplitude of a wave
 amplitude :: Int32
 amplitude = 1 `shiftL` 27 + 1 `shiftL` 26
@@ -33,12 +34,19 @@ zipWithHom f = go
     go xs []         = xs
     go (x:xs) (y:ys) = f x y : go xs ys
 
+takeUntilOrN :: (a -> Bool) -> Int -> [a] -> ([a], [a])
+takeUntilOrN _ _ [] = ([], [])
+takeUntilOrN p n lst@(x:xs)
+  | n <= 0    = ([], lst)
+  | p x       = ([x], xs)
+  | otherwise = let (ls,rs) = takeUntilOrN p (n-1) xs in (x:ls, rs)
+
+
 beatsToNumFrames :: Int -> Int -> Beats -> Int
 beatsToNumFrames bpm frameRate beats =
     round (secondsPerBeat * toRational frameRate)
   where
     secondsPerBeat = (beats / toRational bpm) * 60
-
 
 -- Combine a list of samples one after another
 sequenceSamples :: [WAVESamples] -> WAVESamples
@@ -109,26 +117,48 @@ genSamples env bpm frameRate _memoize = runPar . go Nothing
     applyLineFun :: Maybe Waveform -> LineFun -> [Core] -> Par WAVESamples
     applyLineFun mWaveform Seq =
         fmap sequenceSamples
-        . parMapM (go mWaveform)
+        . goListChunked mWaveform
+    -- Merge's arguments will usually be around the same length,
+    --   so we process them in parallel without chunking
     applyLineFun mWaveform Merge =
         fmap mergeSamples
         . parMapM (go mWaveform)
     applyLineFun mWaveform (Repeat n) =
         fmap (repeatSamples n)
-        . parMapM (go mWaveform)
+        . goListChunked mWaveform
     applyLineFun mWaveform (UsingWaveform setWaveform) =
         fmap sequenceSamples
-        . parMapM (go nextMWaveform)
+        . goListChunked nextMWaveform
       where
         -- Sets the new specified waveform if one has not been set
         --   in an outer UsingWaveform block
         nextMWaveform = Just $ fromMaybe setWaveform mWaveform
     applyLineFun mWaveform (Volume rat) =
         fmap (modifySamplesVolume rat . sequenceSamples)
-        . parMapM (go mWaveform)
+        . goListChunked mWaveform
     applyLineFun mWaveform (Subsection beg end) =
         fmap (subsectionOfSamples bpm frameRate beg end . sequenceSamples)
-        . parMapM (go mWaveform)
+        . goListChunked mWaveform
+
+    -- Generate samples for each Core expr in a list in parallel chunks
+    goListChunked :: Maybe Waveform -> [Core] -> Par [WAVESamples]
+    goListChunked mWaveform =
+        fmap join
+        . parMapM (traverse $ go mWaveform)
+        . chunk
+
+    maxChunkSize = 24
+    -- TODO: keep duration info in Core and chunk based on duration?
+    chunk :: [Core] -> [[Core]]
+    chunk [] = []
+    chunk es@(CoreNote{}:_) = notes : chunk rest
+      where
+        (notes,rest) = takeUntilOrN notNote maxChunkSize es
+    chunk (e:es) = [e] : chunk es
+
+    notNote :: Core -> Bool
+    notNote CoreNote{} = False
+    notNote _          = True
 
 applyModifier :: NoteModifier -> WAVESamples -> WAVESamples
 applyModifier Detached samples =
