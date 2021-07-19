@@ -1,0 +1,127 @@
+module Pursuit.B
+
+self = [
+    |16> selfA
+    |16>
+    [+ 
+        selfB
+        [! 0.6 : [^ SAWTOOTH :
+            12_
+            |4> 'e.C4 'sBb3 'eC4 'eEb4 'eG4 'eF4 'eE4 'eC4
+        ^] !]
+    +]
+    |16>
+    [+
+        selfA
+        [! 0.6 : [^ SAWTOOTH : hornsA ^] !]
+    +]
+    |16>
+    [+
+        selfB
+        [! 0.6 : [^ SAWTOOTH : hornsB ^] !]
+    +]
+]
+
+selfA = [+
+    [^ SAWTOOTH : melodyA ^]
+    [^ TRIANGLE : accompA ^]
+    counterA
+    [! 1.15 : bassA !]
+    drumsA
++]
+
+selfB = [+
+    [^ SAWTOOTH : melodyB ^]
+    [^ TRIANGLE : accompB ^]
+    counterB
+    [! 1.15 : bassB !]
+    drumsB
++]
+
+
+melodyA = [
+    |4> 'q.Eb5 sD5 sEb5 'q.F5 sEb5 sF5
+    |4> 'q.G5 sF5 sEb5 eF5 'eEb5 'eD5 'eBb4
+    |4> qC5 qC6 qBb5 qF5
+    |4> 'q.G5 sF5 sG5 hF5
+]
+accompA = [
+    |4> 'q.C5 sBb4 sC5 'q.D5 sC5 sD5
+    |4> 'q.Eb5 sD5 sC5 eD5 'eC5 'eBb4 'eG4
+    |4> qAb4 qAb5 qG5 qD5
+    |4> 'q.C5 sB4 sC5 hD5
+]
+
+melodyB = [
+    |4> 'q.Eb5 sD5 sBb4 qF4 qBb4
+    |4> 'q.C5 sD5 sEb5 'eG5 'eF5 'eEb5 'eD5
+    |4> 'q.C5 sBb4 sC5 e.Bb4 'e.D5 eBb4
+    |4> h.C5 q_
+]
+accompB = [
+    |4> 'q.C5 sBb4 sG4 qD4 qG4
+    |4> 'q.Ab4 sBb4 sC5 'eEb5 'eD5 'eC5 'eBb4
+    |4> 'q.Ab4 sG4 sF4 e.G4 'e.F4 eD4
+    |4> h.Eb4 q_
+]
+
+
+counterA = [
+    |4> 'qEb3 eC4 'eEb4 'e.D4 'e.Bb3 'eG3
+    |4> 'qC3 eAb3 'eC4 'e.Bb3 'e.G3 'eEb3
+    |4> 'e.F3 'e.F4 'eF3 'e.G3 'e.G4 'eG3
+    |4> 'e.Ab3 'e.Ab4 eAb4 'e.G4 e.D4 eB3
+]
+
+counterB = [
+    |12> [- 0~12 : counterA -]
+    |4> 4C4
+]
+
+
+-- Brought in on the repeat
+hornsA = [
+    |4> h_ qG4 qBb4
+    |4> hC5 qBb4 qF4
+    |4> hG4 qF4 qD4
+    |4> hEb4 hD4
+]
+
+-- Brought in on the repeat
+hornsB = [
+    |4> h_ hD5
+    |4> hEb5 qD5 qBb4
+    |4> hEb5 qD5 qBb4
+    |4> h.Eb5 q_
+{-
+    |4> h_ hD4
+    |4> hEb4 qD4 qBb3
+    |4> hC4 qD4 qBb3
+    |4> h.Eb4 q_
+-}
+]
+
+
+bassA = [
+    |4> hC3 hBb2
+    |4> hAb2 hG2
+    |4> hF2 hEb2
+    |4> hD2 hG2
+]
+
+bassB = [
+    |4> hC3 hBb2
+    |4> hAb2 hG2
+    |4> hF2 hBb2
+    |4> 4C3
+]
+
+
+drumsA = [
+    [* 4 : |4> [* 2 : e.%% e.% e% *] *]
+]
+
+drumsB = [
+    [* 3 : |4> [* 2 : e.%% e.% e% *] *]
+    |4> e%% e% e%% e% s%% s% s% s%% s% s% s%% s%
+]

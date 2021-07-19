@@ -1,0 +1,74 @@
+module Pursuit.Bridge
+
+self = [+
+    [^ SAWTOOTH : high ^]
+    highAccomp
+    [^ SAWTOOTH : stringRun ^]
+    [! 0.7 : mid !]
+    [! 1.15 : bass !]
+    [^ TRIANGLE : basser ^]
+    drums
++]
+
+stringRun = [
+    |4> sC5 sD5 sEb5 sF5 sG5 sF5 sEb5 sD5
+        sF5 sEb5 sD5 sB4 sC5 sG4 sF4 sG4
+    |4> sC5 sAb4 sG4 sAb4 sF4 sAb4 sG4 sAb4
+        sF5 sC5 sB4 sC5 sG5 sC5 sB4 sC5
+    |4> sAb5 sEb5 sD5 sEb5 sG5 sC5 sB4 sC5
+        sF5 sC5 sB4 sC5 sG5 sC5 sB4 sC5
+    |4> sF5 sC5 sB4 sC5 sD5 sB4 sD5 sAb5
+        hG5
+    |2> hB5
+]
+
+high = [
+    |4> 4_
+    |4> h._ e_ 'sC6 'sC6
+    |4> 'sC6 s_ 'sG5 'sG5 'sG5 s_ 'sAb5 'sAb5
+        'sAb5 s_ 'sF5 'sF5 'sF5 s_ 'sF5 'sF5
+    |4> 'sF5 s_ 'sD5 'sD5 'sD5 s_ 'sD5 'sAb5
+        hB5
+    |2> hD6
+]
+highAccomp = [
+    |4> 4_
+    |4> h._ e_ 'sAb5 'sAb5
+    |4> 'sAb5 s_ 'sD5 'sD5 'sD5 s_ 'sF5 'sF5
+        'sF5 s_ 'sD5 'sD5 'sD5 s_ 'sD5 'sD5
+    |4> 'sD5 s_ 'sAb4 'sAb4 'sAb4 s_ 'sB5 'sD5
+        hD5
+    |2> hG5
+]
+
+mid = [
+    [* 3 :
+        |4> [* 4 : [+ e : Ab3 C4 +] e_ *]
+    *]
+    |4> [* 2 : [+ e : Ab3 C4 +] e_ *] [+ h : B3 D4 +]
+    |2> [+ h : B3 D4 +]
+]
+
+bass = [
+    |4> eAb3 e_ eG3 e_ eF3 e_ eEb3 e_
+    |4> eD3 e_ eC3 e_ eB2 e_ eAb2 e_
+    |4> eG2 e_ eB2 e_ eD3 e_ eEb3 e_
+    |4> eD3 e_ eB2 e_ e.G2 e.Gb2 eG2
+    |2> hG2
+]
+
+basser = [
+    |4> qAb2 qG2 qF2 qEb2
+    |4> qD2 qC2 qB1 eAb1 e_
+    |4> qG1 qB1 qD2 eEb2 e_
+    |4> qD2 qB1 hG1
+    |2> hG1
+]
+
+drums = [
+    |4> [* 4 : q%% *]
+    |4> [* 3 : q%% *] e%% s% s%
+    |4> [* 4 : e%% s% s% *]
+    |4> [* 2 : e%% s% s% *] e.%% e.%% e%%
+    |2> e%% s% e%% s% [* 4 : t%% *]
+]

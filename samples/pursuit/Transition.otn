@@ -1,0 +1,52 @@
+module Pursuit.Transition
+
+self = [+
+    [^ SAWTOOTH : melody ^]
+    accomp
+    [! 0.6 : bells !]
+    [! 1.15 : bass !]
+    counter
+    drums
++]
+
+melody = [
+    |4> eC6 s_ eG5 s_ eBb5 s_ eF5 s_ eG5 s_ sEb5
+    |4> sEb5 s_ eF5 s_ eD5 s_ 'eEb5 eD5 'eC5 'eBb4
+    |4> 4C5
+    |4> hC5 h_
+]
+
+accomp = [
+    |4> eG5 s_ eEb5 s_ eF5 s_ eD5 s_ eEb5 s_ sBb4
+    |4> sBb4 s_ eD5 s_ eBb4 s_ 'eG4 eF4 'eG4 'eD4
+    |4> 4Eb4
+    |4> hEb4 h_
+]
+
+bells = [
+    |4> 4_
+    |4> 4_
+    |4> q_ eF5 eG5 e.C6 e.Bb5 eF5
+    |4> e.G5 e.Bb5 eC6 h_
+]
+
+counter = [
+    |4> 'eC3 'eC4 'eC4 'eD3 'eD4 'eD4 'eEb3 'eEb4
+    |4> 'eEb4 'eF3 'eF4 'eF3 'eG3 'eG3 'eBb3 'eBb3
+    |4> 4Ab3
+    |4> 'hAb3 'e.Ab3 'e.Ab3 'eAb3
+]
+
+bass = [
+    |4> q.C2 q.D2 qEb2
+    |4> eEb2 q.F2 qG2 qD2
+    |4> 4C2
+    |4> 'hC2 'e.C2 'e.C2 'eC2
+]
+
+drums = [
+    |4> q%% e% q%% e% q%%
+    |4> e% q%% e% e%% e% e%% e%
+    |4> 3.5%% [* 4 : t% *]
+    |4> q.%% s% s% e%% s% e%% s% [* 4 : t%% *]
+]

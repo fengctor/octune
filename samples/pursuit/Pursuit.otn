@@ -1,0 +1,25 @@
+module Pursuit
+
+-- Pursuit ~ The Great Turnabout
+-- from The Great Ace Attorney
+
+main = { 133 : [ [* 4 : t%% *] [* 2 : pursuit *] Pursuit.A.self ] }
+
+pursuit = [
+    |64>
+    Pursuit.A.self
+    |64>
+    [+
+        Pursuit.B.self
+        [^ SAWTOOTH :  63_ sC5 sEb5 sG5 sBb5 ^]
+    +]
+    |16>
+    Pursuit.Transition.self
+    |32>
+    [+
+        Pursuit.C.self
+        [^ SAWTOOTH : 31.75_ sBb4 ^]
+    +]
+    |18>
+    Pursuit.Bridge.self
+]

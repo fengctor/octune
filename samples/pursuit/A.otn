@@ -1,0 +1,155 @@
+module Pursuit.A
+
+self = [
+    |16>
+    [+
+        [^ SAWTOOTH : melodyA ^]
+        accompA
+        [! 0.8 : throwbackA !]
+        [! 1.15 : bassA !]
+        basserA
+        drums
+    +]
+    |16>
+    [+
+        [^ SAWTOOTH : melodyB ^]
+        counterB
+        [! 0.6 : [^ SAWTOOTH : stringsB ^] !]
+        [! 1.15 : bassB !]
+        basserB
+        drums
+    +]
+    |16>
+    [+
+        [^ SAWTOOTH : melodyA2 ^]
+        accompA2
+        [! 0.8 : throwbackA !]
+        [! 1.15 : bassA !]
+        basserA
+        drums
+        stringsA2
+    +]
+    |16>
+    [+
+        [^ SAWTOOTH : melodyB2 ^]
+        counterB
+        [! 0.6 : [^ SAWTOOTH : stringsB2 ^] !]
+        [! 1.15 : bassB !]
+        basserB
+        drums
+    +]
+
+]
+
+
+melodyA = [
+    |4> 'e.C5 'e.C6 'e.Bb5 'e.G5 'eF5 'eG5
+    |4> 'e.Bb5 'e.F5 'e.G5 'e.Eb5 'eC5 e_
+    |4> 'e.C5 'e.C6 'e.Bb5 'e.G5 'eF5 'eG5
+    |4> 'e.Bb5 'e.F5 'eG5 'eC5 e_ eC5 'eEb5
+]
+accompA = [
+    |4> 'e.G4 'e.G5 'e.Eb5 'e.Bb4 'eC5 'eEb5
+    |4> 'e.D5 'e.Bb4 'e.Bb4 'e.Bb4 'eG4 'eG4
+    |4> 'e.G4 'e.G5 'e.Eb5 'e.Bb4 'eC5 'eEb5
+    |4> 'e.D5 'e.Bb4 'eG4 'eG4 q._
+]
+
+melodyB = [
+    |4> e.G5 e.Ab5 eBb5 e.G5 e.B4 eC5
+    |4> e.F5 e.F5 q.Eb5 e_ sEb5 sF5
+    |4> e.G5 e.Ab5 eG5 e.F5 e.D5 eEb5
+    |4> e.F5 'e.F5 hG5 e_
+]
+
+melodyA2 = [
+    |12> [- 0~12 : melodyA -]
+    |4> 'eBb5 'eF5 'eG5 'eEb5 'eC5 e_ eC5 'eEb5
+]
+accompA2 = [
+    |12> [- 0~12 : accompA -]
+    |4> 'eD5 'eBb4 'eBb4 'eBb4 'eG4 q._
+]
+
+melodyB2 = [
+    |4> e.G5 e.F5 eBb5 e.G5 e.F5 eEb5
+    |4> e.D5 e.D5 q.Eb5 e_ sEb5 sF5
+    |4> e.G5 e.Ab5 eG5 qAb5 e_ sAb5 sG5
+    |4> e.F5 'e.F5 hG5 e_
+]
+
+
+stringsA2 = [ 
+    |4> 4_
+    |4> q._ 'sC5 'sEb5 'sG5 'sC6 'sG5 'sEb5 eC5 e_ 
+    |4> [! 0.75 : 4G4 !]
+    |4> 4_
+]
+
+stringsB = [
+    |4> 3.5C4 eD4
+    |4> 4Eb4
+    |4> h.D5 qC5
+    |4> q.C5 hD5 e_
+]
+
+stringsB2 = [
+    |4> 4Ab4
+    |4> q.C6 q.Bb5 q_
+    |4> 3.5D5 sB4 sC5
+    |4> q.C5 hD5 e_
+]
+
+
+throwbackA = [+
+    [
+        [* 3 : |4> 'e.F4 'e.F4 'e.F4 'eF4 'sF4 'eF4 'eEb4 *]
+        |4> 'e.F4 'e.F4 'eF4 'eEb4 q._
+    ]
+    [
+        [* 3 : |4> 'e.C4 'e.C4 'e.C4 'eC4 'sC4 'eC4 'eBb3 *]
+        |4> 'e.C4 'e.C4 'eBb4 'eC4 q._
+    ]
++]
+
+counterB = [
+    |4> 'e.F3 'e.F4 'e.Eb4 'e.C4 'eBb3 'eC4
+    |4> 'e.Eb3 'e.Bb3 'e.C4 'e.G3 'eEb3 e_
+    |4> 'e.D3 'e.D4 'e.C4 'e.Ab3 'eF3 'eG3
+    |4> 'e.Ab3 'e.F3 qG3 q._
+]
+
+bassA = [
+    |4> 'e.C3 'e.C3 'e.C3 'eC3 'sC3 'eC3 'eC3
+    |4> 'e.Bb2 'e.Bb2 'e.Bb2 'eBb2 'sBb2 'eBb2 'eBb2
+    |4> 'e.Ab2 'e.Ab2 'e.Ab2 'eAb2 'sAb2 'eAb2 'eAb2
+    |4> 'e.G2 'e.G2 'eG2 'eG2 q._
+]
+
+basserA = [
+    |4> 4C2
+    |4> 4Bb1
+    |4> 4Ab1
+    |4> 4G1
+]
+
+bassB = [
+    |4> 'e.F2 'e.F2 'e.F2 'eF2 'sF2 'eF2 'eF2
+    |4> 'e.Eb2 'e.Eb2 'e.Eb2 'eEb2 'sEb2 'eEb2 'eEb2
+    |4> 'e.D2 'e.D2 'e.D2 'eD2 'sD2 'eD2 'eD2
+    |4> 'e.Ab2 'e.Ab2 'e.G2 'e.G2 qG2
+]
+
+basserB = [
+    |4> 4F1
+    |4> 4Eb1
+    |4> 4D1
+    |4> q.Ab1 2.5G1
+]
+
+drums = [
+    |4> q%% q% e% e% q%
+    |4> e.%% e.% e.%% e% s% q%
+    |4> q%% q% e% e% q%
+    |4> e%% s% e%% s% e%% q%% q%%
+]

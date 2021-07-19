@@ -1,0 +1,88 @@
+module Pursuit.C
+
+self = [
+    [+
+        [! 0.6 : [^ SAWTOOTH : highA ^] !]
+        [! 0.75 : midA !]
+        [! 0.75 : [^ TRIANGLE : accompA ^] !]
+        [^ SAWTOOTH : lowMelodyA ^]
+        [! 1.25 : bassA !]
+        drums
+    +]
+    [+
+        [! 0.6 : [^ SAWTOOTH : highB ^] !]
+        [! 0.75 : midB !]
+        [! 0.75 : [^ TRIANGLE : accompB ^] !]
+        [^ SAWTOOTH : lowMelodyB ^]
+        [! 1.25 : bassB !]
+        drums
+    +]
+]
+
+highA = [
+    |4> 4_
+    |4> q._ 'sBb5 sBb5 eC6 'eG5 eBb5 'sF5 'sF5
+    |4> eG5 'eEb5 h._
+    |4> 4_
+]
+
+highB = [
+    |4> q_ s_ sG5 sC6 sEb6 sG6 sEb6 sC6 sG5 sC6 sG5 sEb5 sC5
+    |4> hDb5 h_
+    |4> q_ sD5 sD6 sC6 sAb5 sF5 sD5 sC5 sAb4 sC5 sAb4 sC5 sF5
+    |4> hG5 h_
+]
+
+
+midA = [
+    |4> eEb5 'eD5 'eEb5 'eBb5 e_ eEb5 'eD5 'eEb5
+    |4> 'eBb5 s_ 'eBb5 s_ 'eBb5 h_
+    |4> eEb5 'eD5 'eEb5 'eBb4 eC5 eG4 'eBb4 'eF4
+    |4> hG4 h_
+]
+
+midB = [
+    |8> [- 8~16 : midA -]
+    |4> eD4 'eDb4 'eD4 'eAb4 e_ eD4 'eF4 'eAb4
+    |4> 'eG4 s_ 'eG4 s_ hG4 e_
+]
+
+
+lowMelodyA = [
+    |4> eEb3 'eD3 'eEb3 'eBb3 e_ eEb3 'eD3 'eEb3
+    |4> 'eBb3 s_ 'eBb3 s_ 'eBb3 h_
+    |4> eEb3 'eD3 'eEb3 'eEb3 e_ eEb3 'eD3 'eEb3
+    |4> 'eBb3 s_ 'eBb3 s_ hBb3 e_
+]
+accompA = [
+    |4> eC4 'eBb3 'eC4 'eEb4 e_ eC4 'eBb3 'eC4
+    |4> 'eDb4 s_ 'eDb4 s_ 'eDb4 h_
+    |4> eC4 'eBb3 'eC4 'eEb4 e_ eC4 'eBb3 'eC4
+    |4> 'eDb4 s_ 'eDb4 s_ hDb4 e_
+]
+
+lowMelodyB = [
+    |8> [- 8~16 : lowMelodyA -]
+    |4> eD3 'eDb3 'eD3 'eAb3 e_ eD3 'eF3 'eAb3
+    |4> 'eG3 s_ 'eG3 s_ hG3 e_
+]
+accompB = [
+    |8> [- 8~16 : accompA -]
+    |4> eB3 'eBb3 'eB3 'eD4 e_ eB3 'eD4 'eF4
+    |4> 'eD4 s_ 'eD4 s_ hD4 e_
+]
+
+
+bassA = [* 2 :
+    |4> 'e.C2 'e.C2 'e.C2 'e.C2 qC2
+    |4> 'e.Db2 'e.Db2 'e.Db2 'e.Db2 qDb2
+*]
+
+bassB = [
+    |8> [- 0~8 : bassA -]
+    |4> 'e.D2 'e.D2 'e.D2 'e.D2 qD2
+    |4> 'e.G2 'e.G2 'e.G2 'e.G2 eG2 e_
+]
+
+
+drums = Pursuit.A.drums
