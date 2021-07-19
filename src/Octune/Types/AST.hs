@@ -11,6 +11,7 @@ import           Octune.Types.Note
 data Waveform
     = Square
     | Sawtooth
+    | Triangle
     deriving (Show, Read, Eq, Ord)
 
 data LineFun

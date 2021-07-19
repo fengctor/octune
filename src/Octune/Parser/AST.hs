@@ -30,6 +30,8 @@ pWaveform = lexeme $
     Square <$ string "SQUARE"
     <|>
     Sawtooth <$ string "SAWTOOTH"
+    <|>
+    Triangle <$ string "TRIANGLE"
 
 pModuleComponent :: Parser Text
 pModuleComponent = T.pack <$> ((:) <$> upperChar <*> many letterChar)

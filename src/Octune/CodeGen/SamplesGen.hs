@@ -25,6 +25,9 @@ amplitude = 1 `shiftL` 27 + 1 `shiftL` 26
 semitoneFreqMultiplier :: Rational
 semitoneFreqMultiplier = 1.05946309435929
 
+multRat :: (Real a, Integral a) => Rational -> a -> a
+multRat rat = round . (* rat) . toRational
+
 
 -- {-# INLINE [0] zipWithHom #-}
 zipWithHom :: (a -> a -> a) -> [a] -> [a] -> [a]
@@ -63,9 +66,6 @@ repeatSamples n = sequenceSamples . replicate n . sequenceSamples
 
 modifySamplesVolume :: Rational -> WAVESamples -> WAVESamples
 modifySamplesVolume multiplier = (fmap . fmap) (multRat multiplier)
-  where
-    multRat :: Rational -> Int32 -> Int32
-    multRat rat = round . (* rat) . toRational
 
 subsectionOfSamples :: Int -> Int -> Beats -> Beats -> WAVESamples -> WAVESamples
 subsectionOfSamples bpm frameRate beg end =
@@ -180,20 +180,18 @@ noteToSamples bpm frameRate (Note noteMods beats sound) mWaveform =
   where
     durationFrames = beatsToNumFrames bpm frameRate beats
     unmodifiedSamples =
-        take durationFrames . cycle $
-            soundWave frameRate sound mWaveform
+        take durationFrames $ soundWave frameRate sound mWaveform
 
--- Sample line constituting a single wavelength of the sound.
--- frameRate / frequency = wavelength in frames
+-- Samples representing a repeating wave of the given sound.
 soundWave :: Int -> Sound -> Maybe Waveform -> WAVESamples
-soundWave _ Rest _ = [[0]]
+soundWave _ Rest _ = repeat [0]
 -- TODO: adjust based on framerate
 soundWave _ (Drum percussion) _ =
     case percussion of
         Snare -> snareSample ++ repeat [0]
         Clap  -> clapSample ++ repeat [0]
 soundWave frameRate (Pitch letter accidental octave) mWaveform =
-    case waveformOrDefault mWaveform of
+    cycle $ case waveformOrDefault mWaveform of
         Square ->
             mconcat
                 [ replicate firstHalf [-amplitude]
@@ -202,20 +200,58 @@ soundWave frameRate (Pitch letter accidental octave) mWaveform =
                 , replicate secondHalf [amplitude]
                 ]
               where
-                firstHalf = wavelenFrames `div` 2
-                secondHalf = wavelenFrames - firstHalf
+                (firstHalf, secondHalf) = splitHalf wavelenFrames
         Sawtooth ->
-            -- `2*amplitude` max amplitude to reach the same energy as
-            -- a square wave with amplitude `amplitude`
-            fmap (pure . fromIntegral . lineEquation) [0..wavelenFrames-1]
+            -- Note: `2*amplitude` max amplitude to reach the same energy
+            --       as a square wave with amplitude `amplitude`
+            samplesFromEquation lineEqn [0..wavelenFrames-1]
               where
-                intAmplitude = fromIntegral amplitude
                 -- slope is (2*amplitude - 2*(-amplitude)) / wavelenFrames
-                lineEquation i =
-                    ((4*intAmplitude*i) `div` wavelenFrames)
-                    -
-                    (2*intAmplitude)
+                slope :: Rational
+                slope =
+                    toRational (4 * intAmplitude) / toRational wavelenFrames
+
+                -- wave looks like ////
+                lineEqn :: Int -> Int
+                lineEqn i = multRat slope i - 2*intAmplitude
+        Triangle ->
+            -- Note: `2*amplitude` max amplitude to reach the same energy
+            --       as a square wave with amplitude `amplitude`
+            mconcat
+                [ samplesFromEquation
+                      baseLineEqn
+                      [0..firstQuarter-1]
+                , samplesFromEquation
+                      ((+ 2*intAmplitude) . negate . baseLineEqn)
+                      [0..middleHalf-1]
+                , samplesFromEquation
+                      ((subtract $ 2*intAmplitude) . baseLineEqn)
+                      [0..lastQuarter-1]
+                ]
+              where
+                (middleHalf, restHalf) = splitHalf wavelenFrames
+                (firstQuarter, lastQuarter) = splitHalf restHalf
+                -- upSlope is (2*amplitude - 0) / (1/4 * wavelenFrames);
+                -- downSlope is -upSlope
+                upSlope :: Rational
+                upSlope =
+                    toRational (8 * intAmplitude) / toRational wavelenFrames
+
+                -- line going from (0, 0) to (1/4 * wavelenFrames, 2 * amplitude)
+                baseLineEqn :: Int -> Int
+                baseLineEqn = multRat upSlope
   where
+    intAmplitude = fromIntegral amplitude
+
+    splitHalf :: Int -> (Int, Int)
+    splitHalf n =
+        let firstHalf = n `div` 2
+            secondHalf = n - firstHalf
+         in (firstHalf, secondHalf)
+
+    samplesFromEquation :: (Int -> Int) -> [Int] -> WAVESamples
+    samplesFromEquation eqn = fmap (pure . fromIntegral . eqn)
+
     -- Frequency of `Sound letter accidental 4`
     -- Obtained from https://en.wikipedia.org/wiki/Piano_key_frequencies
     -- We assume most notes will be close to octave 4 to optimize
@@ -249,5 +285,6 @@ soundWave frameRate (Pitch letter accidental octave) mWaveform =
     frequency :: Rational
     frequency = baseFrequency * (2^^(octave - 4))
 
+    -- frameRate / frequency = wavelength in frames
     wavelenFrames :: Int
     wavelenFrames = round (toRational frameRate / frequency)
