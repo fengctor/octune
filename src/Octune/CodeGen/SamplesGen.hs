@@ -52,22 +52,28 @@ beatsToNumFrames bpm frameRate beats =
     secondsPerBeat = (beats / toRational bpm) * 60
 
 -- Combine a list of samples one after another
-sequenceSamples :: [WAVESamples] -> WAVESamples
+sequenceSamples :: [InternalSamples] -> InternalSamples
 sequenceSamples = join
 
 -- Layer a list of samples over each other
-mergeSamples :: [WAVESamples] -> WAVESamples
-mergeSamples = foldl1' (zipWithHom (zipWithHom (+)))
+mergeSamples :: [InternalSamples] -> InternalSamples
+mergeSamples = foldl1' (zipWithHom (+))
 
 -- Sequence a list of samples,
 --   then repeat it a given number of times
-repeatSamples :: Int -> [WAVESamples] -> WAVESamples
+repeatSamples :: Int -> [InternalSamples] -> InternalSamples
 repeatSamples n = sequenceSamples . replicate n . sequenceSamples
 
-modifySamplesVolume :: Rational -> WAVESamples -> WAVESamples
-modifySamplesVolume multiplier = (fmap . fmap) (multRat multiplier)
+modifySamplesVolume :: Rational -> InternalSamples -> InternalSamples
+modifySamplesVolume multiplier = fmap (multRat multiplier)
 
-subsectionOfSamples :: Int -> Int -> Beats -> Beats -> WAVESamples -> WAVESamples
+subsectionOfSamples
+    :: Int
+    -> Int
+    -> Beats
+    -> Beats
+    -> InternalSamples
+    -> InternalSamples
 subsectionOfSamples bpm frameRate beg end =
     take durationFrames . drop beginningFrames
   where
@@ -88,7 +94,7 @@ waveformOrDefault = fromMaybe Square
 --   the samples for each variable is still only generated once,
 --   with the generated samples themselves being replicated
 genSamples :: Env Core -> Int -> Int -> Bool -> Core -> WAVESamples
-genSamples env bpm frameRate _memoize = runPar . go Nothing
+genSamples env bpm frameRate _memoize = fmap pure . runPar . go Nothing
   where
     {-
     memoGenSamples :: Maybe Waveform -> Core -> WAVESamples
@@ -105,7 +111,7 @@ genSamples env bpm frameRate _memoize = runPar . go Nothing
         , (Sawtooth, fmap (go $ Just Sawtooth) env)
         ]
     -}
-    go :: Maybe Waveform -> Core -> Par WAVESamples
+    go :: Maybe Waveform -> Core -> Par InternalSamples
     go mWaveform (CoreVar vName) =
         go mWaveform (env Map.! vName)
     go mWaveform (CoreNote note) =
@@ -114,7 +120,7 @@ genSamples env bpm frameRate _memoize = runPar . go Nothing
         applyLineFun mWaveform lineFun lineArgs
     go _ _ = error "Should not be called on CoreSongs"
 
-    applyLineFun :: Maybe Waveform -> LineFun -> [Core] -> Par WAVESamples
+    applyLineFun :: Maybe Waveform -> LineFun -> [Core] -> Par InternalSamples
     applyLineFun mWaveform Seq =
         fmap sequenceSamples
         . goListChunked mWaveform
@@ -141,7 +147,7 @@ genSamples env bpm frameRate _memoize = runPar . go Nothing
         . goListChunked mWaveform
 
     -- Generate samples for each Core expr in a list in parallel chunks
-    goListChunked :: Maybe Waveform -> [Core] -> Par [WAVESamples]
+    goListChunked :: Maybe Waveform -> [Core] -> Par [InternalSamples]
     goListChunked mWaveform =
         fmap join
         . parMapM (traverse $ go mWaveform)
@@ -160,21 +166,21 @@ genSamples env bpm frameRate _memoize = runPar . go Nothing
     notNote CoreNote{} = False
     notNote _          = True
 
-applyModifier :: NoteModifier -> WAVESamples -> WAVESamples
+applyModifier :: NoteModifier -> InternalSamples -> InternalSamples
 applyModifier Detached samples =
     -- Make the last 20% of the note silent
-    samples & dropping keptSamples traversed . traversed .~ 0
+    samples & dropping keptSamples traversed .~ 0
   where
     keptSamples = div (4 * length samples) 5
 applyModifier Staccato samples =
     -- Make the last 75% of the note silent
-    samples & dropping keptSamples traversed . traversed .~ 0
+    samples & dropping keptSamples traversed .~ 0
   where
     keptSamples = div (length samples) 4
 
 -- TODO: figure out how to use Folds to get `unmodifiedSamples`
 --       without sacrificing performance
-noteToSamples :: Int -> Int -> Note -> Maybe Waveform -> WAVESamples
+noteToSamples :: Int -> Int -> Note -> Maybe Waveform -> InternalSamples
 noteToSamples bpm frameRate (Note noteMods beats sound) mWaveform =
     foldlOf' traversed (flip applyModifier) unmodifiedSamples noteMods
   where
@@ -183,21 +189,21 @@ noteToSamples bpm frameRate (Note noteMods beats sound) mWaveform =
         take durationFrames $ soundWave frameRate sound mWaveform
 
 -- Samples representing a repeating wave of the given sound.
-soundWave :: Int -> Sound -> Maybe Waveform -> WAVESamples
-soundWave _ Rest _ = repeat [0]
+soundWave :: Int -> Sound -> Maybe Waveform -> InternalSamples
+soundWave _ Rest _ = repeat 0
 -- TODO: adjust based on framerate
 soundWave _ (Drum percussion) _ =
     case percussion of
-        Snare -> snareSample ++ repeat [0]
-        Clap  -> clapSample ++ repeat [0]
+        Snare -> snareSamples ++ repeat 0
+        Clap  -> clapSamples ++ repeat 0
 soundWave frameRate (Pitch letter accidental octave) mWaveform =
     cycle $ case waveformOrDefault mWaveform of
         Square ->
             mconcat
-                [ replicate firstHalf [-amplitude]
-                , replicate firstHalf [amplitude]
-                , replicate secondHalf [-amplitude]
-                , replicate secondHalf [amplitude]
+                [ replicate firstHalf (-amplitude)
+                , replicate firstHalf amplitude
+                , replicate secondHalf (-amplitude)
+                , replicate secondHalf amplitude
                 ]
               where
                 (firstHalf, secondHalf) = splitHalf wavelenFrames
@@ -249,8 +255,8 @@ soundWave frameRate (Pitch letter accidental octave) mWaveform =
             secondHalf = n - firstHalf
          in (firstHalf, secondHalf)
 
-    samplesFromEquation :: (Int -> Int) -> [Int] -> WAVESamples
-    samplesFromEquation eqn = fmap (pure . fromIntegral . eqn)
+    samplesFromEquation :: (Int -> Int) -> [Int] -> InternalSamples
+    samplesFromEquation eqn = fmap (fromIntegral . eqn)
 
     -- Frequency of `Sound letter accidental 4`
     -- Obtained from https://en.wikipedia.org/wiki/Piano_key_frequencies
